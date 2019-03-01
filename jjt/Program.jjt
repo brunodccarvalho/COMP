@@ -1,0 +1,68 @@
+options
+{
+ LOOKAHEAD=1;
+}
+PARSER_BEGIN(Program)
+public class Program
+{
+ public static void main(String args[]) throws ParseException {
+    Program myProg = new Program(System.in);
+    SimpleNode root = myProg.Program(); // devolve referência para o nó raiz da árvore
+
+    root.dump(""); // imprime no ecrã a árvore
+ }
+}
+PARSER_END(Program)
+
+
+SKIP :
+{
+" " | "\r" | "\t"
+}
+TOKEN:
+{
+ < INTEGER: (["0"-"9"])+ >
+| < LF: "\n" >
+| < IDENTIFIER: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z"])*>
+| < SEMICOLON: ";">
+}
+SimpleNode Program(): {}
+{
+    ClassDeclaration() <LF> {return jjtThis;}
+}
+
+void ClassDeclaration(): {}
+{
+    ("class ") <IDENTIFIER> [("extends ") <IDENTIFIER>]
+    "{" <IDENTIFIER> "}"
+}
+
+void VarDeclaration(): {}
+{
+    <INTEGER>  
+}
+
+void MainDeclaration(): {}
+{
+    <INTEGER>  
+}
+
+void MethodDeclaration(): {}
+{
+    <INTEGER>  
+}
+
+void Type(): {}
+{
+    <INTEGER>  
+}
+
+void Statement() : {}
+{
+    <INTEGER>  
+}
+
+void Expression() : {}
+{
+    <INTEGER>  
+}
