@@ -21,7 +21,7 @@ SKIP : {
 }
 
 TOKEN: {
-    <INTEGERLITERAL: (["0" - "9"])+ >
+    <INTEGERLITERAL: (((["+","-"])?(["0"-"9"])+)|("0x"(["0"-"9","a"-"f","A"-"F"])+)|("0b"(["0","1"])+))>
     |
     <PUBLIC: "public">
     |
