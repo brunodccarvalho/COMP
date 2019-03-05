@@ -21,7 +21,7 @@ SKIP : {
 }
 
 TOKEN: {
-    <INTEGER: (["0" - "9"])+ >
+    <INTEGER: (["0" - "9"])+>
     |
     <PUBLIC: "public">
     |
@@ -60,6 +60,8 @@ TOKEN: {
     <LENGTH: "length">
     |
     <IDENTIFIER: ["A"-"Z","a"-"z","$","_"](["0"-"9","A"-"Z","a"-"z","_","$"])*>
+    |
+    <IDENTIFIERLITERAL: "1">
     |
     <LEFTKEY: "{">
     |
@@ -103,7 +105,7 @@ SimpleNode Program(): {}
 
 void ClassDeclaration(): {}
 {
-    <CLASS> 
+    <CLASS>
     <IDENTIFIER>
     (<EXTENDS><IDENTIFIER>)?
     <LEFTKEY>
@@ -122,7 +124,7 @@ void VarDeclaration(): {}
     Type()
     <IDENTIFIER>
     <SEMICOLON>
-}   
+}
 
 void MainDeclaration(): {}
 {
@@ -146,7 +148,7 @@ void MethodDeclaration(): {}
     Type()
     <IDENTIFIER>
     <LCB>
-    (Type()<IDENTIFIER>(<COMMA>Type()<IDENTIFIER>)*)?   
+    (Type()<IDENTIFIER>(<COMMA>Type()<IDENTIFIER>)*)?
     <RCB>
     <LEFTKEY>
     (VarDeclaration())*
@@ -177,7 +179,7 @@ void Statement() : {}
     (Statement())*
     <RIGHTKEY>
     |
-    <IF>{System.out.println("line 180");}<LCB>Expression()<RCB>Statement()<ELSE>Statement()
+    <IF><LCB>Expression()<RCB>Statement()<ELSE>Statement()
     |
     <WHILE><LCB>Expression()<RCB>Statement()
     |
@@ -190,16 +192,16 @@ void Statement() : {}
 
 void Expression() : {}
 {
-    ExpressionTerminals(){System.out.println("line 193");}ExpressionL()
+    ExpressionTerminals()(ExpressionL())?
 }
 
-void ExpressionL(): {System.out.println("expressionL"); Token t;}
+void ExpressionL(): {}
 {
-    (t=(<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>)){Expression()
+    (<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>)Expression()
     |
-    (t=<LSB>)Expression()<RSB>
+    <LSB>Expression()<RSB>
     |
-    (t=Point())
+    Point()
 }
 
 void Point(): {}
@@ -214,12 +216,12 @@ void AfterPoint(): {}
     <IDENTIFIER><LCB>(Expression() (<COMMA>Expression())*)<RCB>
 }
 
-void New(): {} 
+void New(): {}
 {
     <NEW>AfterNew()
 }
 
-void AfterNew(): {} 
+void AfterNew(): {}
 {
     <INT><LSB>Expression()<RSB>
     |
@@ -228,9 +230,8 @@ void AfterNew(): {}
 
 void ExpressionTerminals(): {}
 {
-
-    /*<IDENTIFIERLITERAL>
-    |*/
+    <IDENTIFIERLITERAL>
+    |
     <TRUE>
     |
     <FALSE>
@@ -243,5 +244,5 @@ void ExpressionTerminals(): {}
     |
     <LCB>Expression()<RCB>
     |
-    <IDENTIFIER>{System.out.println("line 246");}
+    <IDENTIFIER>
 }
