@@ -1,4 +1,4 @@
-SRC = Program
+SRC = jmm
 
 TEST_FILE = helloworld
 
@@ -7,7 +7,7 @@ JJTREE_DEBUG := -track_tokens
 JJTREE_FLAGS := -output_directory=$(JJTREE_DIR)
 
 JAVACC_DIR := compiled
-JAVACC_DEBUG := -debug_parser -debug_lookahead -debug_token_manager
+JAVACC_DEBUG := -debug_parser #-debug_lookahead -debug_token_manager
 JAVACC_FLAGS := -output_directory=$(JAVACC_DIR)
 
 JAVAC_DIR := bin
@@ -34,4 +34,4 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -cp bin $(SRC) < helloworld
+	@java -cp bin $(SRC) < test_files/lexical_test.java

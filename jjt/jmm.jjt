@@ -4,24 +4,24 @@ options
  FORCE_LA_CHECK=true;
 }
 
-PARSER_BEGIN(Program)
+PARSER_BEGIN(jmm)
 
-public class Program
+public class jmm
 {
     public static void main(String args[]) throws ParseException {
-        Program myProg = new Program(System.in);
-        SimpleNode root = myProg.Program(); // devolve referência para o nó raiz da árvore
+        jmm myProg = new jmm(System.in);
+        SimpleNode root = myProg.Start(); // devolve referência para o nó raiz da árvore
         root.dump(""); // imprime no ecrã a árvore
     }
 }
-PARSER_END(Program)
+PARSER_END(jmm)
 
 SKIP : {
     " " | "\r" | "\t" | "\n"
 }
 
 TOKEN: {
-    <INTEGER: (["0" - "9"])+ >
+    <INTEGERLITERAL: (["0" - "9"])+ >
     |
     <PUBLIC: "public">
     |
@@ -96,12 +96,12 @@ TOKEN: {
     <POINT: ".">
 }
 
-SimpleNode Program(): {}
+SimpleNode Start(): {}
 {
     ClassDeclaration()<EOF> {return jjtThis;}
 }
 
-void ClassDeclaration(): {}
+void ClassDeclaration(): {} 
 {
     <CLASS> 
     <IDENTIFIER>
@@ -177,7 +177,7 @@ void Statement() : {}
     (Statement())*
     <RIGHTKEY>
     |
-    <IF>{System.out.println("line 180");}<LCB>Expression()<RCB>Statement()<ELSE>Statement()
+    <IF><LCB>Expression()<RCB>Statement()<ELSE>Statement()
     |
     <WHILE><LCB>Expression()<RCB>Statement()
     |
@@ -190,16 +190,16 @@ void Statement() : {}
 
 void Expression() : {}
 {
-    ExpressionTerminals(){System.out.println("line 193");}ExpressionL()
+    ExpressionTerminals()(ExpressionL())?
 }
 
-void ExpressionL(): {System.out.println("expressionL"); Token t;}
+void ExpressionL(): {}
 {
-    (t=(<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>)){Expression()
+    (<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>)Expression()
     |
-    (t=<LSB>)Expression()<RSB>
+    <LSB>Expression()<RSB>
     |
-    (t=Point())
+    Point()
 }
 
 void Point(): {}
@@ -228,9 +228,8 @@ void AfterNew(): {}
 
 void ExpressionTerminals(): {}
 {
-
-    /*<IDENTIFIERLITERAL>
-    |*/
+    <INTEGERLITERAL>
+    |
     <TRUE>
     |
     <FALSE>
@@ -243,5 +242,5 @@ void ExpressionTerminals(): {}
     |
     <LCB>Expression()<RCB>
     |
-    <IDENTIFIER>{System.out.println("line 246");}
+    <IDENTIFIER>
 }
