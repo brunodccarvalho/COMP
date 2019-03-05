@@ -1,68 +1,246 @@
 options
 {
- LOOKAHEAD=1;
+ IGNORE_CASE = true;
+ LOOKAHEAD=3;
+ FORCE_LA_CHECK=false;
 }
+
 PARSER_BEGIN(Program)
 public class Program
 {
  public static void main(String args[]) throws ParseException {
     Program myProg = new Program(System.in);
     SimpleNode root = myProg.Program(); // devolve referência para o nó raiz da árvore
-
     root.dump(""); // imprime no ecrã a árvore
  }
 }
 PARSER_END(Program)
 
+SKIP : {
+    " " | "\r" | "\t"
+}
 
-SKIP :
-{
-" " | "\r" | "\t"
+TOKEN: {
+    <INTEGER: (["0" - "9"])+ >
+    |
+    <PUBLIC: "public">
+    |
+    <STATIC: "static">
+    |
+    <VOID: "void">
+    |
+    <MAIN: "main">
+    |
+    <CLASS: "class">
+    |
+    <EXTENDS: "extends">
+    |
+    <INT: "int">
+    |
+    <BOOLEAN: "boolean">
+    |
+    <STRING: "String">
+    |
+    <RETURN: "return">
+    |
+    <IF: "if">
+    |
+    <ELSE: "else">
+    |
+    <WHILE: "while">
+    |
+    <NEW: "new">
+    |
+    <THIS: "this">
+    |
+    <TRUE: "true">
+    |
+    <FALSE: "false">
+    |
+    <LENGTH: "length">
+    |
+    <IDENTIFIER: ["A"-"Z","a"-"z", "$", "_"](["0"-"9","A"-"Z","a"-"z"])*>
+    |
+    <LEFTKEY: "{">
+    |
+    <RIGHTKEY: "}">
+    |
+    <LSB: "[">  // Left Square Bracket
+    |
+    <RSB: "]">  // Right Square Bracket
+    |
+    <COMMA: ",">
+    |
+    <SEMICOLON: ";">
+    |
+    <LCB: "(">  // Left Curved Bracket
+    |
+    <RCB: ")">  // Right Curved Bracket
+    |
+    <EQUAL: "=">
+    |
+    <AND: "&&">
+    |
+    <LT: "<">
+    |
+    <SUM: "+">
+    |
+    <SUB: "-">
+    |
+    <MUL: "*">
+    |
+    <DIV: "/">
+    |
+    <EXC: "!">
+    |
+    <POINT: ".">
 }
-TOKEN:
-{
- < INTEGER: (["0"-"9"])+ >
-| < LF: "\n" >
-| < IDENTIFIER: (["a"-"z","A"-"Z"])(["a"-"z","A"-"Z"])*>
-| < SEMICOLON: ";">
-}
+
 SimpleNode Program(): {}
 {
-    ClassDeclaration() <LF> {return jjtThis;}
+    ClassDeclaration()<EOF> {return jjtThis;}
 }
 
 void ClassDeclaration(): {}
 {
-    ("class ") <IDENTIFIER> [("extends ") <IDENTIFIER>]
-    "{" <IDENTIFIER> "}"
+    <CLASS> 
+    <IDENTIFIER>
+    (<EXTENDS><IDENTIFIER>)?
+    <LEFTKEY>
+    (VarDeclaration())*
+    (Declaration())*
+    <RIGHTKEY>
+}
+
+void Declaration(): {}
+{
+    <PUBLIC>(MainDeclaration() | MethodDeclaration())
 }
 
 void VarDeclaration(): {}
 {
-    <INTEGER>  
-}
+    Type()<IDENTIFIER><INTEGER>
+}   
 
 void MainDeclaration(): {}
 {
-    <INTEGER>  
+    <STATIC>
+    <VOID>
+    <MAIN>
+    <LCB>
+    <STRING>
+    <LSB>
+    <RSB>
+    <IDENTIFIER>
+    <RCB>
+    <LEFTKEY>
+    (VarDeclaration())*
+    (Statement())*
+    <RIGHTKEY>
 }
 
 void MethodDeclaration(): {}
 {
-    <INTEGER>  
+    <PUBLIC>
+    Type()
+    <IDENTIFIER>
+    <LCB>
+    (Type()<IDENTIFIER>(<COMMA>Type()<IDENTIFIER>)*)?   
+    <RCB>
+    <LEFTKEY>
+    (VarDeclaration())*
+    (Statement())*
+    <RETURN>
+    Expression()
+    <SEMICOLON>
+    <RIGHTKEY>
 }
 
 void Type(): {}
 {
-    <INTEGER>  
+    Int()
+    |
+    <BOOLEAN>
+    |
+    <IDENTIFIER>
+}
+
+void Int(): {}
+{
+    <INT>(<LSB><RSB>)?
 }
 
 void Statement() : {}
 {
-    <INTEGER>  
+    <LEFTKEY>
+    (Statement())*
+    <RIGHTKEY>
+    |
+    <IF><LCB>Expression()<RCB>Statement()<ELSE>Statement()
+    |
+    <WHILE><LCB>Expression()<RCB>Statement()
+    |
+    Expression()<SEMICOLON>
+    |
+    <IDENTIFIER><EQUAL>Expression()<SEMICOLON>
+    |
+    <IDENTIFIER><LSB>Expression()<RSB><EQUAL>Expression()<SEMICOLON>
 }
 
 void Expression() : {}
 {
-    <INTEGER>  
+    ExpressionTerminals() (ExpressionL())?
+}
+
+void ExpressionL(): {}
+{
+    (<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>) Expression()
+    |
+    <LSB>Expression()<RSB>
+    |
+    Point()
+}
+
+void Point(): {}
+{
+    <POINT>AfterPoint()
+}
+
+void AfterPoint(): {}
+{
+    <LENGTH>
+    |
+    <IDENTIFIER><LCB>(Expression() (<COMMA>Expression())*)<RCB>
+}
+
+void New(): {} 
+{
+    <NEW>AfterNew()
+}
+
+void AfterNew(): {} 
+{
+    <INT><LSB>Expression()<RSB>
+    |
+    <IDENTIFIER><LCB><RCB>
+}
+
+void ExpressionTerminals(): {}
+{
+
+    /*<IDENTIFIERLITERAL>
+    |*/
+    <TRUE>
+    |
+    <FALSE>
+    |
+    <IDENTIFIER>
+    |
+    <THIS>
+    |
+    New()
+    |
+    <EXC>Expression()
+    |
+    <LCB>Expression()<RCB>
 }
