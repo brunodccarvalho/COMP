@@ -2,7 +2,7 @@ options
 {
  IGNORE_CASE = true;
  LOOKAHEAD=3;
- FORCE_LA_CHECK=false;
+ FORCE_LA_CHECK=true;
 }
 
 PARSER_BEGIN(Program)
