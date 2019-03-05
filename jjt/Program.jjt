@@ -1,23 +1,23 @@
 options
 {
- IGNORE_CASE = true;
  LOOKAHEAD=3;
- FORCE_LA_CHECK=false;
+ FORCE_LA_CHECK=true;
 }
 
 PARSER_BEGIN(Program)
+
 public class Program
 {
- public static void main(String args[]) throws ParseException {
-    Program myProg = new Program(System.in);
-    SimpleNode root = myProg.Program(); // devolve referência para o nó raiz da árvore
-    root.dump(""); // imprime no ecrã a árvore
- }
+    public static void main(String args[]) throws ParseException {
+        Program myProg = new Program(System.in);
+        SimpleNode root = myProg.Program(); // devolve referência para o nó raiz da árvore
+        root.dump(""); // imprime no ecrã a árvore
+    }
 }
 PARSER_END(Program)
 
 SKIP : {
-    " " | "\r" | "\t"
+    " " | "\r" | "\t" | "\n"
 }
 
 TOKEN: {
@@ -59,7 +59,7 @@ TOKEN: {
     |
     <LENGTH: "length">
     |
-    <IDENTIFIER: ["A"-"Z","a"-"z", "$", "_"](["0"-"9","A"-"Z","a"-"z"])*>
+    <IDENTIFIER: ["A"-"Z","a"-"z","$","_"](["0"-"9","A"-"Z","a"-"z","_","$"])*>
     |
     <LEFTKEY: "{">
     |
@@ -119,7 +119,9 @@ void Declaration(): {}
 
 void VarDeclaration(): {}
 {
-    Type()<IDENTIFIER><INTEGER>
+    Type()
+    <IDENTIFIER>
+    <SEMICOLON>
 }   
 
 void MainDeclaration(): {}
@@ -141,7 +143,6 @@ void MainDeclaration(): {}
 
 void MethodDeclaration(): {}
 {
-    <PUBLIC>
     Type()
     <IDENTIFIER>
     <LCB>
@@ -176,7 +177,7 @@ void Statement() : {}
     (Statement())*
     <RIGHTKEY>
     |
-    <IF><LCB>Expression()<RCB>Statement()<ELSE>Statement()
+    <IF>{System.out.println("line 180");}<LCB>Expression()<RCB>Statement()<ELSE>Statement()
     |
     <WHILE><LCB>Expression()<RCB>Statement()
     |
@@ -189,16 +190,16 @@ void Statement() : {}
 
 void Expression() : {}
 {
-    ExpressionTerminals() (ExpressionL())?
+    ExpressionTerminals(){System.out.println("line 193");}ExpressionL()
 }
 
-void ExpressionL(): {}
+void ExpressionL(): {System.out.println("expressionL"); Token t;}
 {
-    (<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>) Expression()
+    (t=(<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>)){Expression()
     |
-    <LSB>Expression()<RSB>
+    (t=<LSB>)Expression()<RSB>
     |
-    Point()
+    (t=Point())
 }
 
 void Point(): {}
@@ -234,8 +235,6 @@ void ExpressionTerminals(): {}
     |
     <FALSE>
     |
-    <IDENTIFIER>
-    |
     <THIS>
     |
     New()
@@ -243,4 +242,6 @@ void ExpressionTerminals(): {}
     <EXC>Expression()
     |
     <LCB>Expression()<RCB>
+    |
+    <IDENTIFIER>{System.out.println("line 246");}
 }

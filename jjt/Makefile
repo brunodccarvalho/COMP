@@ -1,9 +1,9 @@
 SRC = Program
 
 jjtree:
-	jjtree jjt/$(SRC).jjt 
+	jjtree $(SRC).jjt 
 	javacc $(SRC).jj
-	javac $(SRC).java
+	javac *.java
 
 compile:
 	javacc $(SRC).jj
