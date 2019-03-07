@@ -152,17 +152,27 @@ void MainDeclaration(): {}
 void MethodDeclaration(): {}
 {
     <PUBLIC>
-    Type()
-    <IDENTIFIER>
+    Type()                #MethodReturnType
+    <IDENTIFIER>          #MethodName
     <LCB>
-    ParameterList()   
+    ParameterList()       #MethodParameterList
     <RCB>
     <LEFTKEY>
-    (VarThenStatement())?
+    (VarThenStatement())? #MethodBody
     <RETURN>
     Expression()
     <SEMICOLON>
     <RIGHTKEY>
+}
+
+void MainBody(): {}
+{
+    (VarThenStatement())?
+}
+
+void MethodBody(): {}
+{
+    (VarThenStatement())?
 }
 
 void Parameter(): {}
