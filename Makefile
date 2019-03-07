@@ -1,4 +1,4 @@
-SRC = jmm
+SRC = jmm2
 
 TEST_FILE = helloworld
 
@@ -17,8 +17,8 @@ JAVAC_FLAGS := -d $(JAVAC_DIR) --source-path $(JAVACC_DIR)
 all: mkdir
 	jjtree $(JJTREE_FLAGS) jjt/$(SRC).jjt
 	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(SRC).jj
-	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(SRC).java
-	cp $(JAVAC_DIR)/$(SRC).class .
+	##javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(SRC).java
+	##cp $(JAVAC_DIR)/$(SRC).class .
 
 debug: mkdir
 	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jjt/$(SRC).jjt
@@ -33,5 +33,5 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -classpath bin jmm test_files/lexical_test.java  
+	@java -classpath bin $(SRC) test_files/test.java  
 

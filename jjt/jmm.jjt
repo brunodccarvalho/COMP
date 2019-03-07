@@ -1,6 +1,6 @@
 options
 {
- LOOKAHEAD=3;
+ LOOKAHEAD=1;
  FORCE_LA_CHECK=true;
 }
 
@@ -114,7 +114,7 @@ void ClassDeclaration(): {}
     <RIGHTKEY>
 }
 
-void Declaration(): {}
+void Declaration() #void:  {}
 {
     <PUBLIC>(MainDeclaration() | MethodDeclaration())
 }
@@ -243,6 +243,4 @@ void ExpressionTerminals(): {}
     <EXC>Expression()
     |
     <LCB>Expression()<RCB>
-    |
-    <IDENTIFIER>
 }
