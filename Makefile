@@ -33,4 +33,5 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -cp bin $(SRC) < test_files/lexical_test.java
+	@java -classpath bin jmm test_files/lexical_test.java  
+

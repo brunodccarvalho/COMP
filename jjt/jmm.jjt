@@ -5,11 +5,13 @@ options
 }
 
 PARSER_BEGIN(jmm)
+import java.io.*; 
 
 public class jmm
 {
-    public static void main(String args[]) throws ParseException {
-        jmm myProg = new jmm(System.in);
+    public static void main(String args[]) throws ParseException,Exception {
+        FileReader fr = new FileReader(args[0]);
+        jmm myProg = new jmm(fr);
         SimpleNode root = myProg.Start(); // devolve referência para o nó raiz da árvore
         root.dump(""); // imprime no ecrã a árvore
     }
