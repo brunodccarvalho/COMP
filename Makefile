@@ -1,13 +1,12 @@
-SRC = jmm2
-
-TEST_FILE = helloworld
+SRC = jmm
+TEST_FILE = Factorial
 
 JJTREE_DIR := compiled
 JJTREE_DEBUG := #-track_tokens
 JJTREE_FLAGS := -output_directory=$(JJTREE_DIR)
 
 JAVACC_DIR := compiled
-JAVACC_DEBUG := -debug_lookahead #-debug_token_manager
+JAVACC_DEBUG := -debug_lookahead -debug_token_manager
 JAVACC_FLAGS := -debug_parser -output_directory=$(JAVACC_DIR)
 
 JAVAC_DIR := bin
@@ -17,8 +16,8 @@ JAVAC_FLAGS := -d $(JAVAC_DIR) --source-path $(JAVACC_DIR)
 all: mkdir
 	jjtree $(JJTREE_FLAGS) jjt/$(SRC).jjt
 	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(SRC).jj
-	##javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(SRC).java
-	##cp $(JAVAC_DIR)/$(SRC).class .
+	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(SRC).java
+	cp $(JAVAC_DIR)/$(SRC).class .
 
 debug: mkdir
 	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jjt/$(SRC).jjt
@@ -33,5 +32,4 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -classpath bin $(SRC) test_files/test.java  
-
+	@java -classpath bin $(SRC) test_files/$(TEST_FILE).java

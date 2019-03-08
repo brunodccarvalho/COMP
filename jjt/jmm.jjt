@@ -5,7 +5,7 @@ options
 }
 
 PARSER_BEGIN(jmm)
-import java.io.*; 
+import java.io.*;
 
 public class jmm
 {
@@ -23,25 +23,14 @@ SKIP : {
 }
 
 TOKEN: {
-    <INTEGERLITERAL: (((["+","-"])?(["0"-"9"])+)|("0x"(["0"-"9","a"-"f","A"-"F"])+)|("0b"(["0","1"])+))>
-    |
+    // Keywords
     <PUBLIC: "public">
     |
     <STATIC: "static">
     |
-    <VOID: "void">
-    |
-    <MAIN: "main">
-    |
     <CLASS: "class">
     |
     <EXTENDS: "extends">
-    |
-    <INT: "int">
-    |
-    <BOOLEAN: "boolean">
-    |
-    <STRING: "String">
     |
     <RETURN: "return">
     |
@@ -59,29 +48,21 @@ TOKEN: {
     |
     <FALSE: "false">
     |
-    <LENGTH: "length">
+    // Builtin types
+    <VOID: "void">
     |
-    <IDENTIFIER: ["A"-"Z","a"-"z","$","_"](["0"-"9","A"-"Z","a"-"z","_","$"])*>
+    <INT: "int">
     |
-    <LEFTKEY: "{">
+    <BOOLEAN: "boolean">
     |
-    <RIGHTKEY: "}">
-    |
-    <LSB: "[">  // Left Square Bracket
-    |
-    <RSB: "]">  // Right Square Bracket
-    |
+    // Operators
     <COMMA: ",">
     |
     <SEMICOLON: ";">
     |
-    <LCB: "(">  // Left Curved Bracket
-    |
-    <RCB: ")">  // Right Curved Bracket
-    |
     <EQUAL: "=">
     |
-    <AND: "&&">
+    <AND: "&">
     |
     <LT: "<">
     |
@@ -93,156 +74,354 @@ TOKEN: {
     |
     <DIV: "/">
     |
-    <EXC: "!">
+    <NOT: "!">
     |
     <POINT: ".">
+    |
+    // Special strings
+    <MAIN: "main">
+    |
+    <STRING: "String">
+    |
+    <LENGTH: "length">
+    |
+    // Brackets
+    <LEFTKEY: "{">
+    |
+    <RIGHTKEY: "}">
+    |
+    <LSB: "[">  // Left Square Bracket
+    |
+    <RSB: "]">  // Right Square Bracket
+    |
+    <LCB: "(">  // Left Curved Bracket
+    |
+    <RCB: ")">  // Right Curved Bracket
+    |
+    // Integer Literal (decimal | hexadecimal | binary)
+    <INTEGERLITERAL: (((["+","-"])?(["0"-"9"])+)|("0x"(["0"-"9","a"-"f","A"-"F"])+)|("0b"(["0","1"])+))>
+    |
+    // Identifier
+    <IDENTIFIER: ["A"-"Z","a"-"z","$","_"](["0"-"9","A"-"Z","a"-"z","_","$"])*>
 }
 
-SimpleNode Start(): {}
+// *** Class
+SimpleNode Start() : {}
 {
-    ClassDeclaration()<EOF> {return jjtThis;}
+    ClassDeclaration()
+    <EOF>
+    {return jjtThis;}
 }
 
-void ClassDeclaration(): {} 
+void ClassDeclaration(): {}
 {
-    <CLASS> 
+    <CLASS>
     <IDENTIFIER>
     (<EXTENDS><IDENTIFIER>)?
     <LEFTKEY>
-    (VarDeclaration())*
-    (Declaration())*
+    (ClassVarDeclaration())*
+    (ClassMethodDeclaration())*
     <RIGHTKEY>
 }
 
-void Declaration() #void:  {}
-{
-    <PUBLIC>(MainDeclaration() | MethodDeclaration())
-}
-
-void VarDeclaration(): {}
+void ClassVarDeclaration() : {}
 {
     Type()
     <IDENTIFIER>
     <SEMICOLON>
-}   
+}
 
+void ClassMethodDeclaration(): {}
+{
+    <PUBLIC>
+    (MainDeclaration() | MethodDeclaration())
+}
+
+// *** Methods Declarations
 void MainDeclaration(): {}
 {
     <STATIC>
     <VOID>
     <MAIN>
     <LCB>
-    <STRING>
-    <LSB>
-    <RSB>
-    <IDENTIFIER>
+    MainParameterList()
     <RCB>
     <LEFTKEY>
-    (VarDeclaration())*
-    (Statement())*
+    MethodBody()    // * Found a slight problem with using ? here
     <RIGHTKEY>
 }
 
 void MethodDeclaration(): {}
 {
-    Type()
-    <IDENTIFIER>
+    Type()                #MethodReturnType
+    <IDENTIFIER>          #MethodName
     <LCB>
-    (Type()<IDENTIFIER>(<COMMA>Type()<IDENTIFIER>)*)?   
+    ParameterList()       #MethodParameterList
     <RCB>
     <LEFTKEY>
-    (VarDeclaration())*
-    (Statement())*
+    MethodBody()    // * Found a slight problem with using ? here
     <RETURN>
-    Expression()
+    Expression()          #ReturnExpression
     <SEMICOLON>
     <RIGHTKEY>
 }
 
-void Type(): {}
+// *** Parameters
+void Parameter(): {}
 {
-    Int()
+    Type()                #ParameterType
+    <IDENTIFIER>          #ParameterName
+}
+
+void ParameterList(): {}
+{
+    (Parameter() (<COMMA> Parameter())*)?
+}
+
+void MainParameterList(): {}
+{
+    <STRING> <LSB> <RSB> <IDENTIFIER>
+}
+
+// *** Types
+void PrimitiveType(): {}
+{
+    IntType()
     |
     <BOOLEAN>
-    |
+}
+
+void ClassType(): {}
+{
     <IDENTIFIER>
 }
 
-void Int(): {}
+void IntType(): {}
 {
-    <INT>(<LSB><RSB>)?
+    <INT> (<LSB> <RSB>)?
 }
 
-void Statement() : {}
+void Type(): {}
 {
-    <LEFTKEY>
-    (Statement())*
-    <RIGHTKEY>
-    |
-    <IF><LCB>Expression()<RCB>Statement()<ELSE>Statement()
-    |
-    <WHILE><LCB>Expression()<RCB>Statement()
-    |
-    Expression()<SEMICOLON>
-    |
-    <IDENTIFIER><EQUAL>Expression()<SEMICOLON>
-    |
-    <IDENTIFIER><LSB>Expression()<RSB><EQUAL>Expression()<SEMICOLON>
+    PrimitiveType() | ClassType()
 }
 
-v
-
-void Expression() : {}
+// *** Method Body (previous VarThenStatement)
+void MethodBody(): {}
 {
-    ExpressionTerminals()(ExpressionL())?
-}
-
-void ExpressionL(): {}
-{
-    (<AND>|<LT>|<SUM>|<SUB>|<MUL>|<DIV>)Expression()
+    PrimitiveType() VarName() MethodBody()
+    // [int, boolean] Declaration of a variable of primitive type, then self-recurse
     |
-    <LSB>Expression()<RSB>
+    <IDENTIFIER> AssignmentOrDeclaration()
+    // [identifier] Starting with an identifier, then self-recurse or more statements
     |
-    Point()
+    (NonIdentifierStatement() (Statement())*)?
+    // [anything else] Block or literal statement, followed by more statements
 }
 
-void Point(): {}
+void VarName(): {}
 {
-    <POINT>AfterPoint()
+    <IDENTIFIER> <SEMICOLON>
 }
 
-void AfterPoint(): {}
+void AssignmentOrDeclaration(): {}
+{
+    VarName() MethodBody() // Declaration
+    |
+    IdentifierStatementTail() (Statement())* // Assignment
+}
+
+void Assignment(): {}
+{
+    (ArrayAccess())? AssignedValue()
+}
+
+void AssignedValue(): {}
+{
+    <EQUAL> Expression()
+}
+
+// Access an array: [...]
+void ArrayAccess(): {}
+{
+    <LSB> Expression() <RSB>
+}
+
+// *** Statements
+void Statement(): {}
+{
+    BlockStatement()
+    |
+    LineStatement()
+}
+
+void BlockStatement(): {}
+{
+    BracedBlockStatement()
+    |
+    IfStatement()
+    |
+    WhileStatement()
+}
+
+void LineStatement(): {}
+{
+    LiteralStatement() // ! QUESTIONABLE doesn't do anything, just reads
+    |
+    IdentifierStatement()
+}
+
+void LiteralStatement(): {}
+{
+    LiteralExpression() <SEMICOLON>
+}
+
+void IdentifierStatement(): {}
+{
+    <IDENTIFIER> IdentifierStatementTail()
+}
+
+void IdentifierStatementTail(): {}
+{
+    (ArrayAccess())? (AssignedValue())? <SEMICOLON>
+    |
+    MemberAccess() (ExpressionTail())? <SEMICOLON>
+    |
+    ExpressionTail() <SEMICOLON>
+}
+
+void NonIdentifierStatement(): {}
+{
+    BracedBlockStatement()
+    |
+    IfStatement()
+    |
+    WhileStatement()
+    |
+    LiteralStatement()
+}
+
+// *** Expressions
+void Expression(): {}
+{
+    Term() (ExpressionTail())?
+}
+
+void LiteralExpression(): {}
+{
+    LiteralTerm() (ExpressionTail())?
+}
+
+void IdentifierExpression(): {}
+{
+    IdentifierTerm() (ExpressionTail())?
+}
+
+void ExpressionTail(): {}
+{
+    (ExpressionOperator() Term())+
+}
+
+void ExpressionOperator(): {}
+{
+    <AND> | <LT> | <SUM> | <SUB> | <MUL> | <DIV>
+}
+
+// *** Term
+void Term(): {}
+{
+    LiteralTerm()
+    |
+    IdentifierTerm()
+}
+
+void LiteralTerm(): {}
+{
+    <INTEGERLITERAL> (TermTail())* // ! COMPILER-INCORRECT WITH TAIL
+    |
+    <TRUE> (TermTail())* // ! COMPILER-INCORRECT WITH TAIL
+    |
+    <FALSE> (TermTail())* // ! COMPILER-INCORRECT WITH TAIL
+    |
+    <THIS> (TermTail())*
+    |
+    <NEW> NewTerm() (TermTail())*
+    |
+    <NOT> Term()
+    |
+    <LCB> Expression() <RCB> (TermTail())*
+}
+
+void NewTerm(): {}
+{
+    <INT> <LSB> Expression() <RSB>
+    |
+    <IDENTIFIER> <LCB> <RCB>
+}
+
+void IdentifierTerm(): {}
+{
+    <IDENTIFIER> (TermTail())*
+}
+
+void TermTail(): {}
+{
+    ArrayAccess()
+    |
+    MemberAccess()
+}
+
+void MemberAccess(): {}
+{
+    <POINT> MemberField()
+}
+
+void MemberField(): {}
 {
     <LENGTH>
     |
-    <IDENTIFIER><LCB>(Expression() (<COMMA>Expression())*)<RCB>
+    MethodCall()
 }
 
-void New(): {} 
+void MethodCall(): {}
 {
-    <NEW>AfterNew()
+    <IDENTIFIER> <LCB> ArgumentList() <RCB>
 }
 
-void AfterNew(): {} 
+// An argument for any function call
+void Argument(): {}
 {
-    <INT><LSB>Expression()<RSB>
-    |
-    <IDENTIFIER><LCB><RCB>
+    Expression()
 }
 
-void ExpressionTerminals(): {}
+// A list of arguments for any function call
+void ArgumentList(): {}
 {
-    <INTEGERLITERAL>
-    |
-    <TRUE>
-    |
-    <FALSE>
-    |
-    <THIS>
-    |
-    New()
-    |
-    <EXC>Expression()
-    |
-    <LCB>Expression()<RCB>
+    (Argument() (<COMMA> Argument())*)?
+}
+
+// Aceita: (1 + 2)[3]
+// Aceita: true.length
+// Aceita: 1;
+// Não aceita: Call methods of same class, e.g:
+//             find();
+
+
+
+// Braced statement:  { ... }
+void BracedBlockStatement(): {}
+{
+    <LEFTKEY> (Statement())* <RIGHTKEY>
+}
+
+// If statement:  if (condition) ...
+void IfStatement(): {}
+{
+    <IF> <LCB> Expression() <RCB> Statement() <ELSE> Statement()
+}
+
+// While statement:  while (condition) ...
+void WhileStatement(): {}
+{
+    <WHILE> <LCB> Expression() <RCB> Statement()
 }

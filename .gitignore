@@ -1,4 +1,6 @@
 bin
 compiled
-*.class
-*.java
+/*.java
+/*.class
+.vscode
+.clang-format
