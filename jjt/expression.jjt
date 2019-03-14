@@ -105,11 +105,11 @@ TOKEN: {
 
 SimpleNode Start(): {}
 {
-    Expression() {return jjtThis;}
+    (Expression())* {return jjtThis;}
 }
 
 // *** Expression
-void Expression() : {}
+void Expression() #void : {}
 {
     Term1() (Op1())*
 }
@@ -131,11 +131,19 @@ void Term3() #void : {}
 
 void Term4() #void : {}
 {
-    <INTEGERLITERAL> #Integer
+    (<INTEGERLITERAL> #Integer) (TermTail())*
     |
-    <IDENTIFIER> #Variable
+    (<IDENTIFIER> #Variable) (TermTail())*
     |
-    <LCB> Expression() <RCB>
+    (<TRUE> #True) (TermTail())*
+    |
+    (<FALSE> #False) (TermTail())*
+    |
+    (<THIS> #This) (TermTail())*
+    |
+    (<LCB> Expression() <RCB>) (TermTail())*
+    |
+    <NOT> Term4() #NOT(1)
 }
 
 void Op1() #void : {}
@@ -160,4 +168,58 @@ void Op4() #void : {}
     <MUL> Term4() #MUL(2)
     |
     <DIV> Term4() #DIV(2)
+}
+
+void LiteralTerm() #void : {}
+{
+    LiteralTerm4() (Op4())* (Op3())* (Op2())* (Op1())*
+}
+
+void IdentifierTerm() #void : {}
+{
+    IdentifierTerm4() (Op4())* (Op3())* (Op2())* (Op1())*
+}
+
+void LiteralTerm4() #void : {}
+{
+    (<INTEGERLITERAL> #Integer) (TermTail())*
+    |
+    (<TRUE> #True) (TermTail())*
+    |
+    (<FALSE> #False) (TermTail())*
+    |
+    (<THIS> #This) (TermTail())*
+    |
+    (<LCB> Expression() <RCB>) (TermTail())*
+    |
+    <NOT> Term4() #NOT(1)
+}
+
+void IdentifierTerm4() #void : {}
+{
+    (<IDENTIFIER> #Variable) (TermTail())*
+}
+
+void TermTail() #void : {}
+{
+    ArrayAccess()
+    |
+    <POINT> ObjectAccess()
+}
+
+void ArrayAccess() #void : {}
+{
+    <LSB> Expression() <RSB> #Bracket(2)
+}
+
+void ObjectAccess() #void : {}
+{
+    <LENGTH> #Length(1)
+    |
+    <IDENTIFIER> #Method ArgList() #Call(3)
+}
+
+void ArgList() : {}
+{
+    <LCB> (Expression() (<COMMA> Expression())*)? <RCB>
 }
