@@ -1,0 +1,163 @@
+options {
+LOOKAHEAD = 1;
+FORCE_LA_CHECK = true;
+}
+
+PARSER_BEGIN(expression)
+import java.io.*;
+
+public class expression {
+    public static void main(String args[]) throws ParseException, Exception {
+        FileReader fr = new FileReader(args[0]);
+        expression myProg = new expression(fr);
+        SimpleNode root = myProg.Start();
+        root.dump("");
+    }
+}
+PARSER_END(expression)
+
+SKIP : {
+    " " | "\r" | "\t" | "\n"
+}
+
+TOKEN: {
+    // Keywords
+    <PUBLIC: "public">
+    |
+    <STATIC: "static">
+    |
+    <CLASS: "class">
+    |
+    <EXTENDS: "extends">
+    |
+    <RETURN: "return">
+    |
+    <IF: "if">
+    |
+    <ELSE: "else">
+    |
+    <WHILE: "while">
+    |
+    <NEW: "new">
+    |
+    <THIS: "this">
+    |
+    <TRUE: "true">
+    |
+    <FALSE: "false">
+    |
+    // Builtin types
+    <VOID: "void">
+    |
+    <INT: "int">
+    |
+    <BOOLEAN: "boolean">
+    |
+    // Operators
+    <COMMA: ",">
+    |
+    <SEMICOLON: ";">
+    |
+    <EQUAL: "=">
+    |
+    <AND: "&&">
+    |
+    <LT: "<">
+    |
+    <SUM: "+">
+    |
+    <SUB: "-">
+    |
+    <MUL: "*">
+    |
+    <DIV: "/">
+    |
+    <NOT: "!">
+    |
+    <POINT: ".">
+    |
+    // Special strings
+    <MAIN: "main">
+    |
+    <STRING: "String">
+    |
+    <LENGTH: "length">
+    |
+    // Brackets
+    <LEFTKEY: "{">
+    |
+    <RIGHTKEY: "}">
+    |
+    <LSB: "[">  // Left Square Bracket
+    |
+    <RSB: "]">  // Right Square Bracket
+    |
+    <LCB: "(">  // Left Curved Bracket
+    |
+    <RCB: ")">  // Right Curved Bracket
+    |
+    // Integer Literal (decimal | hexadecimal | binary)
+    <INTEGERLITERAL: (((["+","-"])?(["0"-"9"])+)|("0x"(["0"-"9","a"-"f","A"-"F"])+)|("0b"(["0","1"])+))>
+    |
+    // Identifier
+    <IDENTIFIER: ["A"-"Z","a"-"z","$","_"](["0"-"9","A"-"Z","a"-"z","_","$"])*>
+}
+
+SimpleNode Start(): {}
+{
+    Expression() {return jjtThis;}
+}
+
+// *** Expression
+void Expression() : {}
+{
+    Term1() (Op1())*
+}
+
+void Term1() #void : {}
+{
+    Term2() (Op2())*
+}
+
+void Term2() #void : {}
+{
+    Term3() (Op3())*
+}
+
+void Term3() #void : {}
+{
+    Term4() (Op4())*
+}
+
+void Term4() #void : {}
+{
+    <INTEGERLITERAL> #Integer
+    |
+    <IDENTIFIER> #Variable
+    |
+    <LCB> Expression() <RCB>
+}
+
+void Op1() #void : {}
+{
+    <AND> Term1() #AND(2)
+}
+
+void Op2() #void : {}
+{
+    <LT> Term2() #LT(2)
+}
+
+void Op3() #void : {}
+{
+    <SUM> Term3() #SUM(2)
+    |
+    <SUB> Term3() #SUB(2)
+}
+
+void Op4() #void : {}
+{
+    <MUL> Term4() #MUL(2)
+    |
+    <DIV> Term4() #DIV(2)
+}

@@ -1,13 +1,13 @@
-SRC = jmm
-TEST_FILE = Factorial
+SRC = expression
+TEST_FILE = Expression.txt
 
 JJTREE_DIR := compiled
-JJTREE_DEBUG := #-track_tokens
+JJTREE_DEBUG :=
 JJTREE_FLAGS := -output_directory=$(JJTREE_DIR)
 
 JAVACC_DIR := compiled
-JAVACC_DEBUG := -debug_lookahead -debug_token_manager
-JAVACC_FLAGS := -debug_parser -output_directory=$(JAVACC_DIR)
+JAVACC_DEBUG := -debug_parser -debug_lookahead
+JAVACC_FLAGS := -output_directory=$(JAVACC_DIR)
 
 JAVAC_DIR := bin
 JAVAC_DEBUG := -g
@@ -32,4 +32,4 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -classpath bin $(SRC) test_files/$(TEST_FILE).java
+	@java -classpath bin $(SRC) test_files/$(TEST_FILE)

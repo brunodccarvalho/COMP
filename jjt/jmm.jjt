@@ -153,7 +153,7 @@ void ClassMethodDeclaration(): {}
 }
 
 // *** Methods Declarations
-void MainDeclaration(): {}
+void MainDeclaration() #void: {}
 {
     <STATIC>
     <VOID>
@@ -300,9 +300,9 @@ void IdentifierStatementTail(): {}
 {
     (Assignment())? <SEMICOLON>
     |
-    MemberAccess() (ExpressionTail())? <SEMICOLON>
+    MemberAccess() (ExpressionTail())* <SEMICOLON>
     |
-    ExpressionTail() <SEMICOLON>
+    (ExpressionTail())+ <SEMICOLON>
 }
 
 void NonIdentifierStatement(): {}
@@ -319,31 +319,41 @@ void NonIdentifierStatement(): {}
 // *** Expressions
 void Expression(): {}
 {
-    Term() (ExpressionTail())?
+    Term() (ExpressionTail())*
 }
 
 void LiteralExpression(): {}
 {
-    LiteralTerm() (ExpressionTail())?
+    LiteralTerm() (ExpressionTail())*
 }
 
 void IdentifierExpression(): {}
 {
-    IdentifierTerm() (ExpressionTail())?
+    IdentifierTerm() (ExpressionTail())*
 }
 
-void ExpressionTail(): {}
+void ExpressionTail() #void: {}
 {
-    (ExpressionOperator() Term())+
+    ExpressionOperator() Term()
 }
 
-void ExpressionOperator(): {}
+void ExpressionOperator() #void: {}
 {
-    <AND> | <LT> | <SUM> | <SUB> | <MUL> | <DIV>
+    <AND> #And
+    |
+    <LT> #Lt
+    |
+    <SUM> #Sum
+    |
+    <SUB> #Sub
+    |
+    <MUL> #Mul
+    |
+    <DIV> #Div
 }
 
 // *** Term
-void Term(): {}
+void Term() #void: {}
 {
     LiteralTerm()
     |
