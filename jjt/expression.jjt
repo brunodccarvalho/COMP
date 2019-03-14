@@ -105,13 +105,24 @@ TOKEN: {
 
 SimpleNode Start(): {}
 {
-    (Expression())* {return jjtThis;}
+    (LiteralExpression() <SEMICOLON> #Expression(1))+
+    {return jjtThis;}
 }
 
 // *** Expression
 void Expression() #void : {}
 {
     Term1() (Op1())*
+}
+
+void LiteralExpression() #void : {}
+{
+    LiteralTerm4() (Op4())* (Op3())* (Op2())* (Op1())*
+}
+
+void IdentifierExpression() #void : {}
+{
+    IdentifierTerm4() (Op4())* (Op3())* (Op2())* (Op1())*
 }
 
 void Term1() #void : {}
@@ -143,6 +154,8 @@ void Term4() #void : {}
     |
     (<LCB> Expression() <RCB>) (TermTail())*
     |
+    <NEW> NewTerm()
+    |
     <NOT> Term4() #NOT(1)
 }
 
@@ -170,36 +183,6 @@ void Op4() #void : {}
     <DIV> Term4() #DIV(2)
 }
 
-void LiteralTerm() #void : {}
-{
-    LiteralTerm4() (Op4())* (Op3())* (Op2())* (Op1())*
-}
-
-void IdentifierTerm() #void : {}
-{
-    IdentifierTerm4() (Op4())* (Op3())* (Op2())* (Op1())*
-}
-
-void LiteralTerm4() #void : {}
-{
-    (<INTEGERLITERAL> #Integer) (TermTail())*
-    |
-    (<TRUE> #True) (TermTail())*
-    |
-    (<FALSE> #False) (TermTail())*
-    |
-    (<THIS> #This) (TermTail())*
-    |
-    (<LCB> Expression() <RCB>) (TermTail())*
-    |
-    <NOT> Term4() #NOT(1)
-}
-
-void IdentifierTerm4() #void : {}
-{
-    (<IDENTIFIER> #Variable) (TermTail())*
-}
-
 void TermTail() #void : {}
 {
     ArrayAccess()
@@ -216,10 +199,39 @@ void ObjectAccess() #void : {}
 {
     <LENGTH> #Length(1)
     |
-    <IDENTIFIER> #Method ArgList() #Call(3)
+    <IDENTIFIER> #Method ArgumentList() #Call(3)
 }
 
-void ArgList() : {}
+void ArgumentList() : {}
 {
     <LCB> (Expression() (<COMMA> Expression())*)? <RCB>
+}
+
+void NewTerm() #void : {}
+{
+    <INT> <LSB> Expression() <RSB> #NewIntArray(1)
+    |
+    <IDENTIFIER> #Class <LCB> <RCB> #NewClass(1)
+}
+
+void LiteralTerm4() #void : {}
+{
+    (<INTEGERLITERAL> #Integer) (TermTail())*
+    |
+    (<TRUE> #True) (TermTail())*
+    |
+    (<FALSE> #False) (TermTail())*
+    |
+    (<THIS> #This) (TermTail())*
+    |
+    (<LCB> Expression() <RCB>) (TermTail())*
+    |
+    <NEW> NewTerm()
+    |
+    <NOT> Term4() #NOT(1)
+}
+
+void IdentifierTerm4() #void : {}
+{
+    (<IDENTIFIER> #Variable) (TermTail())*
 }
