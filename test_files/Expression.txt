@@ -1,3 +1,10 @@
-new Amarelo();
-new int[50 * 40 + 2];
-true[0].length.call(new de());
+while (i < array) {
+    if (array[i] < low) low = array[i]; else {}
+    if (high < array[i]) high = array[i]; else {}
+    total = total + array[i];
+    4 < 3[ok];
+
+    total = 1;
+    total[i] = 1;
+    total[i];
+} @

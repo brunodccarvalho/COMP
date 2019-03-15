@@ -252,8 +252,9 @@ void IdentifierStatement() : {} {
 }
 
 void IdentifierStatementTail() : {} {
-  (Assignment())
-    ? <SEMICOLON> | MemberAccess()(ExpressionTail1()) * <SEMICOLON> | (ExpressionTail1()) + <SEMICOLON>
+  (Assignment())? <SEMICOLON>
+  |
+  MemberAccess()(ExpressionTail1()) * <SEMICOLON> | (ExpressionTail1()) + <SEMICOLON>
 }
 
 void NonIdentifierStatement() : {} {
