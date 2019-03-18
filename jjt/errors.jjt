@@ -104,33 +104,9 @@ TOKEN: {
     | <ARR: "@">
 }
 
-void Integer() : {Token t1;}
-{
-    t1 = <INTEGERLITERAL>
-    {jjtThis.val = t1.image;}
-}
-
-void Variable() : {Token t1;}
-{
-    t1 = <IDENTIFIER>
-    {jjtThis.val = t1.image;}
-}
-
-void MethodName() : {Token t1;}
-{
-    t1 = <IDENTIFIER>
-    {jjtThis.val = t1.image;}
-}
-
-void ClassType() : {Token t1;}
-{
-    t1 = <IDENTIFIER>
-    {jjtThis.val = t1.image;}
-}
-
 SimpleNode Start() : {}
 {
-    (Expression() <ARR>)+
+    WhileStatement()
     {return jjtThis;}
 }
 
@@ -172,9 +148,9 @@ void Term3() #void : {}
 
 void Term4() #void : {}
 {
-    Integer() (TermTail())*
+    (<INTEGERLITERAL> #Integer) (TermTail())*
     |
-    Variable() (TermTail())*
+    (<IDENTIFIER> #Variable) (TermTail())*
     |
     (<TRUE> #True) (TermTail())*
     |
@@ -234,7 +210,7 @@ void ObjectAccessTail() #void : {}
 {
     <LENGTH> #Length(1)
     |
-    MethodName() ArgumentList() #Call(3)
+    <IDENTIFIER> #Method ArgumentList() #Call(3)
 }
 
 void ArgumentList() : {}
@@ -246,12 +222,12 @@ void NewTerm() #void : {}
 {
     <INT> <LSB> Expression() <RSB> #NewIntArray(1)
     |
-    ClassType() <LCB> <RCB> #NewClass(1)
+    <IDENTIFIER> #Class <LCB> <RCB> #NewClass(1)
 }
 
 void LiteralTerm4() #void : {}
 {
-    Integer() (TermTail())*
+    (<INTEGERLITERAL> #Integer) (TermTail())*
     |
     (<TRUE> #True) (TermTail())*
     |
@@ -268,7 +244,7 @@ void LiteralTerm4() #void : {}
 
 void IdentifierTerm4() #void : {}
 {
-    Variable() (TermTail())*
+    (<IDENTIFIER> #Variable) (TermTail())*
 }
 
 // *** Statements
@@ -321,7 +297,7 @@ void LiteralLineStatement() #void : {}
 
 void IdentifierStatement() #void : {}
 {
-    Variable()
+    <IDENTIFIER> #Variable
     IdentifierStatementTail() <SEMICOLON> #PlainStatement(1)
 }
 

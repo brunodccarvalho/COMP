@@ -1,10 +1,1 @@
-while (i < array) {
-    if (array[i] < low) low = array[i]; else {}
-    if (high < array[i]) high = array[i]; else {}
-    total = total + array[i];
-    4 < 3[ok];
-
-    total = 1;
-    total[i] = 1;
-    total[i];
-} @
+12 + abc + 13 + a2 @

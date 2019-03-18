@@ -1,5 +1,7 @@
 SRC = expression
+ERROR_SRC = errors
 TEST_FILE = Expression.txt
+ERROR_TEST_FILE = Error.txt
 
 JJTREE_DIR := compiled
 JJTREE_DEBUG :=
@@ -33,3 +35,13 @@ clean:
 
 test:
 	@java -classpath bin $(SRC) test_files/$(TEST_FILE)
+
+error: mkdir
+	jjtree $(JJTREE_FLAGS) jjt/$(ERROR_SRC).jjt
+	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(ERROR_SRC).jj
+	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(ERROR_SRC).java
+	cp $(JAVAC_DIR)/$(ERROR_SRC).class .
+
+
+testerror:
+	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE)
