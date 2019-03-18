@@ -110,12 +110,6 @@ void Integer() : {Token t1;}
     {jjtThis.val = t1.image;}
 }
 
-void Variable() : {Token t1;}
-{
-    t1 = <IDENTIFIER>
-    {jjtThis.val = t1.image;}
-}
-
 void MethodName() : {Token t1;}
 {
     t1 = <IDENTIFIER>
@@ -128,9 +122,15 @@ void ClassType() : {Token t1;}
     {jjtThis.val = t1.image;}
 }
 
+void Identifier() : {Token t1;}
+{
+    t1 = <IDENTIFIER>
+    {jjtThis.val = t1.image;}
+}
+
 SimpleNode Start() : {}
 {
-    (Expression() <ARR>)+
+    ClassDeclaration()
     {return jjtThis;}
 }
 
@@ -174,7 +174,7 @@ void Term4() #void : {}
 {
     Integer() (TermTail())*
     |
-    Variable() (TermTail())*
+    Identifier() (TermTail())*
     |
     (<TRUE> #True) (TermTail())*
     |
@@ -268,7 +268,7 @@ void LiteralTerm4() #void : {}
 
 void IdentifierTerm4() #void : {}
 {
-    Variable() (TermTail())*
+    Identifier() (TermTail())*
 }
 
 // *** Statements
@@ -321,19 +321,19 @@ void LiteralLineStatement() #void : {}
 
 void IdentifierStatement() #void : {}
 {
-    Variable()
-    IdentifierStatementTail() <SEMICOLON> #PlainStatement(1)
+    Identifier() IdentifierStatementTail()
 }
 
 void IdentifierStatementTail() #void : {}
 {
-    <EQUAL> Expression() #Assignment(2)
+    (<EQUAL> Expression() #Assignment(2)
     |
     ArrayAccess() (<EQUAL> Expression() #Assignment(2))?
     |
     ObjectAccess() ExpressionTail()
     |
-    ExpressionTail()
+    ExpressionTail())
+    <SEMICOLON> #PlainStatement(1)
 }
 
 void LiteralStatement() #void : {}
@@ -346,3 +346,116 @@ void LiteralStatement() #void : {}
     |
     LiteralLineStatement()
 }
+
+// *** Types
+void Type() #void : {}
+{
+    PrimitiveType()
+    |
+    ClassType()
+}
+
+void PrimitiveType() #void : {}
+{
+    IntType()
+    |
+    <BOOLEAN> #Boolean
+    |
+    <STRING> #String
+}
+
+void IntType() #void : {}
+{
+   (<INT> #Int) (<LSB> <RSB> #IntArray(1))?
+}
+
+// *** Method Body (Declarations and Statements)
+void MethodBody() #void : {}
+{
+    PrimitiveType() Identifier() #VariableDeclaration(2)
+    <SEMICOLON> MethodBody()
+    |
+    Identifier() AssignmentOrDeclaration()
+    |
+    (LiteralStatement() (Statement())*)?
+}
+
+void AssignmentOrDeclaration() #void : {}
+{
+    Identifier() #VariableDeclaration(2) <SEMICOLON> MethodBody()
+    |
+    IdentifierStatementTail() (Statement())*
+}
+
+// *** Parameters
+void Parameter(): {}
+{
+    Type() Identifier()
+}
+
+void ParameterList(): {}
+{
+    (Parameter() (<COMMA> Parameter())*)?
+}
+
+void MainParameterList(): {}
+{
+    <STRING> <LSB> <RSB> Identifier()
+}
+
+// *** Methods
+void MainDeclaration() #void : {}
+{
+    //<PUBLIC>
+    <STATIC>
+    <VOID>
+    <MAIN>
+    <LCB>
+    MainParameterList()
+    <RCB>
+    <LEFTKEY>
+    MethodBody() #MethodBody
+    <RIGHTKEY>
+}
+
+void MethodDeclaration() #void : {}
+{
+    //<PUBLIC>
+    Type() #MethodReturnType
+    MethodName()
+    <LCB>
+    ParameterList()
+    <RCB>
+    <LEFTKEY>
+    MethodBody() #MethodBody
+    <RETURN>
+    Expression() #ReturnExpression
+    <SEMICOLON>
+    <RIGHTKEY>
+}
+
+// *** Class
+
+void ClassDeclaration() : {}
+{
+    <CLASS>
+    ClassType()
+    (<EXTENDS> ClassType() #Extends(1))?
+    <LEFTKEY>
+    (ClassVarDeclaration())*
+    (ClassMethodDeclaration())*
+    <RIGHTKEY>
+}
+
+void ClassVarDeclaration() : {}
+{
+    Type() Identifier() <SEMICOLON>
+}
+
+void ClassMethodDeclaration() : {}
+{
+    <PUBLIC> (MainDeclaration() | MethodDeclaration())
+}
+
+// TODO: What to do with variables named "main", "length".
+// TODO: What to do with types named "main", "length", "String".
