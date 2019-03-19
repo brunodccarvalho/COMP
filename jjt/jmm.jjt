@@ -1,39 +1,24 @@
-options
-{
- LOOKAHEAD=1;
- FORCE_LA_CHECK=true;
+// clang-format off
+options {
+    LOOKAHEAD = 1;
+    FORCE_LA_CHECK = true;
+    TRACK_TOKENS = true;
 }
 
 PARSER_BEGIN(jmm)
 import java.io.*;
 
-public class jmm
-{
-    public static void main(String args[]) throws ParseException,Exception {
+public class jmm {
+    public static void main(String args[]) throws ParseException, Exception {
         FileReader fr = new FileReader(args[0]);
         jmm myProg = new jmm(fr);
-        SimpleNode root = myProg.Start(); // devolve referência para o nó raiz da árvore
-        root.dump(""); // imprime no ecrã a árvore
-    }
-
-    //https://javacc.org/tutorials/errorrecovery
-    void error_skipto(int kind) {
-        ParseException e = generateParseException();  // generate the exception object.
-        System.out.println(e.toString());  // print the error message
-        Token t;
-        do {
-        t = getNextToken();
-        } while (t.kind != kind);
-        // The above loop consumes tokens all the way up to a token of
-        // "kind".  We use a do-while loop rather than a while because the
-        // current token is the one immediately before the erroneous token
-        // (in our case the token immediately before what should have been
-        // "if"/"while".
+        SimpleNode root = myProg.Start();
+        root.dump("");
     }
 }
 PARSER_END(jmm)
 
-SKIP : {
+SKIP: {
     " " | "\r" | "\t" | "\n"
 }
 
@@ -77,7 +62,7 @@ TOKEN: {
     |
     <EQUAL: "=">
     |
-    <AND: "&">
+    <AND: "&&">
     |
     <LT: "<">
     |
@@ -118,74 +103,300 @@ TOKEN: {
     |
     // Identifier
     <IDENTIFIER: ["A"-"Z","a"-"z","$","_"](["0"-"9","A"-"Z","a"-"z","_","$"])*>
+    |
+    <ARR: "@">
 }
 
-// *** Class
 SimpleNode Start() : {}
 {
-    ClassDeclaration()
-    <EOF>
+    ClassDeclaration() (<ARR> ClassDeclaration())*
     {return jjtThis;}
 }
 
-void ClassDeclaration(): {}
+// *** Terminals with Values
+void Integer() : {Token token;}
 {
-    <CLASS>
-    <IDENTIFIER>
-    (<EXTENDS><IDENTIFIER>)?
-    <LEFTKEY>
-    (ClassVarDeclaration())*
-    (ClassMethodDeclaration())*
-    <RIGHTKEY>
+    token = <INTEGERLITERAL>
+    {jjtThis.jjtSetVal(token.image);}
 }
 
-void ClassVarDeclaration() : {}
+void MethodName() : {Token token;}
 {
-    Type()
-    <IDENTIFIER>
-    <SEMICOLON>
+    token = <IDENTIFIER>
+    {jjtThis.jjtSetVal(token.image);}
 }
 
-void ClassMethodDeclaration(): {}
+void ClassType() : {Token token;}
 {
-    <PUBLIC>
-    (MainDeclaration() | MethodDeclaration())
+    token = <IDENTIFIER>
+    {jjtThis.jjtSetVal(token.image);}
 }
 
-// *** Methods Declarations
-void MainDeclaration() #void: {}
+void Identifier() : {Token token;}
 {
-    <STATIC>
-    <VOID>
-    <MAIN>
-    <LCB>
-    MainParameterList()
-    <RCB>
-    <LEFTKEY>
-    MethodBody()    // * Found a slight problem with using ? here
-    <RIGHTKEY>
+    token = <IDENTIFIER>
+    {jjtThis.jjtSetVal(token.image);}
 }
 
-void MethodDeclaration(): {}
+// *** Expression
+void Expression() #void : {}
 {
-    Type()                #MethodReturnType
-    <IDENTIFIER>          #MethodName
-    <LCB>
-    ParameterList()       #MethodParameterList
-    <RCB>
-    <LEFTKEY>
-    MethodBody()    // * Found a slight problem with using ? here
-    <RETURN>
-    Expression()          #ReturnExpression
-    <SEMICOLON>
-    <RIGHTKEY>
+    Term1() (Op1())*
+}
+
+void ExpressionTail() #void : {}
+{
+    (Op4())* (Op3())* (Op2())* (Op1())*
+}
+
+void LiteralExpression() #void : {}
+{
+    LiteralTerm4() ExpressionTail()
+}
+
+void IdentifierExpression() #void : {}
+{
+    IdentifierTerm4() ExpressionTail()
+}
+
+// *** Term
+void Term1() #void : {}
+{
+    Term2() (Op2())*
+}
+
+void Term2() #void : {}
+{
+    Term3() (Op3())*
+}
+
+void Term3() #void : {}
+{
+    Term4() (Op4())*
+}
+
+void Term4() #void : {}
+{
+    Integer() (TermTail())*
+    |
+    Identifier() (TermTail())*
+    |
+    (<TRUE> #True) (TermTail())*
+    |
+    (<FALSE> #False) (TermTail())*
+    |
+    (<THIS> #This) (TermTail())*
+    |
+    (<LCB> Expression() <RCB>) (TermTail())*
+    |
+    <NEW> NewTerm() (TermTail())*
+    |
+    <NOT> Term4() #NOT(1)
+}
+
+void TermTail() #void : {}
+{
+    ArrayAccess()
+    |
+    ObjectAccess()
+}
+
+void ArrayAccess() #void : {}
+{
+    <LSB> Expression() <RSB> #Bracket(2)
+}
+
+void ObjectAccess() #void : {}
+{
+    <POINT> ObjectAccessTail()
+}
+
+void ObjectAccessTail() #void : {}
+{
+    <LENGTH> #Length(1)
+    |
+    MethodName() ArgumentList() #Call(3)
+}
+
+void ArgumentList() : {}
+{
+    <LCB> (Expression() (<COMMA> Expression())*)? <RCB>
+}
+
+void NewTerm() #void : {}
+{
+    <INT> <LSB> Expression() <RSB> #NewIntArray(1)
+    |
+    ClassType() <LCB> <RCB> #NewClass(1)
+}
+
+void LiteralTerm4() #void : {}
+{
+    Integer() (TermTail())*
+    |
+    (<TRUE> #True) (TermTail())*
+    |
+    (<FALSE> #False) (TermTail())*
+    |
+    (<THIS> #This) (TermTail())*
+    |
+    (<LCB> Expression() <RCB>) (TermTail())*
+    |
+    <NEW> NewTerm()
+    |
+    <NOT> Term4() #NOT(1)
+}
+
+void IdentifierTerm4() #void : {}
+{
+    Identifier() (TermTail())*
+}
+
+// *** Operators
+void Op1() #void : {}
+{
+  <AND> Term1() #AND(2)
+}
+
+void Op2() #void : {}
+{
+  <LT> Term2() #LT(2)
+}
+
+void Op3() #void : {}
+{
+  <SUM> Term3() #SUM(2)
+  |
+  <SUB> Term3() #SUB(2)
+}
+
+void Op4() #void : {}
+{
+  <MUL> Term4() #MUL(2)
+  |
+  <DIV> Term4() #DIV(2)
+}
+
+// *** Statements
+// * Statement Types:
+//   * BlockStatement(*)  { ... }
+//   * IfElseStatement(3) if (Condition) TrueBranch else ElseBranch
+//   * WhileStatement(2)  while (Condition) LoopBody
+//   * PlainStatement(1)  Expression
+//   * Assignment(2)      Target = Value
+void Statement() #void : {}
+{
+    BlockStatement()
+    |
+    IfElseStatement()
+    |
+    WhileStatement()
+    |
+    LineStatement()
+}
+
+void BlockStatement() : {}
+{
+    <LEFTKEY> (Statement())* <RIGHTKEY>
+}
+
+void IfElseStatement() : {}
+{
+    <IF> <LCB> Expression() <RCB> //#Condition(1)
+    Statement() //#TrueBranch(1)
+    <ELSE> Statement() //#FalseBranch(1)
+}
+
+void WhileStatement() : {}
+{
+    <WHILE> <LCB> Expression() <RCB> //#Condition(1)
+    Statement() //#LoopBody(1)
+}
+
+void LineStatement() #void : {}
+{
+    LiteralLineStatement()
+    |
+    IdentifierStatement()
+}
+
+void LiteralLineStatement() #void : {}
+{
+    LiteralExpression() <SEMICOLON> #PlainStatement(1)
+}
+
+void IdentifierStatement() #void : {}
+{
+    Identifier() IdentifierStatementTail()
+}
+
+void IdentifierStatementTail() #void : {}
+{
+    (<EQUAL> Expression() #Assignment(2)
+    |
+    ArrayAccess() (<EQUAL> Expression() #Assignment(2))?
+    |
+    ObjectAccess() ExpressionTail()
+    |
+    ExpressionTail())
+    <SEMICOLON> #PlainStatement(1)
+}
+
+void LiteralStatement() #void : {}
+{
+    BlockStatement()
+    |
+    IfElseStatement()
+    |
+    WhileStatement()
+    |
+    LiteralLineStatement()
+}
+
+// *** Types
+void Type() #void : {}
+{
+    PrimitiveType()
+    |
+    ClassType()
+}
+
+void PrimitiveType() #void : {}
+{
+    IntType()
+    |
+    <BOOLEAN> #Boolean
+    |
+    <STRING> #String
+}
+
+void IntType() #void : {}
+{
+   (<INT> #Int) (<LSB> <RSB> #IntArray(1))?
+}
+
+// *** Method Body (Declarations and Statements)
+void MethodBody() #void : {}
+{
+    PrimitiveType() Identifier() #VariableDeclaration(2)
+    <SEMICOLON> MethodBody()
+    |
+    Identifier() AssignmentOrDeclaration()
+    |
+    (LiteralStatement() (Statement())*)?
+}
+
+void AssignmentOrDeclaration() #void : {}
+{
+    Identifier() #VariableDeclaration(2) <SEMICOLON> MethodBody()
+    |
+    IdentifierStatementTail() (Statement())*
 }
 
 // *** Parameters
 void Parameter(): {}
 {
-    Type()                #ParameterType
-    <IDENTIFIER>          #ParameterName
+    Type() Identifier()
 }
 
 void ParameterList(): {}
@@ -195,255 +406,72 @@ void ParameterList(): {}
 
 void MainParameterList(): {}
 {
-    <STRING> <LSB> <RSB> <IDENTIFIER>
+    <STRING> <LSB> <RSB> Identifier()
 }
 
-// *** Types
-void PrimitiveType(): {}
+// *** Methods
+void MainDeclaration() #void : {}
 {
-    IntType()
-    |
-    <BOOLEAN>
+    //<PUBLIC>
+    <STATIC>
+    <VOID>
+    <MAIN>
+    <LCB>
+    MainParameterList()
+    <RCB>
+    <LEFTKEY>
+    MethodBody() #MethodBody
+    <RIGHTKEY>
 }
 
-void ClassType(): {}
+void MethodDeclaration() #void : {}
 {
-    <IDENTIFIER>
+    //<PUBLIC>
+    Type() #MethodReturnType
+    MethodName()
+    <LCB>
+    ParameterList()
+    <RCB>
+    <LEFTKEY>
+    MethodBody() #MethodBody
+    <RETURN>
+    Expression() #ReturnExpression
+    <SEMICOLON>
+    <RIGHTKEY>
 }
 
-void IntType(): {}
+// *** Class
+void ClassDeclaration() : {}
 {
-    <INT> (<LSB> <RSB>)?
+    <CLASS>
+    ClassHeader()
+    <LEFTKEY>
+    ClassBody()
+    <RIGHTKEY>
 }
 
-void Type(): {}
+void ClassHeader() : {}
 {
-    PrimitiveType() | ClassType()
+    ClassType()
+    (<EXTENDS> ClassType() #Extends(1))?
 }
 
-// *** Method Body (previous VarThenStatement)
-void MethodBody(): {}
+void ClassBody() : {}
 {
-    PrimitiveType() VarName() MethodBody()
-    // [int, boolean] Declaration of a variable of primitive type, then self-recurse
-    |
-    <IDENTIFIER> AssignmentOrDeclaration()
-    // [identifier] Starting with an identifier, then self-recurse or more statements
-    |
-    (NonIdentifierStatement() (Statement())*)?
-    // [anything else] Block or literal statement, followed by more statements
+    (ClassVarDeclaration())*
+    (ClassMethodDeclaration())*
 }
 
-void VarName(): {}
+void ClassVarDeclaration() : {}
 {
-    <IDENTIFIER> <SEMICOLON>
+    Type() Identifier() <SEMICOLON>
 }
 
-void AssignmentOrDeclaration(): {}
+void ClassMethodDeclaration() : {}
 {
-    VarName() MethodBody() // Declaration
-    |
-    IdentifierStatementTail() (Statement())* // Assignment
+    <PUBLIC> (MainDeclaration() | MethodDeclaration())
 }
 
-void Assignment(): {}
-{
-    (ArrayAccess())? AssignedValue()
-}
-
-void AssignedValue(): {}
-{
-    <EQUAL> Expression()
-}
-
-// Access an array: [...]
-void ArrayAccess(): {}
-{
-    <LSB> Expression() <RSB>
-}
-
-// *** Statements
-void Statement(): {}
-{
-    BlockStatement()
-    |
-    LineStatement()
-}
-
-void BlockStatement(): {}
-{
-    BracedBlockStatement()
-    |
-    IfStatement()
-    |
-    WhileStatement()
-}
-
-void LineStatement(): {}
-{
-    LiteralStatement()
-    |
-    IdentifierStatement()
-}
-
-void LiteralStatement(): {}
-{
-    LiteralExpression() <SEMICOLON>
-}
-
-void IdentifierStatement(): {}
-{
-    <IDENTIFIER> IdentifierStatementTail()
-}
-
-void IdentifierStatementTail(): {}
-{
-    (Assignment())? <SEMICOLON>
-    |
-    MemberAccess() (ExpressionTail())* <SEMICOLON>
-    |
-    (ExpressionTail())+ <SEMICOLON>
-}
-
-void NonIdentifierStatement(): {}
-{
-    BracedBlockStatement()
-    |
-    IfStatement()
-    |
-    WhileStatement()
-    |
-    LiteralStatement()
-}
-
-// *** Expressions
-void Expression(): {}
-{
-    Term() (ExpressionTail())*
-}
-
-void LiteralExpression(): {}
-{
-    LiteralTerm() (ExpressionTail())*
-}
-
-void IdentifierExpression(): {}
-{
-    IdentifierTerm() (ExpressionTail())*
-}
-
-void ExpressionTail() #void: {}
-{
-    ExpressionOperator() Term()
-}
-
-void ExpressionOperator() #void: {}
-{
-    <AND> #And
-    |
-    <LT> #Lt
-    |
-    <SUM> #Sum
-    |
-    <SUB> #Sub
-    |
-    <MUL> #Mul
-    |
-    <DIV> #Div
-}
-
-// *** Term
-void Term() #void: {}
-{
-    LiteralTerm()
-    |
-    IdentifierTerm()
-}
-
-void LiteralTerm(): {}
-{
-    <INTEGERLITERAL> (TermTail())* // ! COMPILER-INCORRECT WITH TAIL
-    |
-    <TRUE> (TermTail())* // ! COMPILER-INCORRECT WITH TAIL
-    |
-    <FALSE> (TermTail())* // ! COMPILER-INCORRECT WITH TAIL
-    |
-    <THIS> (TermTail())*
-    |
-    <NEW> NewTerm() (TermTail())*
-    |
-    <NOT> Term()
-    |
-    <LCB> Expression() <RCB> (TermTail())*
-}
-
-void NewTerm(): {}
-{
-    <INT> <LSB> Expression() <RSB>
-    |
-    <IDENTIFIER> <LCB> <RCB>
-}
-
-void IdentifierTerm(): {}
-{
-    <IDENTIFIER> (TermTail())*
-}
-
-void TermTail(): {}
-{
-    ArrayAccess()
-    |
-    MemberAccess()
-}
-
-void MemberAccess(): {}
-{
-    <POINT> MemberField()
-}
-
-void MemberField(): {}
-{
-    <LENGTH>
-    |
-    MethodCall()
-}
-
-void MethodCall(): {}
-{
-    <IDENTIFIER> <LCB> ArgumentList() <RCB>
-}
-
-// An argument for any function call
-void Argument(): {}
-{
-    Expression()
-}
-
-// A list of arguments for any function call
-void ArgumentList(): {}
-{
-    (Argument() (<COMMA> Argument())*)?
-}
-
-// Aceita: (1 + 2)[3]
-// Aceita: true.length
-// Aceita: 1;
-// Não aceita: Call methods of same class, e.g:
-//             find();
-
-
-
-void BracedBlockStatement(): {}
-{
-    <LEFTKEY> (Statement())* <RIGHTKEY>
-}
-
-void IfStatement(): {}
-{
-    <IF> <LCB> Expression() <RCB> Statement() <ELSE> Statement()
-}
-
-void WhileStatement(): {}
-{
-    <WHILE> <LCB> Expression() <RCB> Statement()
-}
+// TODO: What to do with variables named "main", "length".
+// TODO: What to do with types named "main", "length", "String".
+// DONE: Add begin and end lines/columns to output AST

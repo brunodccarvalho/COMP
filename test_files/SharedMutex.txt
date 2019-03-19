@@ -1,0 +1,20 @@
+class SharedMutex extends Mutex {
+    Lock lock;
+    int counter;
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public boolean setCounter(int count) {
+        counter = count;
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String arg;
+        arg = args[0];
+        this.setCounter(arg.length);
+        this.lock(this.getCounter());
+    }
+}
