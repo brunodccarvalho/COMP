@@ -75,12 +75,25 @@ public class SimpleNode implements Node {
     this.lastToken = token;
   }
 
+  public int getId() {
+    return id;
+  }
+
+  private static boolean DUMP_TRACK = true;
+
   public String toString() {
-    String line = jmmTreeConstants.jjtNodeName[id];
-    if (val != null)
-      return line + " " + val + " " + getRange();
-    else
-      return line + " " + getRange();
+    String nodename = jmmTreeConstants.jjtNodeName[id];
+    if (DUMP_TRACK) {
+      if (val != null)
+        return nodename + " " + val + " " + getRange();
+      else
+        return nodename + " " + getRange();
+    } else {
+      if (val != null)
+        return nodename + " " + val;
+      else
+        return nodename;
+    }
   }
 
   public String toString(String prefix) {
@@ -99,42 +112,45 @@ public class SimpleNode implements Node {
     }
   }
 
-  public int getId() {
-    return id;
+  protected int rangeCompare(int[] range1, int[] range2) {
+    if (range1[0] != range2[0]) {
+      return range1[0] - range2[0];
+    } else {
+      return range1[1] - range2[1];
+    }
   }
 
-  public int treeBeginLine() {
-    if (children != null && children.length > 0)
-      return children[0].treeBeginLine();
-    else
-      return firstToken.beginLine;
+  protected int[] treeBegin() {
+    int[] mine = {firstToken.beginLine, firstToken.beginColumn};
+
+    // TODO: Optimize (cache)
+
+    if (children != null && children.length > 0) {
+      SimpleNode childnode = (SimpleNode) children[0];
+      int[] childs = childnode.treeBegin();
+      return rangeCompare(mine, childs) < 0 ? mine : childs;  // min
+    } else {
+      return mine;
+    }
   }
 
-  public int treeBeginColumn() {
-    if (children != null && children.length > 0)
-      return children[0].treeBeginColumn();
-    else
-      return firstToken.beginColumn;
-  }
+  protected int[] treeEnd() {
+    int[] mine = {lastToken.endLine, lastToken.endColumn + 1};
 
-  public int treeEndLine() {
-    if (children != null && children.length > 0)
-      return children[children.length - 1].treeEndLine();
-    else
-      return lastToken.endLine;
-  }
+    // TODO: Optimize (cache)
 
-  public int treeEndColumn() {
-    if (children != null && children.length > 0)
-      return children[children.length - 1].treeEndColumn();
-    else
-      return lastToken.endColumn;
+    if (children != null && children.length > 0) {
+      SimpleNode childnode = (SimpleNode) children[children.length - 1];
+      int[] childs = childnode.treeEnd();
+      return rangeCompare(mine, childs) < 0 ? childs : mine;  // max
+    } else {
+      return mine;
+    }
   }
 
   protected String getRange() {
-    String rangeBegin = treeBeginLine() + ":" + treeBeginColumn();
-    String rangeEnd = treeEndLine() + ":" + treeEndColumn();
-    return rangeBegin + " " + rangeEnd;
+    int[] begin = treeBegin(), end = treeEnd();
+    return begin[0] + ":" + begin[1] + " " + end[0] + ":" + end[1];
   }
 }
 

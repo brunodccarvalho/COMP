@@ -1,6 +1,9 @@
-class SharedMutex extends Mutex {
+ class SharedMutex extends Mutex {
   Lock lock;
   int counter;
+  int[] array;
+  boolean b;
+  String ok;
 
   public int getCounter() {
     return counter;
@@ -8,13 +11,10 @@ class SharedMutex extends Mutex {
 
   public boolean setCounter(int count) {
     counter = count;
-    return true;
+    return !true * 3 + 4;
   }
 
   public static void main(String[] args) {
-    String arg;
-    arg = args[0];
-    this.setCounter(arg.length);
-    this.lock(this.getCounter());
+    while (ok) a = b;
   }
 }

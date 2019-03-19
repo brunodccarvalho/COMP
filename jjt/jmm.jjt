@@ -177,57 +177,9 @@ void Term3() #void : {}
 
 void Term4() #void : {}
 {
-    Integer() (TermTail())*
-    |
-    Identifier() (TermTail())*
-    |
-    (<TRUE> #True) (TermTail())*
-    |
-    (<FALSE> #False) (TermTail())*
-    |
-    (<THIS> #This) (TermTail())*
-    |
-    (<LCB> Expression() <RCB>) (TermTail())*
-    |
-    <NEW> NewTerm() (TermTail())*
-    |
-    <NOT> Term4() #NOT(1)
-}
-
-void TermTail() #void : {}
-{
-    ArrayAccess()
-    |
-    ObjectAccess()
-}
-
-void ArrayAccess() #void : {}
-{
-    <LSB> Expression() <RSB> #Bracket(2)
-}
-
-void ObjectAccess() #void : {}
-{
-    <POINT> ObjectAccessTail()
-}
-
-void ObjectAccessTail() #void : {}
-{
-    <LENGTH> #Length(1)
-    |
-    MethodName() ArgumentList() #Call(3)
-}
-
-void ArgumentList() : {}
-{
-    <LCB> (Expression() (<COMMA> Expression())*)? <RCB>
-}
-
-void NewTerm() #void : {}
-{
-    <INT> <LSB> Expression() <RSB> #NewIntArray(1)
-    |
-    ClassType() <LCB> <RCB> #NewClass(1)
+  LiteralTerm4()
+  |
+  IdentifierTerm4()
 }
 
 void LiteralTerm4() #void : {}
@@ -242,9 +194,9 @@ void LiteralTerm4() #void : {}
     |
     (<LCB> Expression() <RCB>) (TermTail())*
     |
-    <NEW> NewTerm()
+    <NEW> NewTerm() (TermTail())*
     |
-    <NOT> Term4() #NOT(1)
+    NOT()
 }
 
 void IdentifierTerm4() #void : {}
@@ -252,29 +204,70 @@ void IdentifierTerm4() #void : {}
     Identifier() (TermTail())*
 }
 
+void TermTail() #void : {}
+{
+    ArrayAccess()
+    |
+    ObjectAccess()
+}
+
+void ArrayAccess() #void : {}
+{
+    (<LSB> Expression() <RSB>) #Bracket(2)
+}
+
+void ObjectAccess() #void : {}
+{
+    <POINT> ObjectAccessTail()
+}
+
+void ObjectAccessTail() #void : {}
+{
+    <LENGTH> #Length(1)
+    |
+    MethodName() <LCB> ArgumentList() <RCB> #Call(3)
+}
+
+void ArgumentList() : {}
+{
+    (Expression() (<COMMA> Expression())*)?
+}
+
+void NewTerm() #void : {}
+{
+    <INT> <LSB> Expression() <RSB> #NewIntArray(1)
+    |
+    ClassType() <LCB> <RCB> #NewClass(1)
+}
+
 // *** Operators
 void Op1() #void : {}
 {
-  <AND> Term1() #AND(2)
+    <AND> Term1() #AND(2)
 }
 
 void Op2() #void : {}
 {
-  <LT> Term2() #LT(2)
+    <LT> Term2() #LT(2)
 }
 
 void Op3() #void : {}
 {
-  <SUM> Term3() #SUM(2)
-  |
-  <SUB> Term3() #SUB(2)
+    <SUM> Term3() #SUM(2)
+    |
+    <SUB> Term3() #SUB(2)
 }
 
 void Op4() #void : {}
 {
-  <MUL> Term4() #MUL(2)
-  |
-  <DIV> Term4() #DIV(2)
+    <MUL> Term4() #MUL(2)
+    |
+    <DIV> Term4() #DIV(2)
+}
+
+void NOT() : {}
+{
+    <NOT> Term4()
 }
 
 // *** Statements
@@ -427,39 +420,45 @@ void MainDeclaration() #void : {}
 void MethodDeclaration() #void : {}
 {
     //<PUBLIC>
-    Type() #MethodReturnType
+    Type() //#MethodReturnType
     MethodName()
     <LCB>
     ParameterList()
     <RCB>
     <LEFTKEY>
     MethodBody() #MethodBody
-    <RETURN>
-    Expression() #ReturnExpression
-    <SEMICOLON>
+    ReturnStatement()
     <RIGHTKEY>
+}
+
+void ReturnStatement() : {}
+{
+    <RETURN> Expression() <SEMICOLON>
 }
 
 // *** Class
 void ClassDeclaration() : {}
 {
-    <CLASS>
     ClassHeader()
-    <LEFTKEY>
     ClassBody()
-    <RIGHTKEY>
 }
 
 void ClassHeader() : {}
 {
-    ClassType()
-    (<EXTENDS> ClassType() #Extends(1))?
+    <CLASS> ClassType() (Extends())?
+}
+
+void Extends() : {}
+{
+    <EXTENDS> ClassType()
 }
 
 void ClassBody() : {}
 {
+    <LEFTKEY>
     (ClassVarDeclaration())*
     (ClassMethodDeclaration())*
+    <RIGHTKEY>
 }
 
 void ClassVarDeclaration() : {}
@@ -474,4 +473,18 @@ void ClassMethodDeclaration() : {}
 
 // TODO: What to do with variables named "main", "length".
 // TODO: What to do with types named "main", "length", "String".
-// DONE: Add begin and end lines/columns to output AST
+// DONE: Add begin and end lines/columns (ranges) to output AST
+
+/**
+ * TODO: Range decisions:
+ *  1. Should ClassHeader() include 'class'? [YES]
+ *  2. Should Extends() include 'extends'? [YES]
+ *  3. Should ClassBody() include '{' and '}'? [YES]
+ *  4. Should ClassMethodDeclaration() include 'public'? [YES]
+ *  4.1. Distinction between method and main? [NO]
+ *  5. Should ArgumentList()/[Main]ParameterList() include '(' and ')'? [NO]
+ *  6. Should NOT() include '!'? [YES]
+ *  7. Should ReturnStatement() include 'return'? [YES]
+ *  8. Should ReturnStatement() include ';'? [YES]
+ *  ...
+ */

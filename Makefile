@@ -21,21 +21,21 @@ all: mkdir
 	jjtree $(JJTREE_FLAGS) jjt/$(SRC).jjt
 	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(SRC).jj
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	cp jjt/Node.java $(JJTREE_DIR)/Node.java
+	#cp jjt/Node.java $(JJTREE_DIR)/Node.java
 	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(SRC).java
 
 debug: mkdir
 	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jjt/$(SRC).jjt
 	javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) $(JJTREE_DIR)/$(SRC).jj
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	cp jjt/Node.java $(JJTREE_DIR)/Node.java
+	#cp jjt/Node.java $(JJTREE_DIR)/Node.java
 	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  $(JAVACC_DIR)/$(SRC).java
 
 error: mkdir
 	jjtree $(JJTREE_FLAGS) jjt/$(ERROR_SRC).jjt
 	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(ERROR_SRC).jj
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	cp jjt/Node.java $(JJTREE_DIR)/Node.java
+	#cp jjt/Node.java $(JJTREE_DIR)/Node.java
 	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(ERROR_SRC).java
 
 mkdir:
