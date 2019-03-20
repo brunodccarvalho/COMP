@@ -1,4 +1,4 @@
-SRC = expression
+SRC = errors
 TEST_FILE = Expression.txt
 
 JJTREE_DIR := compiled
