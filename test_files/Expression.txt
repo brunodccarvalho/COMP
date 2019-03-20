@@ -1,10 +1,20 @@
-while (i < array) {
-    if (array[i] < low) low = array[i]; else {}
-    if (high < array[i]) high = array[i]; else {}
-    total = total + array[i];
-    4 < 3[ok];
+ class SharedMutex extends Mutex {
+  Lock lock;
+  int counter;
+  int[] array;
+  boolean b;
+  String ok;
 
-    total = 1;
-    total[i] = 1;
-    total[i];
-} @
+  public int getCounter() {
+    return counter;
+  }
+
+  public boolean setCounter(int count) {
+    counter = count;
+    return !true * 3 + 4;
+  }
+
+  public static void main(String[] args) {
+    while (ok) a = b;
+  }
+}
