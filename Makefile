@@ -1,5 +1,4 @@
 SRC = jmm
-ERROR_SRC = errors
 
 TEST_FILE = Expression.txt
 ERROR_TEST_FILE = Error.txt
@@ -30,13 +29,6 @@ debug: mkdir
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
 	#cp jjt/Node.java $(JJTREE_DIR)/Node.java
 	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  $(JAVACC_DIR)/$(SRC).java
-
-error: mkdir
-	jjtree $(JJTREE_FLAGS) jjt/$(ERROR_SRC).jjt
-	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(ERROR_SRC).jj
-	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	#cp jjt/Node.java $(JJTREE_DIR)/Node.java
-	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(ERROR_SRC).java
 
 mkdir:
 	@mkdir -p compiled/ bin/ $(JJTREE_DIR)
