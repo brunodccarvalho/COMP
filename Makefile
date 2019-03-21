@@ -41,7 +41,7 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -classpath bin $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES) 
+	@java -classpath bin $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES) || true
 
 testerror:
-	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES) 
+	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES) || true

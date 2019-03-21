@@ -183,16 +183,18 @@ public class ParseException extends Exception {
 
 
    public void error_skipto(int kind) {
-    Token t;
+    Token t, skipped;
+    t = this.currentToken;
     do {
-      t = jmm.getNextToken();
-    } while (t.kind != kind);
+      skipped = jmm.getNextToken();
+    } while (skipped.kind != kind);
       // The above loop consumes tokens all the way up to a token of
       // "kind".  We use a do-while loop rather than a while because the
       // current token is the one immediately before the erroneous token
       // (in our case the token immediately before what should have been
       // "if"/"while".
-      System.out.println("Tokens skipped to\'" + t + "\'");
+      System.out.println("Found \'" +  t.next.image + "\' in " + t.beginLine +  ":"  + t.beginColumn);
+      System.out.println("Tokens skipped to\'" + skipped.image + "\' in " + skipped.beginLine +  ":"  + skipped.beginColumn);
   } 
 }
 /* JavaCC - OriginalChecksum=c5a983a229aa877dc2b3b3b9933cdd6b (do not edit this line) */
