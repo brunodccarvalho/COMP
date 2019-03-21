@@ -10,10 +10,11 @@ import java.io.*;
 import java.util.regex.*;
 
 public class jmm {
+    public static int numberRecoveries = 0;
     public static void main(String args[]) throws FileNotFoundException {
         FileReader fr = new FileReader(args[0]);
         jmm myProg = new jmm(fr);
-        jmm.numberRecoveries = Integer.parseInt(args[1]);
+        myProg.numberRecoveries = Integer.parseInt(args[1]);
         try {
             SimpleNode root = myProg.Start();
             root.dump("");
@@ -28,20 +29,6 @@ public class jmm {
             String column_number=m.group();
             System.out.println("Unhandled error at "+ line_number+", "+column_number+". Aborting parser.");
         }
-    }
-    //https://javacc.org/tutorials/errorrecovery
-    void error_skipto(int kind) {
-        ParseException e = generateParseException();  // generate the exception object.
-        System.out.println(e.toString());  // print the error message
-        Token t;
-        do {
-        t = getNextToken();
-        } while (t.kind != kind);
-        // The above loop consumes tokens all the way up to a token of
-        // "kind".  We use a do-while loop rather than a while because the
-        // current token is the one immediately before the erroneous token
-        // (in our case the token immediately before what should have been
-        // "if"/"while".
     }
 }
 PARSER_END(jmm)

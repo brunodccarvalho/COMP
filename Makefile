@@ -15,7 +15,7 @@ JAVACC_FLAGS := -output_directory=$(JAVACC_DIR)
 
 JAVAC_DIR := bin
 JAVAC_DEBUG := -g
-JAVAC_FLAGS := -d $(JAVAC_DIR) --source-path $(JAVACC_DIR)
+JAVAC_FLAGS := -d $(JAVAC_DIR) -sourcepath $(JAVACC_DIR)
 
 all: mkdir
 	jjtree $(JJTREE_FLAGS) jjt/$(SRC).jjt
