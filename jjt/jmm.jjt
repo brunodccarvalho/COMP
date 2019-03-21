@@ -20,6 +20,7 @@ public class jmm {
             SimpleNode root = myProg.Start();
             if(!jmm.has_error)root.dump("");
         } catch (ParseException e) {
+            if(e.toString()=="Number of retries exceedeed")e.printStackTrace();
             Pattern p_line=Pattern.compile("line [0-9]*");
             Pattern p_col= Pattern.compile("column [0-9]*");
             Matcher m= p_line.matcher(e.getMessage());
@@ -329,8 +330,7 @@ void WhileStatement() : {}
             jmm.numberRecoveries = jmm.numberRecoveries - 1;
         }
         else {
-            System.out.println("Number of retries exceedeed");
-            System.exit(1);
+            throw new ParseException("Number of retries exceedeed");
         }
     }
     try{
@@ -344,8 +344,7 @@ void WhileStatement() : {}
             jmm.numberRecoveries = jmm.numberRecoveries - 1;
         }
         else {
-            System.out.println("Number of retries exceedeed");
-            System.exit(1);
+            throw new ParseException("Number of retries exceedeed");
         }
     }
 }
