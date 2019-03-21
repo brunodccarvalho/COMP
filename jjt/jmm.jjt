@@ -304,16 +304,11 @@ void WhileStatement() : {}
 {
     try{
         <WHILE> <LCB> Expression() <RCB> //#Condition(1)
-        Statement() //#LoopBody(1)
     }
     catch(ParseException e){
-        Token token = getToken(0);
-        if(token.image.equals(")")){
-            getNextToken();
-            System.out.println("An unexpected \')\' found after While condition");
-            System.exit(1);
-        }
+        e.error_skipto(RCB);  // skip all tokens until the token ')' is found
     }
+    Statement() //#LoopBody(1)
 }
 
 void LineStatement() #void : {}
