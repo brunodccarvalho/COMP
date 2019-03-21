@@ -29,6 +29,20 @@ public class jmm {
             System.out.println("Unhandled error at "+ line_number+", "+column_number+". Aborting parser.");
         }
     }
+    //https://javacc.org/tutorials/errorrecovery
+    void error_skipto(int kind) {
+        ParseException e = generateParseException();  // generate the exception object.
+        System.out.println(e.toString());  // print the error message
+        Token t;
+        do {
+        t = getNextToken();
+        } while (t.kind != kind);
+        // The above loop consumes tokens all the way up to a token of
+        // "kind".  We use a do-while loop rather than a while because the
+        // current token is the one immediately before the erroneous token
+        // (in our case the token immediately before what should have been
+        // "if"/"while".
+    }
 }
 PARSER_END(jmm)
 
@@ -321,7 +335,7 @@ void WhileStatement() : {}
     }
     catch(ParseException e){
         if(jmm.numberRecoveries != 0) {
-            e.error_skipto(RCB);  // skip all tokens until the token ')' is found
+            e.error_skipto(LEFTKEY);  // skip all tokens until the token '{' is found
             jmm.numberRecoveries = jmm.numberRecoveries - 1;
         }
         else {
@@ -329,7 +343,20 @@ void WhileStatement() : {}
             System.exit(1);
         }
     }
-    Statement() //#LoopBody(1)
+    try{
+        Statement() //#LoopBody(1)
+    }
+    catch(ParseException e){
+        if(jmm.numberRecoveries != 0) {
+            e.error_skipto(RIGHTKEY);  // skip all tokens until the token '}' is found
+                                       // or should skip to ";"
+            jmm.numberRecoveries = jmm.numberRecoveries - 1;
+        }
+        else {
+            System.out.println("Number of retries exceedeed");
+            System.exit(1);
+        }
+    }
 }
 
 void LineStatement() #void : {}

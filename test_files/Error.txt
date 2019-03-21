@@ -11,11 +11,11 @@
 
   public boolean setCounter(int count) {
     counter = count;
-    while (ok)) a = b;
+    while (ok==========) a = b;
     return !true * 3 + 4;
   }
 
   public static void main(String[] args) {
-    while (ok)) a = b;
+    while (ok==========) a = b;
   }
 }
