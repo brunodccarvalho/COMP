@@ -9,9 +9,11 @@ PARSER_BEGIN(jmm)
 import java.io.*;
 
 public class jmm {
+    public static int numberRecoveries;
     public static void main(String args[]) throws ParseException, Exception {
         FileReader fr = new FileReader(args[0]);
         jmm myProg = new jmm(fr);
+        jmm.numberRecoveries = Integer.parseInt(args[1]);
         SimpleNode root = myProg.Start();
         root.dump("");
     }
@@ -306,7 +308,14 @@ void WhileStatement() : {}
         <WHILE> <LCB> Expression() <RCB> //#Condition(1)
     }
     catch(ParseException e){
-        e.error_skipto(RCB);  // skip all tokens until the token ')' is found
+        if(jmm.numberRecoveries != 0) {
+            e.error_skipto(RCB);  // skip all tokens until the token ')' is found
+            jmm.numberRecoveries = jmm.numberRecoveries - 1;
+        }
+        else {
+            System.out.println("Number of retries exceedeed");
+            System.exit(1);
+        }
     }
     Statement() //#LoopBody(1)
 }

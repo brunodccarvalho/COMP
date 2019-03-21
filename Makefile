@@ -1,6 +1,7 @@
 SRC = jmm
 
 TEST_FILE = Expression.txt
+NUMBER_RECOVERIES = 3
 ERROR_TEST_FILE = Error.txt
 
 JJTREE_DIR := compiled
@@ -37,7 +38,7 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -classpath bin $(SRC) test_files/$(TEST_FILE)
+	@java -classpath bin $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES) 
 
 testerror:
-	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE)
+	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES) 
