@@ -187,6 +187,9 @@ public class ParseException extends Exception {
   public void error_skipto(int kind) {
     skipto(kind);
     System.out.println("Tokens skipped to\'" + t + "\'");
+    System.out.println("Found \'" + t.next.image + "\' in " + t.beginLine + ":" + t.beginColumn);
+    System.out.println("Tokens skipped to\'" + skipped.image + "\' in " + skipped.beginLine + ":"
+                       + skipped.beginColumn);
   }
 }
 /* JavaCC - OriginalChecksum=c5a983a229aa877dc2b3b3b9933cdd6b (do not edit this line) */

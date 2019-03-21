@@ -1,8 +1,9 @@
 SRC = jmm
 
 TEST_FILE = Expression.txt
-NUMBER_RECOVERIES = 3
 ERROR_TEST_FILE = Error.txt
+
+NUMBER_RECOVERIES = 3
 
 JJTREE_DIR := compiled
 JJTREE_DEBUG :=
@@ -32,16 +33,16 @@ debug: mkdir
 
 loadJava:
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	#cp jjt/ParseException.java $(JJTREE_DIR)/ParseException.java
+	cp jjt/ParseException.java $(JJTREE_DIR)/ParseException.java
 
 mkdir:
-	@mkdir -p compiled/ bin/ $(JJTREE_DIR)
+	@mkdir -p $(JAVACC_DIR) $(JAVAC_DIR) $(JJTREE_DIR)
 
 clean:
-	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
+	@rm -f $(JAVAC_DIR)/* $(JAVACC_DIR)/* $(JJTREE_DIR)/* $(SRC).jj *.java *.class
 
 test:
-	@java -classpath bin $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES)
+	@java -classpath $(JAVAC_DIR) $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES) || true
 
 testerror:
-	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES)
+	@java -classpath $(JAVAC_DIR) $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES) || true
