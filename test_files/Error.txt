@@ -11,6 +11,7 @@
 
   public boolean setCounter(int count) {
     counter = count;
+    while (ok)) a = b;
     return !true * 3 + 4;
   }
 

@@ -7,13 +7,26 @@ options {
 
 PARSER_BEGIN(jmm)
 import java.io.*;
+import java.util.regex.*;
 
 public class jmm {
-    public static void main(String args[]) throws ParseException, Exception {
+    public static void main(String args[]) throws FileNotFoundException {
         FileReader fr = new FileReader(args[0]);
         jmm myProg = new jmm(fr);
-        SimpleNode root = myProg.Start();
-        root.dump("");
+        try {
+            SimpleNode root = myProg.Start();
+            root.dump("");
+        } catch (ParseException e) {
+            Pattern p_line=Pattern.compile("line [0-9]*");
+            Pattern p_col= Pattern.compile("column [0-9]*");
+            Matcher m= p_line.matcher(e.getMessage());
+            m.find();
+            String line_number=m.group();
+            m=p_col.matcher(e.getMessage());
+            m.find();
+            String column_number=m.group();
+            System.out.println("Unhandled error at "+ line_number+", "+column_number+". Aborting parser.");
+        }
     }
 }
 PARSER_END(jmm)
@@ -304,16 +317,16 @@ void WhileStatement() : {}
 {
     try{
         <WHILE> <LCB> Expression() <RCB> //#Condition(1)
-        Statement() //#LoopBody(1)
     }
     catch(ParseException e){
         Token token = getToken(0);
+        System.out.println("here");
         if(token.image.equals(")")){
             getNextToken();
             System.out.println("An unexpected \')\' found after While condition");
-            System.exit(1);
         }
     }
+    Statement() //#LoopBody(1)
 }
 
 void LineStatement() #void : {}
