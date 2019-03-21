@@ -11,13 +11,14 @@ import java.util.regex.*;
 
 public class jmm {
     public static int numberRecoveries = 0;
+    public static Boolean has_error=false; 
     public static void main(String args[]) throws FileNotFoundException {
         FileReader fr = new FileReader(args[0]);
         jmm myProg = new jmm(fr);
         myProg.numberRecoveries = Integer.parseInt(args[1]);
         try {
             SimpleNode root = myProg.Start();
-            root.dump("");
+            if(!jmm.has_error)root.dump("");
         } catch (ParseException e) {
             Pattern p_line=Pattern.compile("line [0-9]*");
             Pattern p_col= Pattern.compile("column [0-9]*");
@@ -321,8 +322,10 @@ void WhileStatement() : {}
         <WHILE> <LCB> Expression() <RCB> //#Condition(1)
     }
     catch(ParseException e){
+        jmm.has_error=true;
         if(jmm.numberRecoveries != 0) {
-            e.error_skipto(LEFTKEY);  // skip all tokens until the token '{' is found
+            //e.error_skipto(LEFTKEY);  // skip all tokens until the token '{' is found
+            e.error_skipto(RCB);  // skip all tokens until the token ')' is found
             jmm.numberRecoveries = jmm.numberRecoveries - 1;
         }
         else {
@@ -334,9 +337,10 @@ void WhileStatement() : {}
         Statement() //#LoopBody(1)
     }
     catch(ParseException e){
+        jmm.has_error=true;
         if(jmm.numberRecoveries != 0) {
-            e.error_skipto(RIGHTKEY);  // skip all tokens until the token '}' is found
-                                       // or should skip to ";"
+            //e.error_skipto(RIGHTKEY);  // skip all tokens until the token '}' is found
+            e.error_skipto(SEMICOLON);  // or should skip to ";"
             jmm.numberRecoveries = jmm.numberRecoveries - 1;
         }
         else {
