@@ -20,16 +20,19 @@ JAVAC_FLAGS := -d $(JAVAC_DIR) -sourcepath $(JAVACC_DIR)
 all: mkdir
 	jjtree $(JJTREE_FLAGS) jjt/$(SRC).jjt
 	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(SRC).jj
-	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	#cp jjt/Node.java $(JJTREE_DIR)/Node.java
+	$(MAKE) loadJava
 	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(SRC).java
 
 debug: mkdir
 	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jjt/$(SRC).jjt
 	javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) $(JJTREE_DIR)/$(SRC).jj
-	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	#cp jjt/Node.java $(JJTREE_DIR)/Node.java
+	$(MAKE) loadJava
 	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  $(JAVACC_DIR)/$(SRC).java
+
+
+loadJava:
+	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
+	cp jjt/ParseException.java $(JJTREE_DIR)/ParseException.java
 
 mkdir:
 	@mkdir -p compiled/ bin/ $(JJTREE_DIR)
