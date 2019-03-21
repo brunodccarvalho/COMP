@@ -18,17 +18,23 @@ public class jmm {
         jmm.numberRecoveries = Integer.parseInt(args[1]);
         try {
             SimpleNode root = myProg.Start();
+            //If there has been at least one error it doesn't print the tree
             if(!jmm.has_error)root.dump("");
         } catch (ParseException e) {
+            //Check if the error is number os retries exceeded
             if(e.toString()=="Number of retries exceedeed")e.printStackTrace();
+            //Else is a unhandled error
             Pattern p_line=Pattern.compile("line [0-9]*");
             Pattern p_col= Pattern.compile("column [0-9]*");
             Matcher m= p_line.matcher(e.getMessage());
             m.find();
+            //get the line number from the error message using regex
             String line_number=m.group();
             m=p_col.matcher(e.getMessage());
             m.find();
+            //get the column number from the error message using regex
             String column_number=m.group();
+            //Print error
             System.out.println("Unhandled error at "+ line_number+", "+column_number+". Aborting parser.");
         }
     }
