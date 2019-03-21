@@ -32,7 +32,7 @@ debug: mkdir
 
 loadJava:
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	cp jjt/ParseException.java $(JJTREE_DIR)/ParseException.java
+	#cp jjt/ParseException.java $(JJTREE_DIR)/ParseException.java
 
 mkdir:
 	@mkdir -p compiled/ bin/ $(JJTREE_DIR)
@@ -41,7 +41,7 @@ clean:
 	@rm -f bin/* compiled/* $(SRC).jj *.java *.class
 
 test:
-	@java -classpath bin $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES) 
+	@java -classpath bin $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES)
 
 testerror:
-	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES) 
+	@java -classpath bin $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES)

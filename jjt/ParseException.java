@@ -10,7 +10,6 @@
  * mechanisms so long as you retain the public fields.
  */
 public class ParseException extends Exception {
-
   /**
    * The version identifier for this Serializable class.
    * Increment only if the <i>serialized</i> form of the
@@ -24,11 +23,8 @@ public class ParseException extends Exception {
    * a new object of this type with the fields "currentToken",
    * "expectedTokenSequences", and "tokenImage" set.
    */
-  public ParseException(Token currentTokenVal,
-                        int[][] expectedTokenSequencesVal,
-                        String[] tokenImageVal
-                       )
-  {
+  public ParseException(Token currentTokenVal, int[][] expectedTokenSequencesVal,
+                        String[] tokenImageVal) {
     super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
     currentToken = currentTokenVal;
     expectedTokenSequences = expectedTokenSequencesVal;
@@ -53,7 +49,6 @@ public class ParseException extends Exception {
   public ParseException(String message) {
     super(message);
   }
-
 
   /**
    * This is the last token that has been consumed successfully.  If
@@ -83,9 +78,8 @@ public class ParseException extends Exception {
    * from the parser) the correct error message
    * gets displayed.
    */
-  private static String initialise(Token currentToken,
-                           int[][] expectedTokenSequences,
-                           String[] tokenImage) {
+  private static String initialise(Token currentToken, int[][] expectedTokenSequences,
+                                   String[] tokenImage) {
     String eol = System.getProperty("line.separator", "\n");
     StringBuffer expected = new StringBuffer();
     int maxSize = 0;
@@ -115,7 +109,8 @@ public class ParseException extends Exception {
       retval += " \"";
       tok = tok.next;
     }
-    retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
+    retval += "\" at line " + currentToken.next.beginLine + ", column "
+              + currentToken.next.beginColumn;
     retval += "." + eol;
     if (expectedTokenSequences.length == 1) {
       retval += "Was expecting:" + eol + "    ";
@@ -137,62 +132,61 @@ public class ParseException extends Exception {
    * string literal.
    */
   static String add_escapes(String str) {
-      StringBuffer retval = new StringBuffer();
-      char ch;
-      for (int i = 0; i < str.length(); i++) {
-        switch (str.charAt(i))
-        {
-           case 0 :
-              continue;
-           case '\b':
-              retval.append("\\b");
-              continue;
-           case '\t':
-              retval.append("\\t");
-              continue;
-           case '\n':
-              retval.append("\\n");
-              continue;
-           case '\f':
-              retval.append("\\f");
-              continue;
-           case '\r':
-              retval.append("\\r");
-              continue;
-           case '\"':
-              retval.append("\\\"");
-              continue;
-           case '\'':
-              retval.append("\\\'");
-              continue;
-           case '\\':
-              retval.append("\\\\");
-              continue;
-           default:
-              if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
-                 String s = "0000" + Integer.toString(ch, 16);
-                 retval.append("\\u" + s.substring(s.length() - 4, s.length()));
-              } else {
-                 retval.append(ch);
-              }
-              continue;
+    StringBuffer retval = new StringBuffer();
+    char ch;
+    for (int i = 0; i < str.length(); i++) {
+      switch (str.charAt(i)) {
+      case 0:
+        continue;
+      case '\b':
+        retval.append("\\b");
+        continue;
+      case '\t':
+        retval.append("\\t");
+        continue;
+      case '\n':
+        retval.append("\\n");
+        continue;
+      case '\f':
+        retval.append("\\f");
+        continue;
+      case '\r':
+        retval.append("\\r");
+        continue;
+      case '\"':
+        retval.append("\\\"");
+        continue;
+      case '\'':
+        retval.append("\\\'");
+        continue;
+      case '\\':
+        retval.append("\\\\");
+        continue;
+      default:
+        if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+          String s = "0000" + Integer.toString(ch, 16);
+          retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+        } else {
+          retval.append(ch);
         }
+        continue;
       }
-      return retval.toString();
-   }
+    }
+    return retval.toString();
+  }
 
-
-   public void error_skipto(int kind) {
-    Token t;
-    do {
+  private boolean skipto(int kind) {
+    Token t = currentToken;
+    while (t.kind != kind) {
+      System.out.printf("Token %d %s\n", t, tokenImage[t]);
       t = jmm.getNextToken();
-    } while (t.kind != kind);
-      // The above loop consumes tokens all the way up to a token of
-      // "kind".  We use a do-while loop rather than a while because the
-      // current token is the one immediately before the erroneous token
-      // (in our case the token immediately before what should have been
-      // "if"/"while".
-      System.out.println("Tokens skipped to\'" + t + "\'");
-  } 
+    }
+    return true;
+  }
+
+  public void error_skipto(int kind) {
+    skipto(kind);
+    System.out.println("Tokens skipped to\'" + t + "\'");
+  }
 }
 /* JavaCC - OriginalChecksum=c5a983a229aa877dc2b3b3b9933cdd6b (do not edit this line) */
