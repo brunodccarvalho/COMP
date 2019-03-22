@@ -30,7 +30,6 @@ debug: mkdir
 	$(MAKE) loadJava
 	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  $(JAVACC_DIR)/$(SRC).java
 
-
 loadJava:
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
 	cp jjt/ParseException.java $(JJTREE_DIR)/ParseException.java

@@ -11,7 +11,9 @@ import java.util.regex.*;
 
 public class jmm {
     public static int numberRecoveries = 0;
-    public static Boolean has_error=false; 
+
+    public static Boolean has_error = false;
+
     public static void main(String args[]) throws FileNotFoundException {
         FileReader fr = new FileReader(args[0]);
         jmm myProg = new jmm(fr);
@@ -325,27 +327,16 @@ void IfElseStatement() : {}
 
 void WhileStatement() : {}
 {
-    try{
-        <WHILE><LCB>
-    }
-    catch(ParseException e) {
-        jmm.has_error=true;
-        if(jmm.numberRecoveries != 0) {
-            jmm.numberRecoveries = jmm.numberRecoveries - 1;
-            System.out.println("Expected '(' but found " + e.currentToken.image);
-        }
-        else {
-            System.out.println("Number of retries exceedeed");
-            System.exit(1);
-        }
-    }
-    Expression() //#Condition(1)
+    try { <WHILE> <LCB> }
+    catch (ParseException e) { e.advance(); }
 
-    try{
-        <RCB> Statement() //#LoopBody(1)
-    }
-    catch(ParseException e){
-    }
+    try { Expression()
+        try { <RCB> }
+        catch (ParseException e) {e.advance(); } }
+    catch (ParseException e) { e.skipto(new int[]{RCB, IF, WHILE, LEFTKEY}).consumeif(RCB); }
+
+    try { Statement() }
+    catch (ParseException e) { e.skipto(new int[]{RIGHTKEY, SEMICOLON}).consume(); }
 }
 
 void LineStatement() #void : {}
@@ -423,7 +414,7 @@ void MethodBody() #void : {}
 
 void AssignmentOrDeclaration() #void : {}
 {
-    Identifier() #VariableDeclaration(2) <SEMICOLON> MethodBody()
+    Identifier() <SEMICOLON> #VariableDeclaration(2) MethodBody()
     |
     IdentifierStatementTail() (Statement())*
 }
