@@ -7,7 +7,6 @@ options {
 
 PARSER_BEGIN(jmm)
 import java.io.*;
-import java.util.regex.*;
 
 public class jmm {
     public static int numberRecoveries = 0;
@@ -17,16 +16,20 @@ public class jmm {
 
     public static void main(String args[]) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(args[0]);
-        ParseException.file=args[0];
+        ParseException.file = args[0];
         jmm myProg = new jmm(fr);
         jmm.numberRecoveries = Integer.parseInt(args[1]);
+
         try {
             SimpleNode root = myProg.Program();
-            //If there has been at least one error it doesn't print the tree
-            if(!jmm.has_error)root.dump("");
+            // IMO: Print the tree unless we aborted:
+            root.dump("");
         } catch (ParseException e) {
             e.printStackTrace();
+            // Don't dump
         }
+
+        System.exit(jmm.has_error ? 1 : 0);
     }
 }
 PARSER_END(jmm)
@@ -318,19 +321,15 @@ void IfElseStatement() : {}
 void WhileStatement() : {}
 {
     try { <WHILE> <LCB> }
-    catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString());
-        e.advance(); }
+    catch (ParseException e) { e.advance(); }
 
     try { Expression()
         try { <RCB> }
-        catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString());
-            e.advance(); } }
-    catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString());
-        e.skipto(new int[]{RCB, IF, WHILE, LEFTKEY}).consumeif(RCB); }
+        catch (ParseException e) { e.advance(); } }
+    catch (ParseException e) { e.skipto(new int[]{RCB, IF, WHILE, LEFTKEY}).consumeif(RCB); }
 
     try { Statement() }
-    catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString());
-        e.skipto(new int[]{RIGHTKEY, SEMICOLON}).consume(); }
+    catch (ParseException e) { e.skipto(new int[]{RIGHTKEY, SEMICOLON}).consume(); }
 }
 
 void LineStatement() #void : {}

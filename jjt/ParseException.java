@@ -88,25 +88,23 @@ public class ParseException extends Exception {
       for (int j = 0; j < expectedTokenSequences[i].length; j++) {
         expected.append(tokenImage[expectedTokenSequences[i][j]]);
       }
-      if(i!=expectedTokenSequences.length-1)expected.append(" OR ");
+      if (i != expectedTokenSequences.length - 1) expected.append(" OR ");
     }
-    
+
     Token tok = currentToken.next;
-    String retval = file + ": at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn + " ." + eol + "Parsing error: " ;
-    
+    String retval = file + ": at line " + currentToken.next.beginLine + ", column "
+                    + currentToken.next.beginColumn + "." + eol + "Parsing error: ";
+
     try {
-      String line="";
-      int lineNo=1;
-      FileReader fr =new FileReader(ParseException.file);
+      String line = "";
+      int lineNo = 1;
+      FileReader fr = new FileReader(ParseException.file);
       BufferedReader br = new BufferedReader(fr);
-      while((line=br.readLine())!=null)
-      {
-        if(lineNo==currentToken.next.beginLine)
-        {
-          retval+=line;
+      while ((line = br.readLine()) != null) {
+        if (lineNo == currentToken.next.beginLine) {
+          retval += line;
           break;
-        }
-        else
+        } else
           lineNo++;
       }
     } catch (IOException e) {
@@ -124,13 +122,12 @@ public class ParseException extends Exception {
       retval += "\"";
       tok = tok.next;
     }
-    retval+="."+eol;
+    retval += "." + eol;
 
-    for(int i=0;i<15+currentToken.next.beginColumn-1;i++)
-    {
-      retval+=" ";
+    for (int i = 0; i < 15 + currentToken.next.beginColumn - 1; i++) {
+      retval += " ";
     }
-    retval+="^"+eol;
+    retval += "^" + eol;
 
     if (expectedTokenSequences.length == 1) {
       retval += "Was expecting:" + eol;
@@ -138,7 +135,7 @@ public class ParseException extends Exception {
       retval += "Was expecting one of:" + eol;
     }
     retval += expected.toString();
-    return retval+eol;
+    return retval + eol;
   }
 
   /**
@@ -196,33 +193,32 @@ public class ParseException extends Exception {
   }
 
   // Debugging
-  private static boolean ECHO_TOKENS = true;
+  private static boolean ECHO_TOKENS = false;
   private boolean explained = false;
 
   private void printToken(Token t) {
     if (!ECHO_TOKENS) return;
     if (t == null)
-      System.out.printf("Token null");
+      System.out.printf("Token null\n");
     else if (t.next == null)
-      System.out.printf("Token %d %s %d:%d null\n", t.kind, tokenImage[t.kind], t.beginLine,
-                        t.beginColumn);
+      System.out.printf("Token %s %d:%d null\n", tokenImage[t.kind], t.beginLine, t.beginColumn);
     else
-      System.out.printf("Token %d %s %d:%d - %d %s %d:%d\n", t.kind, tokenImage[t.kind],
-                        t.beginLine, t.beginColumn, t.next.kind, tokenImage[t.next.kind],
-                        t.next.beginLine, t.next.beginColumn);
+      System.out.printf("Token %s %d:%d - %s %d:%d\n", tokenImage[t.kind], t.beginLine,
+                        t.beginColumn, tokenImage[t.next.kind], t.next.beginLine,
+                        t.next.beginColumn);
   }
 
   private void printToken(int i, Token t) {
     if (!ECHO_TOKENS) return;
     if (t == null)
-      System.out.printf("Token null");
+      System.out.printf("Token null\n");
     else if (t.next == null)
-      System.out.printf("Token#%d %d %s %d:%d null\n", i, t.kind, tokenImage[t.kind], t.beginLine,
+      System.out.printf("Token#%d %s %d:%d null\n", i, tokenImage[t.kind], t.beginLine,
                         t.beginColumn);
     else
-      System.out.printf("Token#%d %d %s %d:%d - %d %s %d:%d\n", i, t.kind, tokenImage[t.kind],
-                        t.beginLine, t.beginColumn, t.next.kind, tokenImage[t.next.kind],
-                        t.next.beginLine, t.next.beginColumn);
+      System.out.printf("Token#%d %s %d:%d - %s %d:%d\n", i, tokenImage[t.kind], t.beginLine,
+                        t.beginColumn, tokenImage[t.next.kind], t.next.beginLine,
+                        t.next.beginColumn);
   }
 
   // A fix for the spaghetti of jmm.getNextToken()
@@ -333,6 +329,9 @@ public class ParseException extends Exception {
       System.err.println(toString());
     }
     explained = true;
+    jmm.has_error = true;
+    // handle number of recoveries here
+    // if (too many recoveries) throw this;
   }
 
   @Override
