@@ -1,6 +1,6 @@
 SRC = jmm
 
-TEST_FILE = Expression.txt
+TEST_FILE = TestEverything.java
 ERROR_TEST_FILE = Error.txt
 
 NUMBER_RECOVERIES = 3

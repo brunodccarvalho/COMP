@@ -15,13 +15,13 @@ public class jmm {
     public static Boolean has_error = false;
     public static String file;
 
-    public static void main(String args[]) throws FileNotFoundException {
+    public static void main(String args[]) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(args[0]);
         ParseException.file=args[0];
         jmm myProg = new jmm(fr);
         jmm.numberRecoveries = Integer.parseInt(args[1]);
         try {
-            SimpleNode root = myProg.Start();
+            SimpleNode root = myProg.Program();
             //If there has been at least one error it doesn't print the tree
             if(!jmm.has_error)root.dump("");
         } catch (ParseException e) {
@@ -120,7 +120,7 @@ TOKEN: {
     <ARR: "@">
 }
 
-SimpleNode Start() : {}
+SimpleNode Program() : {}
 {
     ClassDeclaration() (<ARR> ClassDeclaration())*
     {return jjtThis;}
@@ -197,31 +197,29 @@ void Term4() #void : {}
 
 void LiteralTerm4() #void : {}
 {
-    Integer() (TermTail())*
+    Integer() TermTail()
     |
-    (<TRUE> #True) (TermTail())*
+    (<TRUE> #True) TermTail()
     |
-    (<FALSE> #False) (TermTail())*
+    (<FALSE> #False) TermTail()
     |
-    (<THIS> #This) (TermTail())*
+    (<THIS> #This) TermTail()
     |
-    (<LCB> Expression() <RCB>) (TermTail())*
+    (<LCB> Expression() <RCB>) TermTail()
     |
-    <NEW> NewTerm() (TermTail())*
+    <NEW> NewTerm() TermTail()
     |
     NOT()
 }
 
 void IdentifierTerm4() #void : {}
 {
-    Identifier() (TermTail())*
+    Identifier() TermTail()
 }
 
 void TermTail() #void : {}
 {
-    ArrayAccess()
-    |
-    ObjectAccess()
+    (ArrayAccess() | ObjectAccess())*
 }
 
 void ArrayAccess() #void : {}
@@ -338,6 +336,7 @@ void LineStatement() #void : {}
     IdentifierStatement()
 }
 
+// Expression ;   FOR NON IDENTIFIERS
 void LiteralLineStatement() #void : {}
 {
     LiteralExpression() <SEMICOLON> #PlainStatement(1)
@@ -348,16 +347,24 @@ void IdentifierStatement() #void : {}
     Identifier() IdentifierStatementTail()
 }
 
+// Identifier = Expression ;
+// Identifier [ Expression ] = Expression ;
+// Expression ;   FOR IDENTIFIERS
 void IdentifierStatementTail() #void : {}
 {
     (<EQUAL> Expression() #Assignment(2)
     |
-    ArrayAccess() (<EQUAL> Expression() #Assignment(2))?
+    ArrayAccess() ArrayAccessIdentifierStatementTail()
     |
-    ObjectAccess() ExpressionTail()
-    |
-    ExpressionTail())
+    ObjectAccess() TermTail() ExpressionTail())?
     <SEMICOLON> #PlainStatement(1)
+}
+
+void ArrayAccessIdentifierStatementTail() #void : {}
+{
+    <EQUAL> Expression() #Assignment(2)
+    |
+    TermTail() ExpressionTail()
 }
 
 void LiteralStatement() #void : {}
@@ -513,3 +520,15 @@ void ClassMethodDeclaration() : {}
  *  8. Should ReturnStatement() include ';'? [YES]
  *  ...
  */
+
+// Keyword: one of
+// abstract   continue   for          new         switch
+// assert     default    if           package     synchronized
+// boolean    do         goto         private     this
+// break      double     implements   protected   throw
+// byte       else       import       public      throws
+// case       enum       instanceof   return      transient
+// catch      extends    int          short       try
+// char       final      interface    static      void
+// class      finally    long         strictfp    volatile
+// const      float      native       super       while
