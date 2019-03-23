@@ -23,7 +23,6 @@ public class jmm {
             //If there has been at least one error it doesn't print the tree
             if(!jmm.has_error)root.dump("");
         } catch (ParseException e) {
-            if (true) throw e;
             //Check if the error is number os retries exceeded
             if(e.toString()=="Number of retries exceedeed")e.printStackTrace();
             //Else is a unhandled error
@@ -46,6 +45,10 @@ PARSER_END(jmm)
 
 SKIP: {
     " " | "\r" | "\t" | "\n"
+    |
+    < "//" (~["\n","\r"])* ("\n" | "\r") > // skip single-line comments
+    |
+    < "/*" (~["*"])* "*" (~["*","/"] (~["*"])* "*" | "*")* "/" > // skip multiline comments
 }
 
 TOKEN: {

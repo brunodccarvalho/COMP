@@ -1,3 +1,4 @@
+// single line comment
 class TestEverything extends Something {
   SomeClassType type;
   int i;
@@ -8,6 +9,10 @@ class TestEverything extends Something {
   boolean both;
   long counter;
   int[] input;
+
+  /***
+   * * multiline comment ** / *
+   */
 
   TestEverything that;
 

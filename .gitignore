@@ -4,6 +4,3 @@ old
 /*.java
 /*.class
 .vscode
-
-# Exceptions
-!compiled/ParseException.java

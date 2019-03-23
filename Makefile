@@ -1,7 +1,8 @@
 SRC = jmm
 
-TEST_FILE = TestEverything.java
+TEST_FILE = TestEverything.txt
 ERROR_TEST_FILE = Error.txt
+WHILES_TEST_FILE = BadWhiles.txt
 
 NUMBER_RECOVERIES = 3
 
@@ -45,3 +46,6 @@ test:
 
 testerror:
 	@java -classpath $(JAVAC_DIR) $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES) || true
+
+testwhiles:
+	@java -classpath $(JAVAC_DIR) $(SRC) test_files/$(WHILES_TEST_FILE) $(NUMBER_RECOVERIES) || true
