@@ -82,6 +82,8 @@ class TestEverything extends Something {
     a.length;
     a.length.get();
     a.get().length;
+    a + b;
+    a + b.length * c;
 
     a = 1;
     a[1] = 1 - 2 / 3;

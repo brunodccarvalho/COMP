@@ -359,7 +359,9 @@ void IdentifierStatementTail() #void : {}
     |
     ArrayAccess() ArrayAccessIdentifierStatementTail()
     |
-    ObjectAccess() TermTail() ExpressionTail())?
+    ObjectAccess() TermTail() ExpressionTail()
+    |
+    ExpressionTail())
     <SEMICOLON> #PlainStatement(1)
 }
 
