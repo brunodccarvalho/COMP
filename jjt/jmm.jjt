@@ -13,9 +13,11 @@ public class jmm {
     public static int numberRecoveries = 0;
 
     public static Boolean has_error = false;
+    public static String file;
 
     public static void main(String args[]) throws FileNotFoundException {
         FileReader fr = new FileReader(args[0]);
+        ParseException.file=args[0];
         jmm myProg = new jmm(fr);
         jmm.numberRecoveries = Integer.parseInt(args[1]);
         try {
@@ -23,21 +25,7 @@ public class jmm {
             //If there has been at least one error it doesn't print the tree
             if(!jmm.has_error)root.dump("");
         } catch (ParseException e) {
-            //Check if the error is number os retries exceeded
-            if(e.toString()=="Number of retries exceedeed")e.printStackTrace();
-            //Else is a unhandled error
-            Pattern p_line=Pattern.compile("line [0-9]*");
-            Pattern p_col= Pattern.compile("column [0-9]*");
-            Matcher m= p_line.matcher(e.getMessage());
-            m.find();
-            //get the line number from the error message using regex
-            String line_number=m.group();
-            m=p_col.matcher(e.getMessage());
-            m.find();
-            //get the column number from the error message using regex
-            String column_number=m.group();
-            //Print error
-            System.out.println("Unhandled error at "+ line_number+", "+column_number+". Aborting parser.");
+            e.printStackTrace();
         }
     }
 }
@@ -328,15 +316,19 @@ void IfElseStatement() : {}
 void WhileStatement() : {}
 {
     try { <WHILE> <LCB> }
-    catch (ParseException e) { e.advance(); }
+    catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString()); 
+        e.advance(); }
 
     try { Expression()
         try { <RCB> }
-        catch (ParseException e) {e.advance(); } }
-    catch (ParseException e) { e.skipto(new int[]{RCB, IF, WHILE, LEFTKEY}).consumeif(RCB); }
+        catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString());
+            e.advance(); } }
+    catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString()); 
+        e.skipto(new int[]{RCB, IF, WHILE, LEFTKEY}).consumeif(RCB); }
 
     try { Statement() }
-    catch (ParseException e) { e.skipto(new int[]{RIGHTKEY, SEMICOLON}).consume(); }
+    catch (ParseException e) {jmm.has_error=true;System.out.println(e.toString()); 
+        e.skipto(new int[]{RIGHTKEY, SEMICOLON}).consume(); }
 }
 
 void LineStatement() #void : {}
