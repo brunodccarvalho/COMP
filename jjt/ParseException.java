@@ -88,12 +88,12 @@ public class ParseException extends Exception {
       for (int j = 0; j < expectedTokenSequences[i].length; j++) {
         expected.append(tokenImage[expectedTokenSequences[i][j]]);
       }
-      if (i != expectedTokenSequences.length - 1) expected.append(" OR ");
+      if (i != expectedTokenSequences.length - 1) expected.append(", ");
     }
 
     Token tok = currentToken.next;
     String retval = file + ": at line " + currentToken.next.beginLine + ", column "
-                    + currentToken.next.beginColumn + "." + eol + "Parsing error: ";
+                    + currentToken.next.beginColumn + "." + eol + "\t Syntactic error: ";
 
     try {
       String line = "";
@@ -130,11 +130,11 @@ public class ParseException extends Exception {
     retval += "^" + eol;
 
     if (expectedTokenSequences.length == 1) {
-      retval += "Was expecting:" + eol;
+      retval += "\t Was expecting:" + eol;
     } else {
-      retval += "Was expecting one of:" + eol;
+      retval += "\t Was expecting one of:" + eol;
     }
-    retval += expected.toString();
+    retval += "\t " + expected.toString();
     return retval + eol;
   }
 
@@ -221,7 +221,7 @@ public class ParseException extends Exception {
                         t.next.beginColumn);
   }
 
-  // A fix for the spaghetti of jmm.getNextToken()
+  // A fix for the implementation of jmm.getNextToken()
   // it does: A1 null -> A2 null  OR  A1 A2 -> A2 null
   // what we want: A1 null -> A2 A3  OR  A1 A2 -> A2 A3
   private Token jmmSkip() {
