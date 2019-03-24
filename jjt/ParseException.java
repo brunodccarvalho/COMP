@@ -122,9 +122,10 @@ public class ParseException extends Exception {
       retval += "\"";
       tok = tok.next;
     }
-    retval += "." + eol;
+    retval += "." + eol + "\t";
 
-    for (int i = 0; i < 15 + currentToken.next.beginColumn - 1; i++) {
+    String offset=" Syntactic error: ";//without \t
+    for (int i = 0; i < offset.length() + currentToken.next.beginColumn - 1; i++) {
       retval += " ";
     }
     retval += "^" + eol;
