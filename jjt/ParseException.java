@@ -13,6 +13,7 @@ public class ParseException extends Exception {
    * class changes.
    */
   private static final long serialVersionUID = 1L;
+  public static int numberRecoveries;
 
   /**
    * This constructor is used by the method "generateParseException"
@@ -326,6 +327,11 @@ public class ParseException extends Exception {
   }
 
   public void explain() {
+    if(--ParseException.numberRecoveries < 0) {
+      System.out.println("Exceeded maximum number of recoveries.");
+      System.exit(1);
+    };
+
     if (!explained) {
       System.err.println(toString());
     }

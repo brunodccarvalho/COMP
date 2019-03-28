@@ -9,16 +9,15 @@ PARSER_BEGIN(jmm)
 import java.io.*;
 
 public class jmm {
-    public static int numberRecoveries = 0;
-
+    
     public static Boolean has_error = false;
     public static String file;
 
     public static void main(String args[]) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(args[0]);
         ParseException.file = args[0];
+        ParseException.numberRecoveries = Integer.parseInt(args[1]);
         jmm myProg = new jmm(fr);
-        jmm.numberRecoveries = Integer.parseInt(args[1]);
 
         try {
             SimpleNode root = myProg.Program();
@@ -442,7 +441,6 @@ void MainParameterList(): {}
 // *** Methods
 void MainDeclaration() #void : {}
 {
-    //<PUBLIC>
     <STATIC>
     <VOID>
     <MAIN>
@@ -456,7 +454,6 @@ void MainDeclaration() #void : {}
 
 void MethodDeclaration() #void : {}
 {
-    //<PUBLIC>
     Type() //#MethodReturnType
     MethodName()
     <LCB>

@@ -16,6 +16,7 @@
   }
 
   public static void main(String[] args) {
-    while (ok)))) a = b;
+    while (ok=) a = b;
+    while (ok=) a = b;
   }
 }
