@@ -9,9 +9,9 @@ PARSER_BEGIN(jmm)
 import java.io.*;
 
 public class jmm {
-    
     public static Boolean has_error = false;
     public static String file;
+    public static int[][] tokenCache;
 
     public static void main(String args[]) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(args[0]);
@@ -128,8 +128,26 @@ TOKEN: {
 
 SimpleNode Program() : {}
 {
-    ClassDeclaration() (<ARR> ClassDeclaration())*
+    ClassDeclaration() (<ARR> ClassDeclaration())?
     {return jjtThis;}
+}
+
+// *** Black magic
+void Length() #void : {}
+{
+    <LENGTH>
+    {jmm.tokenCache = new int[2][2];
+        jmm.tokenCache[0][0] = jmm.token.beginLine;
+        jmm.tokenCache[0][1] = jmm.token.beginColumn;
+        jmm.tokenCache[1][0] = jmm.token.endLine;
+        jmm.tokenCache[1][1] = jmm.token.endColumn + 1;}
+}
+
+void MethodNameLength() #MethodName : {}
+{
+    {jjtThis.jjtSetVal("length");
+        jjtThis.cacheBegin = jmm.tokenCache[0];
+        jjtThis.cacheEnd = jmm.tokenCache[1];}
 }
 
 // *** Terminals with Values
@@ -141,19 +159,19 @@ void Integer() : {Token token;}
 
 void MethodName() : {Token token;}
 {
-    token = <IDENTIFIER>
+    (token = <IDENTIFIER> | token = <MAIN>)
     {jjtThis.jjtSetVal(token.image);}
 }
 
 void ClassType() : {Token token;}
 {
-    token = <IDENTIFIER>
+    (token = <IDENTIFIER> | token = <MAIN> | token = <LENGTH>)
     {jjtThis.jjtSetVal(token.image);}
 }
 
 void Identifier() : {Token token;}
 {
-    token = <IDENTIFIER>
+    (token = <IDENTIFIER> | token = <MAIN> | token = <LENGTH>)
     {jjtThis.jjtSetVal(token.image);}
 }
 
@@ -240,9 +258,16 @@ void ObjectAccess() #void : {}
 
 void ObjectAccessTail() #void : {}
 {
-    <LENGTH> #Length(1)
+    Length() LengthTail()
     |
     MethodName() <LCB> ArgumentList() <RCB> #Call(3)
+}
+
+void LengthTail() #void : {}
+{
+    MethodNameLength() <LCB> ArgumentList() <RCB> #Call(3)
+    |
+    {} #Length(1)
 }
 
 void ArgumentList() : {}

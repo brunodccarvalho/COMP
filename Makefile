@@ -1,7 +1,7 @@
 SRC = jmm
 
 TEST_FILE = TestEverything.txt
-ERROR_TEST_FILE = Error.txt
+ERROR_TEST_FILE = What.txt
 WHILES_TEST_FILE = BadWhiles.txt
 
 NUMBER_RECOVERIES = 3
