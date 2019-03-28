@@ -92,6 +92,14 @@ class TestEverything extends Something {
     return 0;
   }
 
+  public int main() {
+      return 0;
+  }
+
+  public int length() {
+      return 1;
+  }
+
   public static void main(String[] args) {
     int a;
     int length;
