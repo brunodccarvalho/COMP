@@ -95,11 +95,18 @@ class TestEverything extends Something {
   public static void main(String[] args) {
     int a;
     int length;
+    length b;
+    main c;
 
     abc.mod(7);
     abc.length
     (7);
     abc.length;
+
+    abc.main(ok, abc);
+    main.ok();
+    main.length;
+    length.main(length.length(ok.length));
 
     SomeClass[0] = true;
     n = 0 + 1;

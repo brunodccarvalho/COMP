@@ -13,6 +13,14 @@ public class jmm {
     public static String file;
     public static int[][] tokenCache;
 
+    public static void pushTokenCache() {
+        jmm.tokenCache = new int[2][2];
+        jmm.tokenCache[0][0] = jmm.token.beginLine;
+        jmm.tokenCache[0][1] = jmm.token.beginColumn;
+        jmm.tokenCache[1][0] = jmm.token.endLine;
+        jmm.tokenCache[1][1] = jmm.token.endColumn + 1;
+    }
+
     public static void main(String args[]) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(args[0]);
         ParseException.file = args[0];
@@ -132,15 +140,18 @@ SimpleNode Program() : {}
     {return jjtThis;}
 }
 
-// *** Black magic
+// According to the Java Identifier specification, 'length' is a valid
+// identifier. So we should accept method names called 'length' along with
+// the construct 'variable.length'. This generates a difficult lookahead issue
+// at ObjectAccessTail() and then LengthTail(), as the two different constructs
+// Length(1) and Call(3) interact with the previous <LENGTH> token differently.
+// The first does not add <LENGTH> to the AST, while the second does, and it
+// needs its begin and end line/column. So we add <LENGTH> to the jmm cache,
+// and 'pop' it only if necessary.
 void Length() #void : {}
 {
     <LENGTH>
-    {jmm.tokenCache = new int[2][2];
-        jmm.tokenCache[0][0] = jmm.token.beginLine;
-        jmm.tokenCache[0][1] = jmm.token.beginColumn;
-        jmm.tokenCache[1][0] = jmm.token.endLine;
-        jmm.tokenCache[1][1] = jmm.token.endColumn + 1;}
+    {jmm.pushTokenCache();}
 }
 
 void MethodNameLength() #MethodName : {}
