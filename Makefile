@@ -1,10 +1,10 @@
 SRC = jmm
 
 TEST_FILE = TestEverything.txt
-ERROR_TEST_FILE = What.txt
+ERROR_TEST_FILE = Error.txt
 WHILES_TEST_FILE = BadWhiles.txt
 
-NUMBER_RECOVERIES = 3
+NUMBER_RECOVERIES = 10
 
 JJTREE_DIR := compiled
 JJTREE_DEBUG :=

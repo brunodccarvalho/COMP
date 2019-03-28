@@ -125,7 +125,7 @@ public class ParseException extends Exception {
     }
     retval += "." + eol + "\t";
 
-    String offset=" Syntactic error: ";//without \t
+    String offset = " Syntactic error: ";  // without \t
     for (int i = 0; i < offset.length() + currentToken.next.beginColumn - 1; i++) {
       retval += " ";
     }
@@ -327,12 +327,11 @@ public class ParseException extends Exception {
   }
 
   public void explain() {
-    if(--ParseException.numberRecoveries < 0) {
-      System.out.println("Exceeded maximum number of recoveries.");
-      System.exit(1);
-    };
-
     if (!explained) {
+      if (--ParseException.numberRecoveries < 0) {
+        System.out.println("Exceeded maximum number of recoveries.");
+        System.exit(1);
+      };
       System.err.println(toString());
     }
     explained = true;
