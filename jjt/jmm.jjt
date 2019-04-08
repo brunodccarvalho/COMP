@@ -9,8 +9,7 @@ PARSER_BEGIN(jmm)
 import java.io.*;
 
 public class jmm {
-    public static Boolean has_error = false;
-    public static String file;
+    public static boolean has_error = false, parsed = false;
     public static int[][] tokenCache;
 
     public static void pushTokenCache() {
@@ -21,22 +20,30 @@ public class jmm {
         jmm.tokenCache[1][1] = jmm.token.endColumn + 1;
     }
 
-    public static void main(String args[]) throws FileNotFoundException, ParseException {
-        FileReader fr = new FileReader(args[0]);
+    public static void main(String[] args) throws FileNotFoundException, ParseException {
+        File file = new File(args[0]);
         ParseException.file = args[0];
-        ParseException.numberRecoveries = Integer.parseInt(args[1]);
+        if (args.length > 1) ParseException.numberRecoveries = Integer.parseInt(args[1]);
+
+        SimpleNode root = parseFile(file);
+        if (root == null) System.exit(1);
+        root.dump("");
+        System.exit(0);
+    }
+
+    public static SimpleNode parseFile(File file) throws FileNotFoundException {
+        FileReader fr = new FileReader(file);
+        ParseException.file = file.toString();
         jmm myProg = new jmm(fr);
 
         try {
             SimpleNode root = myProg.Program();
-            // IMO: Print the tree unless we aborted:
-            root.dump("");
+            return root;
         } catch (ParseException e) {
             e.printStackTrace();
-            // Don't dump
         }
 
-        System.exit(jmm.has_error ? 1 : 0);
+        return null;
     }
 }
 PARSER_END(jmm)

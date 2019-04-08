@@ -1,4 +1,5 @@
-SRC = jmm
+JMM = jmm
+SRC = src/
 
 TEST_FILE = TestEverything.txt
 ERROR_TEST_FILE = Error.txt
@@ -20,16 +21,16 @@ JAVAC_DEBUG := -g
 JAVAC_FLAGS := -d $(JAVAC_DIR) -sourcepath $(JAVACC_DIR)
 
 all: mkdir
-	jjtree $(JJTREE_FLAGS) jjt/$(SRC).jjt
-	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(SRC).jj
+	jjtree $(JJTREE_FLAGS) jjt/$(JMM).jjt
+	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(JMM).jj
 	$(MAKE) loadJava
-	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(SRC).java
+	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(JMM).java
 
 debug: mkdir
-	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jjt/$(SRC).jjt
-	javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) $(JJTREE_DIR)/$(SRC).jj
+	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jjt/$(JMM).jjt
+	javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) $(JJTREE_DIR)/$(JMM).jj
 	$(MAKE) loadJava
-	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  $(JAVACC_DIR)/$(SRC).java
+	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  $(JAVACC_DIR)/$(JMM).java
 
 loadJava:
 	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
@@ -39,13 +40,13 @@ mkdir:
 	@mkdir -p $(JAVACC_DIR) $(JAVAC_DIR) $(JJTREE_DIR)
 
 clean:
-	@rm -f $(JAVAC_DIR)/* $(JAVACC_DIR)/* $(JJTREE_DIR)/* $(SRC).jj *.java *.class
+	@rm -f $(JAVAC_DIR)/* $(JAVACC_DIR)/* $(JJTREE_DIR)/* $(JMM).jj *.java *.class
 
 test:
-	@java -classpath $(JAVAC_DIR) $(SRC) test_files/$(TEST_FILE) $(NUMBER_RECOVERIES) || true
+	@java -classpath $(JAVAC_DIR) $(JMM) test_files/$(TEST_FILE) || true
 
 testerror:
-	@java -classpath $(JAVAC_DIR) $(SRC) test_files/$(ERROR_TEST_FILE) $(NUMBER_RECOVERIES) || true
+	@java -classpath $(JAVAC_DIR) $(JMM) test_files/$(ERROR_TEST_FILE) || true
 
 testwhiles:
-	@java -classpath $(JAVAC_DIR) $(SRC) test_files/$(WHILES_TEST_FILE) $(NUMBER_RECOVERIES) || true
+	@java -classpath $(JAVAC_DIR) $(JMM) test_files/$(WHILES_TEST_FILE) || true

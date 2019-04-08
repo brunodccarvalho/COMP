@@ -13,7 +13,7 @@ public class ParseException extends Exception {
    * class changes.
    */
   private static final long serialVersionUID = 1L;
-  public static int numberRecoveries;
+  public static int numberRecoveries = 10;
 
   /**
    * This constructor is used by the method "generateParseException"
