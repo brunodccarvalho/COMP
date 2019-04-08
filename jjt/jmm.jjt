@@ -547,12 +547,12 @@ void ClassMethodDeclaration() : {}
     <PUBLIC> (MainDeclaration() | MethodDeclaration())
 }
 
-// TODO: What to do with variables named "main", "length".
-// TODO: What to do with types named "main", "length", "String".
+// DONE: What to do with variables named "main", "length".
+// DONE: What to do with types named "main", "length", "String".
 // DONE: Add begin and end lines/columns (ranges) to output AST
 
 /**
- * TODO: Range decisions:
+ * DONE: Range decisions:
  *  1. Should ClassHeader() include 'class'? [YES]
  *  2. Should Extends() include 'extends'? [YES]
  *  3. Should ClassBody() include '{' and '}'? [YES]
