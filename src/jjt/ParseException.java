@@ -21,7 +21,7 @@ public class ParseException extends Exception {
    * type with the fields "currentToken", "expectedTokenSequences", and
    * "tokenImage" set.
    */
-  public ParseException(Token currentTokenVal, int[][] expectedTokenSequencesVal, String[] tokenImageVal) {
+  ParseException(Token currentTokenVal, int[][] expectedTokenSequencesVal, String[] tokenImageVal) {
     super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
     currentToken = currentTokenVal;
     expectedTokenSequences = expectedTokenSequencesVal;
@@ -37,12 +37,12 @@ public class ParseException extends Exception {
    * constructors.
    */
 
-  public ParseException() {
+  ParseException() {
     super();
   }
 
   /** Constructor with message. */
-  public ParseException(String message) {
+  ParseException(String message) {
     super(message);
   }
 
@@ -51,21 +51,21 @@ public class ParseException extends Exception {
    * has been created due to a parse error, the token followng this token will
    * (therefore) be the first error token.
    */
-  public Token currentToken;
+  Token currentToken;
 
   /**
    * Each entry in this array is an array of integers. Each array of integers
    * represents a sequence of tokens (by their ordinal values) that is expected at
    * this point of the parse.
    */
-  public int[][] expectedTokenSequences;
+  int[][] expectedTokenSequences;
 
   /**
    * This is a reference to the "tokenImage" array of the generated parser within
    * which the parse error occurred. This array is defined in the generated
    * ...Constants interface.
    */
-  public String[] tokenImage;
+  String[] tokenImage;
 
   /**
    * It uses "currentToken" and "expectedTokenSequences" to generate a parse error
@@ -73,7 +73,7 @@ public class ParseException extends Exception {
    * and you do not catch it (it gets thrown from the parser) the correct error
    * message gets displayed.
    */
-  public static String file;
+  static String file;
 
   private static String initialise(Token currentToken, int[][] expectedTokenSequences, String[] tokenImage) {
     String eol = System.getProperty("line.separator", "\n");
@@ -142,7 +142,7 @@ public class ParseException extends Exception {
   /**
    * The end of line string for this machine.
    */
-  protected String eol = System.getProperty("line.separator", "\n");
+  String eol = System.getProperty("line.separator", "\n");
 
   /**
    * Used to convert raw characters to their escaped version when these raw
@@ -231,7 +231,7 @@ public class ParseException extends Exception {
     return a2;
   }
 
-  public ParseException skipto(int kind) {
+  ParseException skipto(int kind) {
     explain();
     int count = 0;
     while (currentToken.next.kind != kind) {
@@ -242,7 +242,7 @@ public class ParseException extends Exception {
     return this;
   }
 
-  public ParseException skipto(int[] kinds) {
+  ParseException skipto(int[] kinds) {
     explain();
     int count = 0;
     while (!IntStream.of(kinds).anyMatch(x -> x == currentToken.next.kind)) {
@@ -253,7 +253,7 @@ public class ParseException extends Exception {
     return this;
   }
 
-  public ParseException skipn(int n) {
+  ParseException skipn(int n) {
     explain();
     int count = 0;
     while (count < n) {
@@ -264,7 +264,7 @@ public class ParseException extends Exception {
     return this;
   }
 
-  public ParseException skip(int n, int kind) {
+  ParseException skip(int n, int kind) {
     explain();
     int count = 0;
     while (count < n && currentToken.next.kind != kind) {
@@ -275,7 +275,7 @@ public class ParseException extends Exception {
     return this;
   }
 
-  public ParseException skip(int n, int[] kinds) {
+  ParseException skip(int n, int[] kinds) {
     explain();
     int count = 0;
     while (count < n && !IntStream.of(kinds).anyMatch(x -> x == currentToken.next.kind)) {
@@ -286,55 +286,55 @@ public class ParseException extends Exception {
     return this;
   }
 
-  public ParseException skiptoif(int is, int kind) {
+  ParseException skiptoif(int is, int kind) {
     if (currentToken.next.kind == is)
       skipto(kind);
     return this;
   }
 
-  public ParseException skiptoif(int is, int[] kinds) {
+  ParseException skiptoif(int is, int[] kinds) {
     if (currentToken.next.kind == is)
       skipto(kinds);
     return this;
   }
 
-  public ParseException skipnif(int is, int n) {
+  ParseException skipnif(int is, int n) {
     if (currentToken.next.kind == is)
       skipn(n);
     return this;
   }
 
-  public ParseException skipif(int is, int n, int kind) {
+  ParseException skipif(int is, int n, int kind) {
     if (currentToken.next.kind == is)
       skip(n, kind);
     return this;
   }
 
-  public ParseException skipif(int is, int n, int[] kinds) {
+  ParseException skipif(int is, int n, int[] kinds) {
     if (currentToken.next.kind == is)
       skip(n, kinds);
     return this;
   }
 
-  public ParseException advance() {
+  ParseException advance() {
     return skipn(0);
   }
 
-  public ParseException consume() {
+  ParseException consume() {
     return skipn(1);
   }
 
-  public ParseException consumeif(int is) {
+  ParseException consumeif(int is) {
     return skipnif(is, 1);
   }
 
-  public void explain() {
+  void explain() {
     if (!explained) {
       if (--ParseException.numberRecoveries < 0) {
         System.out.println("Exceeded maximum number of recoveries.");
         System.exit(1);
       }
-      ;
+
       System.err.println(toString());
     }
     explained = true;

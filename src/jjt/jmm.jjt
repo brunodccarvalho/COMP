@@ -11,10 +11,10 @@ package jjt;
 import java.io.*;
 
 public class jmm {
-    public static boolean has_error = false, parsed = false;
-    public static int[][] tokenCache;
+    static boolean has_error = false, parsed = false;
+    static int[][] tokenCache;
 
-    public static void pushTokenCache() {
+    static void pushTokenCache() {
         jmm.tokenCache = new int[2][2];
         jmm.tokenCache[0][0] = jmm.token.beginLine;
         jmm.tokenCache[0][1] = jmm.token.beginColumn;
@@ -25,7 +25,7 @@ public class jmm {
     /**
      * Called directly through the command line, used on checkpoint 1.
      */
-    public static void main(String[] args) throws FileNotFoundException, ParseException {
+    public static void main(String[] args) throws FileNotFoundException {
         if (args.length == 0) {
             System.err.println("Usage: jmm java-file [number of recoveries]");
             System.exit(1);
@@ -500,7 +500,7 @@ void MainParameterList(): {}
 }
 
 // *** Methods
-void MainDeclaration() #void : {}
+void MainDeclaration() : {}
 {
     <STATIC>
     <VOID>
@@ -513,7 +513,7 @@ void MainDeclaration() #void : {}
     <RIGHTKEY>
 }
 
-void MethodDeclaration() #void : {}
+void MethodDeclaration() : {}
 {
     Type() //#MethodReturnType
     ClassMethodName()
@@ -551,8 +551,8 @@ void Extends() : {}
 void ClassBody() : {}
 {
     <LEFTKEY>
-    (ClassVarDeclaration())*
-    (ClassMethodDeclaration())*
+    ClassVarDeclarations()
+    ClassMethodDeclarations()
     <RIGHTKEY>
 }
 
@@ -561,9 +561,19 @@ void ClassVarDeclaration() : {}
     Type() Identifier() <SEMICOLON>
 }
 
-void ClassMethodDeclaration() : {}
+void ClassMethodDeclaration() #void : {}
 {
     <PUBLIC> (MainDeclaration() | MethodDeclaration())
+}
+
+void ClassVarDeclarations() : {}
+{
+    (ClassVarDeclaration())*
+}
+
+void ClassMethodDeclarations() : {}
+{
+    (ClassMethodDeclaration())*
 }
 
 // DONE: What to do with variables named "main", "length".
