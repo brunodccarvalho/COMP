@@ -1,52 +1,63 @@
-JMM = jmm
-SRC = src/
+# COMP JMM Compiler Makefile
 
-TEST_FILE = TestEverything.txt
-ERROR_TEST_FILE = Error.txt
-WHILES_TEST_FILE = BadWhiles.txt
+# Parser package name (use slashes)
+JJT := jjt
 
-NUMBER_RECOVERIES = 10
+# Compiler package name (use slashes)
+COMPILER := compiler
 
-JJTREE_DIR := compiled
+# Test file (in folder test_files)
+TEST_FILE := TestEverything.txt
+
+# Flags
 JJTREE_DEBUG :=
 JJTREE_FLAGS := -track_tokens -force_la_check
-JJTREE_FLAGS += -output_directory=$(JJTREE_DIR)
+JJTREE_FLAGS += -output_directory=parser/$(JJT)
 
-JAVACC_DIR := compiled
 JAVACC_DEBUG := -debug_parser -debug_lookahead
-JAVACC_FLAGS := -output_directory=$(JAVACC_DIR)
+JAVACC_FLAGS := -output_directory=parser/$(JJT)
 
-JAVAC_DIR := bin
 JAVAC_DEBUG := -g
-JAVAC_FLAGS := -d $(JAVAC_DIR) -sourcepath $(JAVACC_DIR)
+JAVAC_FLAGS := -cp bin -d bin -Werror
 
-all: mkdir
-	jjtree $(JJTREE_FLAGS) jjt/$(JMM).jjt
-	javacc $(JAVACC_FLAGS) $(JJTREE_DIR)/$(JMM).jj
-	$(MAKE) loadJava
-	javac  $(JAVAC_FLAGS)  $(JAVACC_DIR)/$(JMM).java
+COMPILER_FILES := $(shell find src/${COMPILER} -name '*.java' -type f)
 
-debug: mkdir
-	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jjt/$(JMM).jjt
-	javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) $(JJTREE_DIR)/$(JMM).jj
-	$(MAKE) loadJava
-	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  $(JAVACC_DIR)/$(JMM).java
+.PHONY: all debug parser parser-debug load-java mkdir clean test run
 
-loadJava:
-	cp jjt/SimpleNode.java $(JJTREE_DIR)/SimpleNode.java
-	cp jjt/ParseException.java $(JJTREE_DIR)/ParseException.java
+all:
+	@[ -f bin/jjt/jmm.class ] || ${MAKE} parser
+	@echo "Compiling src/compiler ..."
+	@javac $(JAVAC_FLAGS) -sourcepath src $(COMPILER_FILES)
+
+debug:
+	@[ -f bin/jjt/jmm.class ] || ${MAKE} parser
+	@echo "Compiling src/compiler ..."
+	@javac $(JAVAC_FLAGS) $(JAVAC_DEBUG) -sourcepath src $(COMPILER_FILES)
+
+parser: mkdir
+	jjtree $(JJTREE_FLAGS) src/$(JJT)/jmm.jjt
+	javacc $(JAVACC_FLAGS) parser/$(JJT)/jmm.jj
+	@${MAKE} -s load-java
+	javac  $(JAVAC_FLAGS)  -sourcepath parser parser/$(JJT)/*.java
+
+parser-debug: mkdir
+	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) src/$(JJT)/jmm.jjt
+	javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) parser/$(JJT)/jmm.jj
+	@${MAKE} -s load-java
+	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  -sourcepath parser parser/$(JJT)/*.java
+
+load-java:
+	@cp src/jjt/SimpleNode.java parser/jjt/SimpleNode.java
+	@cp src/jjt/ParseException.java parser/jjt/ParseException.java
 
 mkdir:
-	@mkdir -p $(JAVACC_DIR) $(JAVAC_DIR) $(JJTREE_DIR)
+	@mkdir -p bin parser
 
-clean:
-	@rm -f $(JAVAC_DIR)/* $(JAVACC_DIR)/* $(JJTREE_DIR)/* $(JMM).jj *.java *.class
+clean: mkdir
+	@rm -rf bin/* parser/* compiled jjt
 
 test:
-	@java -classpath $(JAVAC_DIR) $(JMM) test_files/$(TEST_FILE) || true
+	@java -classpath bin jmm test_files/$(TEST_FILE) || true
 
-testerror:
-	@java -classpath $(JAVAC_DIR) $(JMM) test_files/$(ERROR_TEST_FILE) || true
-
-testwhiles:
-	@java -classpath $(JAVAC_DIR) $(JMM) test_files/$(WHILES_TEST_FILE) || true
+run:
+	@java -cp bin compiler.Compiler

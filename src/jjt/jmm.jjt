@@ -6,6 +6,8 @@ options {
 }
 
 PARSER_BEGIN(jmm)
+package jjt;
+
 import java.io.*;
 
 public class jmm {
@@ -20,15 +22,21 @@ public class jmm {
         jmm.tokenCache[1][1] = jmm.token.endColumn + 1;
     }
 
+    /**
+     * Called directly through the command line, used on checkpoint 1.
+     */
     public static void main(String[] args) throws FileNotFoundException, ParseException {
         File file = new File(args[0]);
         ParseException.file = args[0];
         if (args.length > 1) ParseException.numberRecoveries = Integer.parseInt(args[1]);
 
         SimpleNode root = parseFile(file);
-        if (root == null) System.exit(1);
-        root.dump("");
-        System.exit(0);
+        if (root == null) {
+            System.exit(1);
+        } else {
+            root.dump("");
+            System.exit(0);
+        }
     }
 
     public static SimpleNode parseFile(File file) throws FileNotFoundException {
@@ -41,9 +49,8 @@ public class jmm {
             return root;
         } catch (ParseException e) {
             e.printStackTrace();
+            return null;
         }
-
-        return null;
     }
 }
 PARSER_END(jmm)
