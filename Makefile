@@ -57,7 +57,4 @@ clean: mkdir
 	@rm -rf bin/* parser/* compiled jjt
 
 test:
-	@java -classpath bin jmm test_files/$(TEST_FILE) || true
-
-run:
-	@java -cp bin compiler.Compiler
+	@java -cp bin compiler.Compiler test_files/$(TEST_FILE) || true

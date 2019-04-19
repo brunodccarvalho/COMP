@@ -26,6 +26,11 @@ public class jmm {
      * Called directly through the command line, used on checkpoint 1.
      */
     public static void main(String[] args) throws FileNotFoundException, ParseException {
+        if (args.length == 0) {
+            System.err.println("Usage: jmm java-file [number of recoveries]");
+            System.exit(1);
+        }
+
         File file = new File(args[0]);
         ParseException.file = args[0];
         if (args.length > 1) ParseException.numberRecoveries = Integer.parseInt(args[1]);
