@@ -58,3 +58,6 @@ clean: mkdir
 
 test:
 	@java -cp bin compiler.Compiler test_files/$(TEST_FILE) || true
+
+parser-test:
+	@java -cp bin jjt.jmm test_files/$(TEST_FILE) || true

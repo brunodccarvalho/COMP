@@ -1,0 +1,498 @@
+Program 2:7 123:2
+ ClassDeclaration 2:7 123:2
+  ClassHeader 2:7 2:39
+   ClassType TestEverything 2:7 2:21
+   Extends 2:30 2:39
+    ClassType Something 2:30 2:39
+  ClassBody 3:3 123:2
+   ClassVarDeclarations 3:3 17:23
+    ClassVarDeclaration 3:3 3:22
+     ClassType SomeClassType 3:3 3:16
+     Identifier type 3:17 3:21
+    ClassVarDeclaration 4:3 4:9
+     Int 4:3 4:6
+     Identifier i 4:7 4:8
+    ClassVarDeclaration 5:3 5:9
+     Int 5:3 5:6
+     Identifier j 5:7 5:8
+    ClassVarDeclaration 6:3 6:9
+     Int 6:3 6:6
+     Identifier k 6:7 6:8
+    ClassVarDeclaration 7:3 7:19
+     Boolean 7:3 7:10
+     Identifier checked 7:11 7:18
+    ClassVarDeclaration 8:3 8:20
+     Boolean 8:3 8:10
+     Identifier verified 8:11 8:19
+    ClassVarDeclaration 9:3 9:16
+     Boolean 9:3 9:10
+     Identifier both 9:11 9:15
+    ClassVarDeclaration 10:3 10:16
+     ClassType long 10:3 10:7
+     Identifier counter 10:8 10:15
+    ClassVarDeclaration 11:3 11:15
+     IntArray 11:3 11:8
+      Int 11:3 11:6
+     Identifier input 11:9 11:14
+    ClassVarDeclaration 17:3 17:23
+     ClassType TestEverything 17:3 17:17
+     Identifier that 17:18 17:22
+   ClassMethodDeclarations 19:10 122:4
+    MethodDeclaration 19:10 41:4
+     Int 19:10 19:13
+     MethodName testExpressions 19:14 19:29
+     ParameterList 19:30 19:30
+     MethodBody 20:5 38:63
+      PlainStatement 20:5 20:32
+       Assignment 20:5 20:31
+        Identifier both 20:5 20:9
+        AND 20:12 20:31
+         Identifier checked 20:12 20:19
+         Identifier verified 20:23 20:31
+      PlainStatement 21:5 21:18
+       Assignment 21:5 21:17
+        Identifier both 21:5 21:9
+        LT 21:12 21:17
+         Identifier j 21:12 21:13
+         Identifier k 21:16 21:17
+      PlainStatement 22:5 22:15
+       Assignment 22:5 22:14
+        Identifier i 22:5 22:6
+        SUM 22:9 22:14
+         Identifier j 22:9 22:10
+         Identifier k 22:13 22:14
+      PlainStatement 23:5 23:15
+       Assignment 23:5 23:14
+        Identifier i 23:5 23:6
+        SUB 23:9 23:14
+         Identifier j 23:9 23:10
+         Identifier k 23:13 23:14
+      PlainStatement 24:5 24:15
+       Assignment 24:5 24:14
+        Identifier i 24:5 24:6
+        MUL 24:9 24:14
+         Identifier j 24:9 24:10
+         Identifier k 24:13 24:14
+      PlainStatement 25:5 25:15
+       Assignment 25:5 25:14
+        Identifier i 25:5 25:6
+        DIV 25:9 25:14
+         Identifier j 25:9 25:10
+         Identifier k 25:13 25:14
+      PlainStatement 26:5 26:57
+       Assignment 26:5 26:56
+        Bracket 26:5 26:52
+         Identifier input 26:5 26:10
+         SUB 26:11 26:51
+          SUM 26:11 26:36
+           SUB 26:11 26:32
+            SUM 26:11 26:20
+             Integer 1 26:11 26:12
+             MUL 26:15 26:20
+              Integer 2 26:15 26:16
+              Integer 3 26:19 26:20
+            MUL 26:23 26:32
+             DIV 26:23 26:28
+              Integer 4 26:23 26:24
+              Integer 5 26:27 26:28
+             Integer 6 26:31 26:32
+           Integer 7 26:35 26:36
+          MUL 26:39 26:51
+           Integer 8 26:39 26:40
+           SUM 26:44 26:50
+            Integer 9 26:44 26:45
+            Integer 10 26:48 26:50
+        Integer 0 26:55 26:56
+      PlainStatement 27:5 27:20
+       Assignment 27:5 27:19
+        Identifier checked 27:5 27:12
+        True 27:15 27:19
+      PlainStatement 28:5 28:21
+       Assignment 28:5 28:20
+        Identifier checked 28:5 28:12
+        False 28:15 28:20
+      PlainStatement 29:5 29:20
+       Assignment 29:5 29:19
+        Identifier checked 29:5 29:12
+        Identifier both 29:15 29:19
+      PlainStatement 30:5 30:17
+       Assignment 30:5 30:16
+        Identifier that 30:5 30:9
+        This 30:12 30:16
+      PlainStatement 31:5 31:33
+       Assignment 31:5 31:32
+        Identifier that 31:5 31:9
+        NewClass 31:16 31:32
+         ClassType TestEverything 31:16 31:30
+      PlainStatement 32:5 32:66
+       Assignment 32:5 32:65
+        Identifier that 32:5 32:9
+        Bracket 32:16 32:65
+         Length 32:16 32:61
+          Call 32:16 32:54
+           Call 32:16 32:44
+            NewClass 32:16 32:32
+             ClassType TestEverything 32:16 32:30
+            MethodName something 32:33 32:42
+            ArgumentList 32:43 32:43
+           MethodName another 32:45 32:52
+           ArgumentList 32:53 32:53
+         Integer 10 32:62 32:64
+      PlainStatement 33:5 33:43
+       Assignment 33:5 33:42
+        Identifier input 33:5 33:10
+        NewIntArray 33:21 33:42
+         SUM 33:21 33:41
+          Integer 50 33:21 33:23
+          MUL 33:26 33:41
+           Length 33:26 33:37
+            This 33:26 33:30
+           Integer 2 33:40 33:41
+      PlainStatement 34:5 34:48
+       Assignment 34:5 34:47
+        Identifier both 34:5 34:9
+        AND 34:13 34:47
+         NOT 34:13 34:20
+          Identifier checked 34:13 34:20
+         NOT 34:26 34:47
+          AND 34:26 34:46
+           Identifier verified 34:26 34:34
+           NOT 34:39 34:46
+            Identifier checked 34:39 34:46
+      PlainStatement 35:5 35:32
+       Assignment 35:5 35:31
+        Identifier both 35:5 35:9
+        Call 35:13 35:31
+         SUM 35:13 35:18
+          Identifier a 35:13 35:14
+          Identifier b 35:17 35:18
+         MethodName call 35:20 35:24
+         ArgumentList 35:25 35:30
+          Integer 1 35:25 35:26
+          Integer 2 35:27 35:28
+          Integer 3 35:29 35:30
+      PlainStatement 37:5 37:58
+       Call 37:5 37:57
+        Bracket 37:5 37:28
+         Bracket 37:5 37:25
+          Length 37:5 37:22
+           Call 37:5 37:15
+            Identifier type 37:5 37:9
+            MethodName get 37:10 37:13
+            ArgumentList 37:14 37:14
+          Integer 1 37:23 37:24
+         Integer 2 37:26 37:27
+        MethodName put 37:29 37:32
+        ArgumentList 37:33 37:56
+         Identifier a 37:33 37:34
+         Call 37:36 37:43
+          Identifier b 37:36 37:37
+          MethodName get 37:38 37:41
+          ArgumentList 37:42 37:42
+         MUL 37:45 37:56
+          Integer 3 37:45 37:46
+          SUM 37:50 37:55
+           Identifier c 37:50 37:51
+           Integer 2 37:54 37:55
+      PlainStatement 38:5 38:63
+       Bracket 38:5 38:62
+        Call 38:5 38:59
+         Length 38:5 38:53
+          Call 38:5 38:46
+           Bracket 38:5 38:40
+            Call 38:5 38:37
+             Length 38:5 38:30
+              Length 38:5 38:23
+               Length 38:5 38:16
+                Identifier type 38:5 38:9
+             MethodName get 38:31 38:34
+             ArgumentList 38:35 38:36
+              Identifier j 38:35 38:36
+            Identifier i 38:38 38:39
+           MethodName get 38:41 38:44
+           ArgumentList 38:45 38:45
+         MethodName get 38:54 38:57
+         ArgumentList 38:58 38:58
+        Integer 2 38:60 38:61
+     ReturnStatement 40:12 40:14
+      Integer 0 40:12 40:13
+    MethodDeclaration 43:10 48:4
+     Int 43:10 43:13
+     MethodName testPrecedence 43:14 43:28
+     ParameterList 43:29 43:29
+     MethodBody 44:5 45:64
+      PlainStatement 44:5 44:60
+       Assignment 44:5 44:59
+        Identifier n 44:5 44:6
+        AND 44:10 44:59
+         SUM 44:10 44:31
+          MUL 44:10 44:21
+           SUM 44:10 44:16
+            Identifier a 44:10 44:11
+            NOT 44:15 44:16
+             Identifier b 44:15 44:16
+           Identifier c 44:20 44:21
+          DIV 44:24 44:31
+           Identifier d 44:24 44:25
+           NOT 44:30 44:31
+            NOT 44:30 44:31
+             Identifier e 44:30 44:31
+         LT 44:35 44:59
+          SUM 44:35 44:40
+           Identifier f 44:35 44:36
+           Identifier g 44:39 44:40
+          SUM 44:43 44:59
+           Identifier h 44:43 44:44
+           DIV 44:47 44:59
+            Identifier i 44:47 44:48
+            SUM 44:52 44:58
+             Identifier j 44:52 44:53
+             NOT 44:57 44:58
+              Identifier l 44:57 44:58
+      PlainStatement 45:5 45:64
+       Assignment 45:5 45:63
+        Identifier n 45:5 45:6
+        SUM 45:9 45:63
+         Call 45:9 45:27
+          Bracket 45:9 45:20
+           Length 45:9 45:17
+            Identifier a 45:9 45:10
+           Integer 0 45:18 45:19
+          MethodName call 45:21 45:25
+          ArgumentList 45:26 45:26
+         MUL 45:30 45:63
+          Call 45:30 45:37
+           Identifier b 45:30 45:31
+           MethodName get 45:32 45:35
+           ArgumentList 45:36 45:36
+          Call 45:40 45:63
+           Identifier c 45:40 45:41
+           MethodName what 45:42 45:46
+           ArgumentList 45:47 45:62
+            Identifier a 45:47 45:48
+            SUM 45:50 45:62
+             Identifier b 45:50 45:51
+             Length 45:54 45:62
+              Identifier c 45:54 45:55
+     ReturnStatement 47:12 47:14
+      Integer 0 47:12 47:13
+    MethodDeclaration 50:10 94:4
+     Int 50:10 50:13
+     MethodName testStatements 50:14 50:28
+     ParameterList 50:29 50:29
+     MethodBody 52:7 91:25
+      BlockStatement 52:7 55:6
+       PlainStatement 52:7 52:13
+        Assignment 52:7 52:12
+         Identifier a 52:7 52:8
+         Identifier b 52:11 52:12
+       PlainStatement 53:7 53:13
+        Assignment 53:7 53:12
+         Identifier b 53:7 53:8
+         Identifier c 53:11 53:12
+       PlainStatement 54:7 54:13
+        Assignment 54:7 54:12
+         Identifier c 54:7 54:8
+         Identifier a 54:11 54:12
+      BlockStatement 58:7 63:6
+       PlainStatement 58:7 58:13
+        Assignment 58:7 58:12
+         Identifier a 58:7 58:8
+         Identifier b 58:11 58:12
+       BlockStatement 60:9 62:8
+        PlainStatement 60:9 60:15
+         Assignment 60:9 60:14
+          Identifier b 60:9 60:10
+          Identifier c 60:13 60:14
+        BlockStatement 61:11 61:19
+         PlainStatement 61:11 61:17
+          Assignment 61:11 61:16
+           Identifier c 61:11 61:12
+           Identifier a 61:15 61:16
+      IfElseStatement 65:9 71:6
+       LT 65:9 65:14
+        Identifier a 65:9 65:10
+        Identifier b 65:13 65:14
+       BlockStatement 66:7 67:6
+        PlainStatement 66:7 66:15
+         Assignment 66:7 66:14
+          Identifier min 66:7 66:10
+          Identifier a 66:13 66:14
+       IfElseStatement 67:16 71:6
+        LT 67:16 67:21
+         Identifier b 67:16 67:17
+         Identifier a 67:20 67:21
+        BlockStatement 68:7 69:6
+         PlainStatement 68:7 68:15
+          Assignment 68:7 68:14
+           Identifier min 68:7 68:10
+           Identifier b 68:13 68:14
+        BlockStatement 70:7 71:6
+         PlainStatement 70:7 70:19
+          Assignment 70:7 70:18
+           Identifier min 70:7 70:10
+           Identifier equal 70:13 70:18
+      WhileStatement 73:12 73:37
+       AND 73:12 73:25
+        True 73:12 73:16
+        False 73:20 73:25
+       PlainStatement 73:27 73:37
+        Assignment 73:27 73:36
+         Identifier a 73:27 73:28
+         SUM 73:31 73:36
+          Identifier a 73:31 73:32
+          Integer 1 73:35 73:36
+      WhileStatement 75:12 80:6
+       LT 75:12 75:17
+        Integer 1 75:12 75:13
+        Integer 2 75:16 75:17
+       BlockStatement 76:11 80:6
+        IfElseStatement 76:11 79:8
+         LT 76:11 76:16
+          Identifier a 76:11 76:12
+          Identifier b 76:15 76:16
+         BlockStatement 77:7 77:8
+         BlockStatement 78:9 79:8
+          PlainStatement 78:9 78:15
+           Assignment 78:9 78:14
+            Identifier a 78:9 78:10
+            Integer 1 78:13 78:14
+      PlainStatement 82:5 82:7
+       Identifier a 82:5 82:6
+      PlainStatement 83:5 83:14
+       Length 83:5 83:13
+        Identifier a 83:5 83:6
+      PlainStatement 84:5 84:20
+       Call 84:5 84:19
+        Length 84:5 84:13
+         Identifier a 84:5 84:6
+        MethodName get 84:14 84:17
+        ArgumentList 84:18 84:18
+      PlainStatement 85:5 85:20
+       Length 85:5 85:19
+        Call 85:5 85:12
+         Identifier a 85:5 85:6
+         MethodName get 85:7 85:10
+         ArgumentList 85:11 85:11
+      PlainStatement 86:5 86:11
+       SUM 86:5 86:10
+        Identifier a 86:5 86:6
+        Identifier b 86:9 86:10
+      PlainStatement 87:5 87:22
+       SUM 87:5 87:21
+        Identifier a 87:5 87:6
+        MUL 87:9 87:21
+         Length 87:9 87:17
+          Identifier b 87:9 87:10
+         Identifier c 87:20 87:21
+      PlainStatement 89:5 89:11
+       Assignment 89:5 89:10
+        Identifier a 89:5 89:6
+        Integer 1 89:9 89:10
+      PlainStatement 90:5 90:22
+       Assignment 90:5 90:21
+        Bracket 90:5 90:9
+         Identifier a 90:5 90:6
+         Integer 1 90:7 90:8
+        SUB 90:12 90:21
+         Integer 1 90:12 90:13
+         DIV 90:16 90:21
+          Integer 2 90:16 90:17
+          Integer 3 90:20 90:21
+      PlainStatement 91:5 91:25
+       Assignment 91:5 91:24
+        Bracket 91:5 91:12
+         Identifier a 91:5 91:6
+         Bracket 91:7 91:11
+          Identifier a 91:7 91:8
+          Integer 0 91:9 91:10
+        SUM 91:15 91:24
+         Integer 1 91:15 91:16
+         MUL 91:19 91:24
+          Integer 2 91:19 91:20
+          Integer 3 91:23 91:24
+     ReturnStatement 93:12 93:14
+      Integer 0 93:12 93:13
+    MethodDeclaration 96:10 98:4
+     Int 96:10 96:13
+     MethodName main 96:14 96:18
+     ParameterList 96:19 96:19
+     MethodBody 97:7 96:22
+     ReturnStatement 97:14 97:16
+      Integer 0 97:14 97:15
+    MethodDeclaration 100:10 102:4
+     Int 100:10 100:13
+     MethodName length 100:14 100:20
+     ParameterList 100:21 100:21
+     MethodBody 101:7 100:24
+     ReturnStatement 101:14 101:16
+      Integer 1 101:14 101:15
+    MainDeclaration 104:36 122:4
+     MainParameterList 104:36 104:40
+      Identifier args 104:36 104:40
+     MethodBody 105:5 121:15
+      VariableDeclaration 105:5 105:10
+       Int 105:5 105:8
+       Identifier a 105:9 105:10
+      VariableDeclaration 106:5 106:15
+       Int 106:5 106:8
+       Identifier length 106:9 106:15
+      VariableDeclaration 107:5 107:14
+       Identifier length 107:5 107:11
+       Identifier b 107:12 107:13
+      VariableDeclaration 108:5 108:12
+       Identifier main 108:5 108:9
+       Identifier c 108:10 108:11
+      PlainStatement 110:5 110:16
+       Call 110:5 110:15
+        Identifier abc 110:5 110:8
+        MethodName mod 110:9 110:12
+        ArgumentList 110:13 110:14
+         Integer 7 110:13 110:14
+      PlainStatement 111:5 112:9
+       Call 111:5 112:8
+        Identifier abc 111:5 111:8
+        MethodName length 111:9 111:15
+        ArgumentList 112:6 112:7
+         Integer 7 112:6 112:7
+      PlainStatement 113:5 113:16
+       Length 113:5 113:15
+        Identifier abc 113:5 113:8
+      PlainStatement 115:5 115:23
+       Call 115:5 115:22
+        Identifier abc 115:5 115:8
+        MethodName main 115:9 115:13
+        ArgumentList 115:14 115:21
+         Identifier ok 115:14 115:16
+         Identifier abc 115:18 115:21
+      PlainStatement 116:5 116:15
+       Call 116:5 116:14
+        Identifier main 116:5 116:9
+        MethodName ok 116:10 116:12
+        ArgumentList 116:13 116:13
+      PlainStatement 117:5 117:17
+       Length 117:5 117:16
+        Identifier main 117:5 117:9
+      PlainStatement 118:5 118:43
+       Call 118:5 118:42
+        Identifier length 118:5 118:11
+        MethodName main 118:12 118:16
+        ArgumentList 118:17 118:41
+         Call 118:17 118:41
+          Identifier length 118:17 118:23
+          MethodName length 118:24 118:30
+          ArgumentList 118:31 118:40
+           Length 118:31 118:40
+            Identifier ok 118:31 118:33
+      PlainStatement 120:5 120:25
+       Assignment 120:5 120:24
+        Bracket 120:5 120:17
+         Identifier SomeClass 120:5 120:14
+         Integer 0 120:15 120:16
+        True 120:20 120:24
+      PlainStatement 121:5 121:15
+       Assignment 121:5 121:14
+        Identifier n 121:5 121:6
+        SUM 121:9 121:14
+         Integer 0 121:9 121:10
+         Integer 1 121:13 121:14

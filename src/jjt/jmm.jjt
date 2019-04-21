@@ -35,7 +35,7 @@ public class jmm {
         ParseException.file = args[0];
         if (args.length > 1) ParseException.numberRecoveries = Integer.parseInt(args[1]);
 
-        SimpleNode root = parseFile(file);
+        SimpleNode root = parseClass(file);
         if (root == null) {
             System.exit(1);
         } else {
@@ -44,13 +44,55 @@ public class jmm {
         }
     }
 
-    public static SimpleNode parseFile(File file) throws FileNotFoundException {
+    public static SimpleNode parseClass(File file) throws FileNotFoundException {
         FileReader fr = new FileReader(file);
         ParseException.file = file.toString();
         jmm myProg = new jmm(fr);
 
         try {
-            SimpleNode root = myProg.Program();
+            SimpleNode root = jmm.Program();
+            return root;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static SimpleNode parseAssignment(File file) throws FileNotFoundException {
+        FileReader fr = new FileReader(file);
+        ParseException.file = file.toString();
+        jmm myProg = new jmm(fr);
+
+        try {
+            SimpleNode root = jmm.ProgramAssignment();
+            return root;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static SimpleNode parseExpression(File file) throws FileNotFoundException {
+        FileReader fr = new FileReader(file);
+        ParseException.file = file.toString();
+        jmm myProg = new jmm(fr);
+
+        try {
+            SimpleNode root = jmm.ProgramExpression();
+            return root;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static SimpleNode parseTerm(File file) throws FileNotFoundException {
+        FileReader fr = new FileReader(file);
+        ParseException.file = file.toString();
+        jmm myProg = new jmm(fr);
+
+        try {
+            SimpleNode root = jmm.ProgramTerm();
             return root;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -155,7 +197,25 @@ TOKEN: {
 
 SimpleNode Program() : {}
 {
-    ClassDeclaration() (<ARR> ClassDeclaration())?
+    ClassDeclaration()
+    {return jjtThis;}
+}
+
+SimpleNode ProgramExpression() : {}
+{
+    Expression()
+    {return jjtThis;}
+}
+
+SimpleNode ProgramTerm() : {}
+{
+    Term4()
+    {return jjtThis;}
+}
+
+SimpleNode ProgramAssignment() : {}
+{
+    IdentifierStatement()
     {return jjtThis;}
 }
 
@@ -405,14 +465,14 @@ void LiteralLineStatement() #void : {}
     LiteralExpression() <SEMICOLON> #PlainStatement(1)
 }
 
+// Identifier = Expression ;
+// Identifier [ Expression ] = Expression ;
+// Expression ;   FOR IDENTIFIERS
 void IdentifierStatement() #void : {}
 {
     Identifier() IdentifierStatementTail()
 }
 
-// Identifier = Expression ;
-// Identifier [ Expression ] = Expression ;
-// Expression ;   FOR IDENTIFIERS
 void IdentifierStatementTail() #void : {}
 {
     (<EQUAL> Expression() #Assignment(2)

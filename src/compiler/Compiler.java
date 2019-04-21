@@ -3,7 +3,6 @@ package compiler;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
 
@@ -15,7 +14,7 @@ final class Compiler {
       return;
 
     try {
-      SimpleNode node = jmm.parseFile(new File(args[0]));
+      SimpleNode node = jmm.parseClass(new File(args[0]));
       if (node != null) {
         node.dump("");
         // ...

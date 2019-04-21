@@ -32,6 +32,7 @@ class TestEverything extends Something {
     that = new TestEverything().something().another().length[10];
     input = new int[50 + this.length * 2];
     both = !checked && !(verified && !checked);
+    both = (a + b).call(1,2,3);
 
     type.get().length[1][2].put(a, b.get(), 3 * (c + 2));
     type.length.length.length.get(j)[i].get().length.get()[2];
