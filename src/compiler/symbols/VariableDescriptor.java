@@ -1,5 +1,10 @@
 package compiler.symbols;
 
+/**
+ * Descriptor for a variable instance, may it be a data member, a parameter or a
+ * local variable. It simply groups a type descriptor with a name. The name is
+ * used to address it in various hash maps (symbol tables).
+ */
 public class VariableDescriptor extends Descriptor {
   private TypeDescriptor type;
   private String name;

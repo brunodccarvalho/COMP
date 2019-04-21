@@ -4,6 +4,34 @@ import java.util.Arrays;
 
 // TODO: handle void return types as null?
 
+/**
+ * Class representing a function type: its return type and its parameters'
+ * types, in order. An instance of this class is mutable: we may start off only
+ * knowning some things about the represented function's signature, and we'll
+ * discover more about it as we go along through the source file's code. Imagine
+ * for example a function class like
+ *
+ * io.printf(format, Thread.getId());
+ *
+ * First, we fail to resolve name 'io' through the symbol table chain, so we
+ * must deduce it to an external class name. So we add to the class name table
+ * (if we hadn't done that already). Second, we deduce it has a static function
+ * called 'printf' taking two arguments and unknown return type, possibly even
+ * void. But we do not know their types just yet -- we don't have access to the
+ * function declaration. So we add this function 'printf' to the class io's
+ * static member function table with an incomplete signature. Third, the first
+ * argument -- format -- is resolved successfully, to say a parameter variable
+ * of type String. This means that we can deduce the first parameter of the
+ * printf function has type String -- and we can deduce the first parameter type
+ * conclusively. The second argument, however, follows the same pattern from the
+ * start: Thread is not resolved successfully, so we deduce it to an external
+ * class name; then getId is one of its static functions taking no arguments,
+ * and its return value is unknown, so we cannot use it to deduce printf's
+ * second parameter type. Either way, we accept this statement as is.
+ *
+ * This is why a function signature is mutable: so we may add information to it
+ * as we discover it implicitly throughout the source file.
+ */
 public class FunctionSignature {
   private TypeDescriptor returnType;
   private TypeDescriptor[] parameterTypes;

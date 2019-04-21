@@ -1,5 +1,8 @@
 package compiler.symbols;
 
+/**
+ * Represents a static class method.
+ */
 class StaticMethodDescriptor extends FunctionDescriptor {
   private ClassDescriptor parent;
 

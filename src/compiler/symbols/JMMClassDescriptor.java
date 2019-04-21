@@ -1,8 +1,19 @@
 package compiler.symbols;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
+/**
+ * Represents a class being parsed by this compiler: it must obey the rules of
+ * JMM and be parseable by our compiler, which means:
+ *
+ * * All data members are package-protected.
+ *
+ * * All member functions are public and have non-void return type.
+ *
+ * * There is at most one static function, with name 'main'.
+ *
+ * * There may be a super class.
+ */
 class JMMClassDescriptor extends ClassDescriptor {
   private HashMap<String, VariableDescriptor> members;
   private HashMap<String, HashMap<FunctionSignature, MethodDescriptor>> methods;

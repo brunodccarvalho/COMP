@@ -1,5 +1,8 @@
 package compiler.symbols;
 
+/**
+ * Represents a class instance method.
+ */
 class MethodDescriptor extends FunctionDescriptor {
   private ClassDescriptor parent;
 

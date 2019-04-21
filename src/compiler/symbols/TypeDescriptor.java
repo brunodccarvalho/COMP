@@ -1,5 +1,11 @@
 package compiler.symbols;
 
+/**
+ * Base class of a type descriptor (class and primitive type descriptors). The
+ * type has a name whici unequivocally identifies it.
+ *
+ * TODO
+ */
 public class TypeDescriptor extends Descriptor {
   protected String name;
 

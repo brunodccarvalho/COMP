@@ -3,6 +3,15 @@ package compiler.symbols;
 import java.util.Arrays;
 import java.util.HashSet;
 
+/**
+ * Base class of all _declared_ function descriptors. It has an associated
+ * signature, a name, and names for each of its parameters, which may be
+ * necessary when compiling its body.
+ *
+ * This descriptor does not know of its own function body, however. The
+ * signature and name provided in the constructors cannot be changed, so this
+ * class is essentially immutable.
+ */
 class FunctionDescriptor extends Descriptor {
   private String functionName;
   private FunctionSignature signature;

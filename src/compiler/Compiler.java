@@ -6,6 +6,12 @@ import java.io.FileNotFoundException;
 import jjt.SimpleNode;
 import jjt.jmm;
 
+/**
+ * Compiler class. An instance of this class is used to parse each compilation
+ * unit. Various instances may be launched to parse several source files.
+ *
+ * TODO
+ */
 final class Compiler {
   public static void main(String[] args) {
     System.out.println("Hello World!");
