@@ -5,9 +5,9 @@ package compiler.symbols;
  * local variable. It simply groups a type descriptor with a name. The name is
  * used to address it in various hash maps (symbol tables).
  */
-public class VariableDescriptor extends Descriptor {
-  private TypeDescriptor type;
-  private String name;
+public abstract class VariableDescriptor extends Descriptor {
+  protected TypeDescriptor type;
+  protected String name;
 
   public VariableDescriptor(TypeDescriptor type, String name) {
     assert type != null && name != null;

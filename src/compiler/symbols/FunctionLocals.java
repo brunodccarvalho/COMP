@@ -3,10 +3,11 @@ package compiler.symbols;
 import java.util.HashMap;
 
 public class FunctionLocals extends Descriptor {
-  private HashMap<String, VariableDescriptor> variables;
+  private HashMap<String, LocalVariableDescriptor> variables;
   private FunctionDescriptor function;
 
   public FunctionLocals(FunctionDescriptor function) {
+    assert function != null;
     this.function = function;
   }
 
@@ -14,11 +15,11 @@ public class FunctionLocals extends Descriptor {
     return variables.containsKey(name);
   }
 
-  public VariableDescriptor getVariable(String name) {
+  public LocalVariableDescriptor getVariable(String name) {
     return variables.get(name);
   }
 
-  public boolean addVariable(VariableDescriptor var) {
+  public boolean addVariable(LocalVariableDescriptor var) {
     return variables.putIfAbsent(var.getName(), var) == null;
   }
 
@@ -27,7 +28,7 @@ public class FunctionLocals extends Descriptor {
   }
 
   public Descriptor resolve(String name) {
-    VariableDescriptor variable = variables.get(name);
+    LocalVariableDescriptor variable = variables.get(name);
     if (variable != null)
       return variable;
     else

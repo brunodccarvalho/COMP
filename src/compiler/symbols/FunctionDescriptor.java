@@ -12,39 +12,38 @@ import java.util.HashSet;
  * signature and name provided in the constructors cannot be changed, so this
  * class is essentially immutable.
  */
-class FunctionDescriptor extends Descriptor {
+public class FunctionDescriptor extends Descriptor {
   private String functionName;
   private FunctionSignature signature;
-  private VariableDescriptor[] parameters;
+  private ParameterDescriptor[] parameters;
 
-  private void validateParameterNames(VariableDescriptor[] params) {
-    HashSet<String> names = new HashSet<>();
-    for (VariableDescriptor var : params) {
-      if (names.contains(var.getName()))
-        throw new IllegalArgumentException(
-            "Repeated parameter name (" + var.getName() + ") in function " + functionName);
-      names.add(var.getName());
+  private void validateParameterNames(String[] names) {
+    HashSet<String> set = new HashSet<>();
+    for (String name : names) {
+      if (set.contains(name))
+        throw new IllegalArgumentException("Repeated parameter name (" + name + ") in function " + functionName);
+      set.add(name);
     }
   }
 
-  public FunctionDescriptor(String name, TypeDescriptor ret, VariableDescriptor[] params) {
-    assert name != null && ret != null;
+  public FunctionDescriptor(String name, FunctionSignature signature, String[] params) {
+    assert name != null && signature != null && signature.isComplete();
     if (params == null)
-      params = new VariableDescriptor[0];
+      params = new String[0];
+    assert signature.getNumParameters() == params.length;
 
     this.functionName = name;
-    this.parameters = params;
+    this.signature = signature;
 
     // Check that no argument names are repeated.
     validateParameterNames(params);
 
-    // Create the type descriptors arrays for the signature.
-    TypeDescriptor[] paramTypes = new TypeDescriptor[params.length];
-    for (int i = 0; i < params.length; ++i)
-      paramTypes[i] = params[i].getType();
-
-    this.signature = new FunctionSignature(ret, paramTypes);
-    assert this.signature.isComplete();
+    // Create the variable descriptors arrays for the signature.
+    this.parameters = new ParameterDescriptor[params.length];
+    for (int i = 0; i < params.length; ++i) {
+      TypeDescriptor typei = signature.getParameterType(i);
+      this.parameters[i] = new ParameterDescriptor(typei, params[i], this, i);
+    }
   }
 
   public FunctionSignature getSignature() {
@@ -75,23 +74,23 @@ class FunctionDescriptor extends Descriptor {
     return signature.getParameterTypes();
   }
 
-  public VariableDescriptor getParameter(int index) {
+  public ParameterDescriptor getParameter(int index) {
     return parameters[index];
   }
 
-  public VariableDescriptor[] getParameters() {
+  public ParameterDescriptor[] getParameters() {
     return parameters;
   }
 
   public boolean hasParameter(String name) {
-    for (VariableDescriptor var : parameters)
+    for (ParameterDescriptor var : parameters)
       if (var.getName().equals(name))
         return true;
     return false;
   }
 
-  public VariableDescriptor getParameter(String name) {
-    for (VariableDescriptor var : parameters)
+  public ParameterDescriptor getParameter(String name) {
+    for (ParameterDescriptor var : parameters)
       if (var.getName().equals(name))
         return var;
     return null;

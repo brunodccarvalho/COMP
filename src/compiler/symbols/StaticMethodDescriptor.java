@@ -3,11 +3,11 @@ package compiler.symbols;
 /**
  * Represents a static class method.
  */
-class StaticMethodDescriptor extends FunctionDescriptor {
+public class StaticMethodDescriptor extends FunctionDescriptor {
   private ClassDescriptor parent;
 
-  public StaticMethodDescriptor(ClassDescriptor parent, String name, TypeDescriptor ret, VariableDescriptor[] params) {
-    super(name, ret, params);
+  public StaticMethodDescriptor(ClassDescriptor parent, String name, FunctionSignature signature, String[] params) {
+    super(name, signature, params);
     assert parent != null;
     this.parent = parent;
   }
@@ -16,9 +16,9 @@ class StaticMethodDescriptor extends FunctionDescriptor {
     return parent;
   }
 
+  @Override
   public Descriptor resolve(String name) {
-    assert name != null;
-    VariableDescriptor var = getParameter(name);
+    Descriptor var = super.resolve(name);
     if (var != null)
       return var;
     else

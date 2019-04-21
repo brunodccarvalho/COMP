@@ -3,11 +3,11 @@ package compiler.symbols;
 /**
  * Represents a class instance method.
  */
-class MethodDescriptor extends FunctionDescriptor {
+public class MethodDescriptor extends FunctionDescriptor {
   private ClassDescriptor parent;
 
-  public MethodDescriptor(ClassDescriptor parent, String name, TypeDescriptor ret, VariableDescriptor[] params) {
-    super(name, ret, params);
+  public MethodDescriptor(ClassDescriptor parent, String name, FunctionSignature signature, String[] params) {
+    super(name, signature, params);
     assert parent != null;
     this.parent = parent;
   }
@@ -16,9 +16,9 @@ class MethodDescriptor extends FunctionDescriptor {
     return parent;
   }
 
+  @Override
   public Descriptor resolve(String name) {
-    assert name != null;
-    VariableDescriptor var = getParameter(name);
+    Descriptor var = super.resolve(name);
     if (var != null)
       return var;
     else

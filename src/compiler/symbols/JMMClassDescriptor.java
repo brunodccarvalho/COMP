@@ -14,8 +14,8 @@ import java.util.HashMap;
  *
  * * There may be a super class.
  */
-class JMMClassDescriptor extends ClassDescriptor {
-  private HashMap<String, VariableDescriptor> members;
+public class JMMClassDescriptor extends ClassDescriptor {
+  private HashMap<String, MemberVariableDescriptor> members;
   private HashMap<String, HashMap<FunctionSignature, MethodDescriptor>> methods;
   private StaticMethodDescriptor main;
   private ClassDescriptor superClass;
@@ -45,7 +45,7 @@ class JMMClassDescriptor extends ClassDescriptor {
       return map.containsKey(signature);
   }
 
-  public VariableDescriptor getMember(String name) {
+  public MemberVariableDescriptor getMember(String name) {
     return members.get(name);
   }
 
@@ -58,7 +58,7 @@ class JMMClassDescriptor extends ClassDescriptor {
       return map.get(signature);
   }
 
-  public boolean addMember(VariableDescriptor var) {
+  public boolean addMember(MemberVariableDescriptor var) {
     return members.putIfAbsent(var.getName(), var) == null;
   }
 
@@ -68,7 +68,7 @@ class JMMClassDescriptor extends ClassDescriptor {
   }
 
   public Descriptor resolve(String name) {
-    VariableDescriptor var = members.get(name);
+    MemberVariableDescriptor var = members.get(name);
     if (var != null)
       return var;
     else if (superClass != null)

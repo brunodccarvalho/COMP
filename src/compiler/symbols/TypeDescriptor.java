@@ -2,14 +2,15 @@ package compiler.symbols;
 
 /**
  * Base class of a type descriptor (class and primitive type descriptors). The
- * type has a name whici unequivocally identifies it.
+ * type has a name which unequivocally identifies it.
  *
  * TODO
  */
-public class TypeDescriptor extends Descriptor {
+public abstract class TypeDescriptor extends Descriptor {
   protected String name;
 
   public TypeDescriptor(String name) {
+    assert name != null;
     this.name = name;
   }
 
