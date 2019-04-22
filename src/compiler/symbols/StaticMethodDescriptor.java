@@ -1,10 +1,10 @@
 package compiler.symbols;
 
 /**
- * Represents a static class method.
+ * A descriptor for a class's a static method.
  */
 public class StaticMethodDescriptor extends FunctionDescriptor {
-  private ClassDescriptor parent;
+  private final ClassDescriptor parent;
 
   public StaticMethodDescriptor(ClassDescriptor parent, String name, FunctionSignature signature, String[] params) {
     super(name, signature, params);

@@ -1,10 +1,10 @@
 package compiler.symbols;
 
 /**
- * Represents a class instance method.
+ * A descriptor for a class's instance method.
  */
 public class MethodDescriptor extends FunctionDescriptor {
-  private ClassDescriptor parent;
+  private final ClassDescriptor parent;
 
   public MethodDescriptor(ClassDescriptor parent, String name, FunctionSignature signature, String[] params) {
     super(name, signature, params);

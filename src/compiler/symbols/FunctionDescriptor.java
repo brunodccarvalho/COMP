@@ -13,9 +13,9 @@ import java.util.HashSet;
  * class is essentially immutable.
  */
 public class FunctionDescriptor extends Descriptor {
-  private String functionName;
-  private FunctionSignature signature;
-  private ParameterDescriptor[] parameters;
+  private final String functionName;
+  private final FunctionSignature signature;
+  private final ParameterDescriptor[] parameters;
 
   private void validateParameterNames(String[] names) {
     HashSet<String> set = new HashSet<>();

@@ -2,12 +2,19 @@ package compiler.symbols;
 
 import java.util.HashMap;
 
+/**
+ * A symbol table of declared function local variables. This table is associated
+ * with a function (descriptor) and holds a map of names to local variable
+ * descriptors. It can resolve names up the hierarchy (parameters, class
+ * members...).
+ */
 public class FunctionLocals extends Descriptor {
-  private HashMap<String, LocalVariableDescriptor> variables;
-  private FunctionDescriptor function;
+  private final HashMap<String, LocalVariableDescriptor> variables;
+  private final FunctionDescriptor function;
 
   public FunctionLocals(FunctionDescriptor function) {
     assert function != null;
+    this.variables = new HashMap<>();
     this.function = function;
   }
 

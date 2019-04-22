@@ -15,17 +15,22 @@ import java.util.HashMap;
  * * There may be a super class.
  */
 public class JMMClassDescriptor extends ClassDescriptor {
-  private HashMap<String, MemberVariableDescriptor> members;
-  private HashMap<String, HashMap<FunctionSignature, MethodDescriptor>> methods;
+  private final HashMap<String, MemberVariableDescriptor> members;
+  private final HashMap<String, HashMap<FunctionSignature, MethodDescriptor>> methods;
   private StaticMethodDescriptor main;
-  private ClassDescriptor superClass;
+  private final ClassDescriptor superClass;
 
   public JMMClassDescriptor(String name) {
     super(name);
+    this.members = new HashMap<>();
+    this.methods = new HashMap<>();
+    this.superClass = null;
   }
 
   public JMMClassDescriptor(String name, ClassDescriptor superClass) {
     super(name);
+    this.members = new HashMap<>();
+    this.methods = new HashMap<>();
     this.superClass = superClass;
   }
 

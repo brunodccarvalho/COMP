@@ -1,17 +1,32 @@
 package compiler.symbols;
 
+import java.util.HashMap;
+
 /**
  * Base class of a type descriptor (class and primitive type descriptors). The
  * type has a name which unequivocally identifies it.
  *
  * TODO
  */
-public abstract class TypeDescriptor extends Descriptor {
-  protected String name;
+public class TypeDescriptor extends Descriptor {
+  protected final String name;
 
-  public TypeDescriptor(String name) {
+  private static HashMap<String, TypeDescriptor> types = new HashMap<>();
+
+  public static TypeDescriptor get(String name) {
+    return types.get(name);
+  }
+
+  public static boolean has(String name) {
+    return types.containsKey(name);
+  }
+
+  protected TypeDescriptor(String name) {
     assert name != null;
     this.name = name;
+    if (types.containsKey(name))
+      throw new IllegalStateException("Type '" + name + "' already exists");
+    types.put(name, this);
   }
 
   public String getName() {

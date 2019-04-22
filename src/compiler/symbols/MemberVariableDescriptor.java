@@ -1,7 +1,10 @@
 package compiler.symbols;
 
+/**
+ * A descriptor for a class's data member.
+ */
 public class MemberVariableDescriptor extends VariableDescriptor {
-  private ClassDescriptor instanceClass;
+  private final ClassDescriptor instanceClass;
 
   public MemberVariableDescriptor(TypeDescriptor type, String name, ClassDescriptor instanceClass) {
     super(type, name);

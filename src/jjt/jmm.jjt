@@ -25,79 +25,61 @@ public class jmm {
     /**
      * Called directly through the command line, used on checkpoint 1.
      */
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         if (args.length == 0) {
-            System.err.println("Usage: jmm java-file [number of recoveries]");
+            System.err.println("Usage: java jjt.jmm java-file [number of recoveries]");
             System.exit(1);
         }
 
         File file = new File(args[0]);
-        ParseException.file = args[0];
         if (args.length > 1) ParseException.numberRecoveries = Integer.parseInt(args[1]);
 
-        SimpleNode root = parseClass(file);
-        if (root == null) {
+        try {
+            SimpleNode root = parseClass(file);
+            if (root != null) root.dump("");
+        } catch (FileNotFoundException e) {
+            System.err.println(e.getMessage());
             System.exit(1);
-        } else {
-            root.dump("");
-            System.exit(0);
+        } catch (ParseException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
         }
     }
 
-    public static SimpleNode parseClass(File file) throws FileNotFoundException {
+    public static SimpleNode parseClass(File file) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(file);
         ParseException.file = file.toString();
         jmm myProg = new jmm(fr);
 
-        try {
-            SimpleNode root = jmm.Program();
-            return root;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        SimpleNode root = jmm.Program();
+        return root;
     }
 
-    public static SimpleNode parseAssignment(File file) throws FileNotFoundException {
+    public static SimpleNode parseAssignment(File file) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(file);
         ParseException.file = file.toString();
         jmm myProg = new jmm(fr);
 
-        try {
-            SimpleNode root = jmm.ProgramAssignment();
-            return root;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        SimpleNode root = jmm.ProgramAssignment();
+        return root;
     }
 
-    public static SimpleNode parseExpression(File file) throws FileNotFoundException {
+    public static SimpleNode parseExpression(File file) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(file);
         ParseException.file = file.toString();
         jmm myProg = new jmm(fr);
 
-        try {
-            SimpleNode root = jmm.ProgramExpression();
-            return root;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        SimpleNode root = jmm.ProgramExpression();
+        return root;
     }
 
-    public static SimpleNode parseTerm(File file) throws FileNotFoundException {
+    public static SimpleNode parseTerm(File file) throws FileNotFoundException, ParseException {
         FileReader fr = new FileReader(file);
         ParseException.file = file.toString();
         jmm myProg = new jmm(fr);
 
-        try {
-            SimpleNode root = jmm.ProgramTerm();
-            return root;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        SimpleNode root = jmm.ProgramTerm();
+        return root;
     }
 }
 PARSER_END(jmm)

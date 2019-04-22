@@ -4,7 +4,7 @@ package compiler.symbols;
  * Descriptor for a local variable instance.
  */
 public class LocalVariableDescriptor extends VariableDescriptor {
-  private FunctionDescriptor function;
+  private final FunctionDescriptor function;
 
   public LocalVariableDescriptor(TypeDescriptor type, String name, FunctionDescriptor function) {
     super(type, name);

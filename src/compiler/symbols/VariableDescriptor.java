@@ -6,8 +6,8 @@ package compiler.symbols;
  * used to address it in various hash maps (symbol tables).
  */
 public abstract class VariableDescriptor extends Descriptor {
-  protected TypeDescriptor type;
-  protected String name;
+  protected final TypeDescriptor type;
+  protected final String name;
 
   public VariableDescriptor(TypeDescriptor type, String name) {
     assert type != null && name != null;

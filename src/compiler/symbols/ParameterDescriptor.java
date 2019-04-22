@@ -1,8 +1,11 @@
 package compiler.symbols;
 
+/**
+ * A descriptor for a function's parameter variable.
+ */
 public class ParameterDescriptor extends VariableDescriptor {
-  private FunctionDescriptor function;
-  private int index;
+  private final FunctionDescriptor function;
+  private final int index;
 
   public ParameterDescriptor(TypeDescriptor type, String name, FunctionDescriptor func, int index) {
     super(type, name);

@@ -49,6 +49,7 @@ parser-debug: mkdir
 load-java:
 	@cp src/jjt/SimpleNode.java parser/jjt/SimpleNode.java
 	@cp src/jjt/ParseException.java parser/jjt/ParseException.java
+	@cp -t src/jjt/ parser/jjt/Node.java
 
 mkdir:
 	@mkdir -p bin parser
