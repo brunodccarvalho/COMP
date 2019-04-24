@@ -1,6 +1,7 @@
 package compiler.symbols;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 import compiler.FunctionSignature;
 
@@ -17,9 +18,9 @@ import compiler.FunctionSignature;
  * * There may be a super class.
  */
 public class JMMClassDescriptor extends ClassDescriptor {
-  private final HashMap<String, MemberVariableDescriptor> members;
+  private final HashMap<String, MemberDescriptor> members;
   private final HashMap<String, HashMap<FunctionSignature, MethodDescriptor>> methods;
-  private StaticMethodDescriptor main;
+  private JMMMainDescriptor main;
   private final ClassDescriptor superClass;
 
   /**
@@ -59,6 +60,13 @@ public class JMMClassDescriptor extends ClassDescriptor {
   }
 
   /**
+   * Returns true if this class has a main method.
+   */
+  public boolean hasMain() {
+    return main != null;
+  }
+
+  /**
    * Returns true if this class has at least one member method identified by name
    * and matching the corresponding signature.
    */
@@ -78,7 +86,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
   /**
    * Returns the data member identified by name. Possibly null.
    */
-  public MemberVariableDescriptor getMember(String name) {
+  public MemberDescriptor getMember(String name) {
     return members.get(name);
   }
 
@@ -97,18 +105,39 @@ public class JMMClassDescriptor extends ClassDescriptor {
   }
 
   /**
+   * Returns the main method.
+   */
+  public JMMMainDescriptor getMain() {
+    return main;
+  }
+
+  /**
    * Add a new data member to this class.
    */
-  public boolean addMember(MemberVariableDescriptor var) {
-    return members.putIfAbsent(var.getName(), var) == null;
+  public void addMember(MemberDescriptor var) {
+    assert !members.containsKey(var.getName());
+    members.put(var.getName(), var);
   }
 
   /**
    * Add a new member method to this class.
    */
-  public boolean addMethod(MethodDescriptor method) {
-    return methods.computeIfAbsent(method.getName(), name -> new HashMap<>()).putIfAbsent(method.getSignature(),
-        method) == null;
+  public void addMethod(MethodDescriptor method) {
+    assert method.getSignature().isComplete();
+
+    HashMap<FunctionSignature, MethodDescriptor> map;
+    map = methods.computeIfAbsent(method.getName(), n -> new HashMap<>());
+
+    assert !map.containsKey(method.getSignature());
+    map.put(method.getSignature(), method);
+  }
+
+  /**
+   * Set the class's main static method.
+   */
+  public void setMain(JMMMainDescriptor main) {
+    assert main != null && this.main == null;
+    this.main = main;
   }
 
   /**
@@ -118,7 +147,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
    * Returns the Descriptor found, or null if not found.
    */
   public Descriptor resolve(String name) {
-    MemberVariableDescriptor var = members.get(name);
+    MemberDescriptor var = members.get(name);
     if (var != null)
       return var;
     else if (superClass != null)
@@ -138,5 +167,20 @@ public class JMMClassDescriptor extends ClassDescriptor {
       return superClass.resolveStatic(name);
     else
       return null;
+  }
+
+  /**
+   * Convenience methods to list all members/methods.
+   */
+  public MemberDescriptor[] getMembersList() {
+    return members.values().toArray(new MemberDescriptor[members.size()]);
+  }
+
+  public MethodDescriptor[] getMethodsList() {
+    HashSet<MethodDescriptor> methodsSet = new HashSet<>();
+    for (HashMap<FunctionSignature, MethodDescriptor> map : methods.values()) {
+      methodsSet.addAll(map.values());
+    }
+    return methodsSet.toArray(new MethodDescriptor[methodsSet.size()]);
   }
 }

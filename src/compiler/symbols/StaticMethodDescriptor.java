@@ -3,7 +3,9 @@ package compiler.symbols;
 import compiler.FunctionSignature;
 
 /**
- * A descriptor for a class's a static method.
+ * A descriptor for a class's static method.
+ *
+ * Note: unused.
  */
 public class StaticMethodDescriptor extends FunctionDescriptor {
   private final ClassDescriptor parent;

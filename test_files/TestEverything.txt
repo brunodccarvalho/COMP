@@ -97,7 +97,7 @@ class TestEverything extends Something {
       return 0;
   }
 
-  public int length() {
+  public int length(int a, int b, int c, ClassOk ok) {
       return 1;
   }
 

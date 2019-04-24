@@ -1,9 +1,11 @@
 package compiler.symbols;
 
+import static compiler.symbols.PrimitiveDescriptor.Type.*;
+
 /**
  * Up for refactoring any day.
  */
-public class PrimitiveType extends TypeDescriptor {
+public class PrimitiveDescriptor extends TypeDescriptor {
   public enum Type {
     INT("int"), INTARRAY("int[]"), BOOLEAN("boolean");
 
@@ -19,9 +21,13 @@ public class PrimitiveType extends TypeDescriptor {
     }
   }
 
+  public static final PrimitiveDescriptor intDescriptor = new PrimitiveDescriptor(INT);
+  public static final PrimitiveDescriptor intArrayDescriptor = new PrimitiveDescriptor(INTARRAY);
+  public static final PrimitiveDescriptor booleanDescriptor = new PrimitiveDescriptor(BOOLEAN);
+
   private final Type primitive;
 
-  public PrimitiveType(Type primitive) {
+  public PrimitiveDescriptor(Type primitive) {
     super(primitive.toString());
     this.primitive = primitive;
 
@@ -68,7 +74,7 @@ public class PrimitiveType extends TypeDescriptor {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    PrimitiveType other = (PrimitiveType) obj;
+    PrimitiveDescriptor other = (PrimitiveDescriptor) obj;
     if (primitive != other.primitive)
       return false;
     return true;

@@ -243,13 +243,13 @@ void ClassMethodName() #MethodName : {Token token;}
 
 void ClassType() : {Token token;}
 {
-    (token = <IDENTIFIER> | token = <MAIN> | token = <LENGTH>)
+    (token = <IDENTIFIER> | token = <MAIN> | token = <LENGTH> | token = <STRING>)
     {jjtThis.jjtSetVal(token.image);}
 }
 
 void Identifier() : {Token token;}
 {
-    (token = <IDENTIFIER> | token = <MAIN> | token = <LENGTH>)
+    (token = <IDENTIFIER> | token = <MAIN> | token = <LENGTH> | token = <STRING>)
     {jjtThis.jjtSetVal(token.image);}
 }
 
@@ -498,8 +498,6 @@ void PrimitiveType() #void : {}
     IntType()
     |
     <BOOLEAN> #Boolean
-    |
-    <STRING> #String
 }
 
 void IntType() #void : {}

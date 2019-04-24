@@ -352,6 +352,10 @@ if (jjtc000) {
         token = jj_consume_token(LENGTH);
         break;
         }
+      case STRING:{
+        token = jj_consume_token(STRING);
+        break;
+        }
       default:
         jj_la1[2] = jj_gen;
         jj_consume_token(-1);
@@ -386,6 +390,10 @@ if (jjtc000) {
         }
       case LENGTH:{
         token = jj_consume_token(LENGTH);
+        break;
+        }
+      case STRING:{
+        token = jj_consume_token(STRING);
         break;
         }
       default:
@@ -557,6 +565,7 @@ if (jjtc000) {
       break;
       }
     case MAIN:
+    case STRING:
     case LENGTH:
     case IDENTIFIER:{
       IdentifierTerm4();
@@ -805,6 +814,7 @@ if (jjtc002) {
       case FALSE:
       case NOT:
       case MAIN:
+      case STRING:
       case LENGTH:
       case LCB:
       case INTEGERLITERAL:
@@ -873,6 +883,7 @@ if (jjtc001) {
       break;
       }
     case MAIN:
+    case STRING:
     case LENGTH:
     case IDENTIFIER:{
       ClassType();
@@ -1154,6 +1165,7 @@ if (jjtc000) {
     case FALSE:
     case NOT:
     case MAIN:
+    case STRING:
     case LENGTH:
     case LCB:
     case INTEGERLITERAL:
@@ -1186,6 +1198,7 @@ if (jjtc000) {
         case FALSE:
         case NOT:
         case MAIN:
+        case STRING:
         case LENGTH:
         case LEFTKEY:
         case LCB:
@@ -1320,6 +1333,7 @@ if (jjtc000) {
       break;
       }
     case MAIN:
+    case STRING:
     case LENGTH:
     case IDENTIFIER:{
       IdentifierStatement();
@@ -1492,12 +1506,12 @@ if (jjtc001) {
   static final public void Type() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case INT:
-    case BOOLEAN:
-    case STRING:{
+    case BOOLEAN:{
       PrimitiveType();
       break;
       }
     case MAIN:
+    case STRING:
     case LENGTH:
     case IDENTIFIER:{
       ClassType();
@@ -1527,21 +1541,6 @@ SimpleNode jjtn001 = new SimpleNode(JJTBOOLEAN);
 if (jjtc001) {
         jjtree.closeNodeScope(jjtn001, true);
         jjtn001.jjtSetLastToken(getToken(0));
-      }
-      }
-      break;
-      }
-    case STRING:{
-SimpleNode jjtn002 = new SimpleNode(JJTSTRING);
-      boolean jjtc002 = true;
-      jjtree.openNodeScope(jjtn002);
-      jjtn002.jjtSetFirstToken(getToken(1));
-      try {
-        jj_consume_token(STRING);
-      } finally {
-if (jjtc002) {
-        jjtree.closeNodeScope(jjtn002, true);
-        jjtn002.jjtSetLastToken(getToken(0));
       }
       }
       break;
@@ -1593,8 +1592,7 @@ if (jjtc002) {
   static final public void MethodBody() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case INT:
-    case BOOLEAN:
-    case STRING:{
+    case BOOLEAN:{
       PrimitiveType();
 SimpleNode jjtn001 = new SimpleNode(JJTVARIABLEDECLARATION);
                       boolean jjtc001 = true;
@@ -1627,6 +1625,7 @@ if (jjtc001) {
       break;
       }
     case MAIN:
+    case STRING:
     case LENGTH:
     case IDENTIFIER:{
       Identifier();
@@ -1658,6 +1657,7 @@ if (jjtc001) {
           case FALSE:
           case NOT:
           case MAIN:
+          case STRING:
           case LENGTH:
           case LEFTKEY:
           case LCB:
@@ -1684,6 +1684,7 @@ if (jjtc001) {
   static final public void AssignmentOrDeclaration() throws ParseException {
     switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
     case MAIN:
+    case STRING:
     case LENGTH:
     case IDENTIFIER:{
       Identifier();
@@ -1724,6 +1725,7 @@ if (jjtc001) {
         case FALSE:
         case NOT:
         case MAIN:
+        case STRING:
         case LENGTH:
         case LEFTKEY:
         case LCB:
@@ -2316,7 +2318,7 @@ if (jjtc000) {
       jj_la1_0 = new int[] {0x0,0x0,0x0,0x0,0x2000000,0x60000000,0x18000000,0x4000000,0x2000000,0x4000000,0x18000000,0x60000000,0x80078000,0x80078000,0x0,0x0,0x0,0x0,0x400000,0x80078000,0x100000,0x18000000,0x60000000,0x8007d000,0x8007d000,0x80078000,0x1000000,0x1000000,0x8007d000,0x300000,0x300000,0x0,0x8007d000,0x8007d000,0x300000,0x8007d000,0x7f800000,0x400000,0x300000,0x400,0x300100,0x300000,0x80,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x802,0x80a,0x80a,0x80a,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xd0a,0x500,0x41,0x41,0x80a,0x100,0x0,0xd0a,0x80a,0x0,0x0,0xd1a,0xd1a,0xd0a,0x41,0x0,0x510,0x80e,0x4,0x40,0xd1a,0x510,0x80e,0xd1a,0x84b,0x0,0x80e,0x0,0x80e,0x80e,0x0,};
+      jj_la1_1 = new int[] {0x802,0x80a,0x80e,0x80e,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xd0e,0x500,0x41,0x41,0x80a,0x100,0x0,0xd0e,0x80e,0x0,0x0,0xd1e,0xd1e,0xd0e,0x41,0x0,0x510,0x80e,0x0,0x40,0xd1e,0x510,0x80e,0xd1e,0x84f,0x0,0x80e,0x0,0x80e,0x80e,0x0,};
    }
 
   /** Constructor with InputStream. */

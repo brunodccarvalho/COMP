@@ -1,5 +1,7 @@
 package compiler.symbols;
 
+import compiler.FunctionSignature;
+
 /**
  * The base class of any Java class descriptor. This class has a non fully
  * qualified class name and can resolve both instance and static names from
@@ -34,6 +36,17 @@ public abstract class ClassDescriptor extends TypeDescriptor {
   }
 
   /**
+   * Returns true if this class has a data member identified by name.
+   */
+  public abstract boolean hasMethod(String name);
+
+  /**
+   * Returns true if this class has at least one member method identified by name
+   * and matching the corresponding signature.
+   */
+  public abstract boolean hasMethod(String name, FunctionSignature signature);
+
+  /**
    * Resolve the given name non-statically.
    */
   public abstract Descriptor resolve(String name);
@@ -42,9 +55,4 @@ public abstract class ClassDescriptor extends TypeDescriptor {
    * Resolve the given name statically.
    */
   public abstract Descriptor resolveStatic(String name);
-
-  @Override
-  public String toString() {
-    return "class " + getClassName();
-  }
 }

@@ -1,7 +1,3 @@
-package example;
-
-import java.io.File;
-
 class Example {
   int counter;
   boolean counter;
@@ -10,7 +6,8 @@ class Example {
   File file;
 
   public int getCounter() {
-    int counter = 2;
+    int counter;
+    counter = 2;
     return counter * 2;
   }
 
@@ -18,7 +15,7 @@ class Example {
     return array;
   }
 
-  public boolean getInited() {
+  public boolean getInited(int a, int[] b, boolean c) {
     return inited;
   }
 
@@ -26,7 +23,7 @@ class Example {
     return file;
   }
 
-  public void getFile(File f) {
+  public int getFile(File f) {
     return file;
   }
 
@@ -54,7 +51,7 @@ class Example {
     a = b.length;
     b = new int[5];
     c = true;
-    d = new File(str);
+    d = new File();
 
     return 0;
   }

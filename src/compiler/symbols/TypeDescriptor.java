@@ -6,26 +6,51 @@ import java.util.HashMap;
  * Base class of a type descriptor (class and primitive type descriptors).
  *
  * The type has a name which unequivocally identifies it.
+ *
+ * This class has a protected constructor and two subclasses:
+ * PrimitiveDescriptor and ClassDescriptor. This is so because we do not
+ * distinguish between classes and interfaces, and support only integer arrays
+ * (int[]).
+ *
+ * This class holds a list of all 'discovered' typenames and their corresponding
+ * type descriptors. The PrimitiveDescriptor class holds three static instances
+ * for the int, int array and boolean primitive types supported by this
+ * compiler.
+ *
+ * An existing type can be retrieved with 'get(name)'. An missing type can be
+ * created upon retrieval with 'getOrCreate(name)' -- this function will create
+ * a new instance of JavaClassDescriptor for the name if it was not found,
+ * returning it. A name can be inspected with 'exists(name)' -- returning true
+ * if it has an entry in the map.
  */
 public abstract class TypeDescriptor extends Descriptor {
   protected final String name;
 
-  private static HashMap<String, TypeDescriptor> types = new HashMap<>();
+  private static HashMap<String, TypeDescriptor> typesMap = new HashMap<>();
 
   public static TypeDescriptor get(String name) {
-    return types.get(name);
+    return typesMap.get(name);
   }
 
-  public static boolean has(String name) {
-    return types.containsKey(name);
+  public static TypeDescriptor getOrCreate(String name) {
+    if (typesMap.containsKey(name))
+      return typesMap.get(name);
+
+    TypeDescriptor classDescriptor = new JavaClassDescriptor(name);
+    assert classDescriptor.isClass();
+    return classDescriptor;
+  }
+
+  public static boolean exists(String name) {
+    return typesMap.containsKey(name);
   }
 
   protected TypeDescriptor(String name) {
     assert name != null;
     this.name = name;
-    if (types.containsKey(name))
+    if (typesMap.containsKey(name))
       throw new IllegalStateException("Type '" + name + "' already exists");
-    types.put(name, this);
+    typesMap.put(name, this);
   }
 
   public String getName() {

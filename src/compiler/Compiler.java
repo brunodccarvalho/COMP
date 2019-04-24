@@ -2,6 +2,8 @@ package compiler;
 
 import java.io.File;
 
+import compiler.modules.ClassCompiler;
+
 final class Compiler {
   private static Compiler compiler;
 

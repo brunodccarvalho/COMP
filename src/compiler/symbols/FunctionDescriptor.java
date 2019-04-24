@@ -23,13 +23,15 @@ public class FunctionDescriptor extends Descriptor {
   /**
    * Ensures there are no two parameters with the same name.
    */
-  private void validateParameterNames(String[] names) {
+  public static boolean validateParameterNames(String[] names) {
     HashSet<String> set = new HashSet<>();
     for (String name : names) {
+      assert name != null;
       if (set.contains(name))
-        throw new IllegalArgumentException("Repeated parameter name (" + name + ") in function " + functionName);
+        return false;
       set.add(name);
     }
+    return true;
   }
 
   /**
@@ -43,7 +45,7 @@ public class FunctionDescriptor extends Descriptor {
    * @param params    The names of the function's parameters.
    */
   public FunctionDescriptor(String name, TypeDescriptor ret, FunctionSignature signature, String[] params) {
-    assert name != null && ret != null && signature != null && signature.isComplete();
+    assert name != null && signature != null && signature.isComplete();
     if (params == null)
       params = new String[0];
     assert signature.getNumParameters() == params.length;
@@ -53,7 +55,7 @@ public class FunctionDescriptor extends Descriptor {
     this.signature = signature;
 
     // Check that no argument names are repeated.
-    validateParameterNames(params);
+    assert validateParameterNames(params);
 
     // Create the variable descriptors arrays for the signature.
     this.parameters = new ParameterDescriptor[params.length];

@@ -25,7 +25,7 @@ public abstract class VariableDescriptor extends Descriptor {
 
   @Override
   public String toString() {
-    return type.toString() + ' ' + name;
+    return type + " " + name;
   }
 
   @Override
