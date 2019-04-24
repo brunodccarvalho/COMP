@@ -3,12 +3,11 @@ package compiler.symbols;
 import java.util.HashMap;
 
 /**
- * Base class of a type descriptor (class and primitive type descriptors). The
- * type has a name which unequivocally identifies it.
+ * Base class of a type descriptor (class and primitive type descriptors).
  *
- * TODO
+ * The type has a name which unequivocally identifies it.
  */
-public class TypeDescriptor extends Descriptor {
+public abstract class TypeDescriptor extends Descriptor {
   protected final String name;
 
   private static HashMap<String, TypeDescriptor> types = new HashMap<>();
@@ -32,6 +31,12 @@ public class TypeDescriptor extends Descriptor {
   public String getName() {
     return name;
   }
+
+  public abstract boolean isPrimitive();
+
+  public abstract boolean isClass();
+
+  public abstract boolean isArray();
 
   @Override
   public String toString() {

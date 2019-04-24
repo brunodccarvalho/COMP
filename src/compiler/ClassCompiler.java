@@ -101,11 +101,22 @@ final class ClassCompiler {
       SimpleNode varDeclaration = classVarDeclarations.jjtGetChild(i);
       assert varDeclaration.is(JJTCLASSVARDECLARATION);
 
+      SimpleNode typeNode = varDeclaration.jjtGetChild(0);
+      SimpleNode nameNode = varDeclaration.jjtGetChild(1);
+      assert nameNode.is(JJTIDENTIFIER);
+
+      String varIdentifier = nameNode.jjtGetVal();
+
       switch (varDeclaration.getId()) {
       case JJTINT:
+        break;
       case JJTINTARRAY:
+        break;
       case JJTBOOLEAN:
+        break;
       case JJTCLASSTYPE:
+        String typeIdentifier = typeNode.jjtGetVal();
+        break;
       }
     }
   }

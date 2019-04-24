@@ -52,4 +52,10 @@ class Example {
 
     return 0;
   }
+
+  public static int lol() {
+    Example example = new Example();
+
+    return example.counter;
+  }
 }
