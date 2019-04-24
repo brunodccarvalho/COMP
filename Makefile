@@ -18,38 +18,36 @@ JAVACC_DEBUG := -debug_parser -debug_lookahead
 JAVACC_FLAGS := -output_directory=parser/$(JJT)
 
 JAVAC_DEBUG := -g
-JAVAC_FLAGS := -cp bin -d bin -Werror
+JAVAC_FLAGS := -cp bin -d bin -Werror -sourcepath src
 
 COMPILER_FILES := $(shell find src/${COMPILER} -name '*.java' -type f)
 
 .PHONY: all debug parser parser-debug load-java mkdir clean test run
 
-all:
-	@[ -f bin/jjt/jmm.class ] || ${MAKE} parser
+all: parser
 	@echo "Compiling src/compiler ..."
-	@javac $(JAVAC_FLAGS) -sourcepath src $(COMPILER_FILES)
+	@javac $(JAVAC_FLAGS) $(COMPILER_FILES)
 
-debug:
-	@[ -f bin/jjt/jmm.class ] || ${MAKE} parser
+debug: parser-debug
 	@echo "Compiling src/compiler ..."
-	@javac $(JAVAC_FLAGS) $(JAVAC_DEBUG) -sourcepath src $(COMPILER_FILES)
+	@javac $(JAVAC_FLAGS) $(JAVAC_DEBUG) $(COMPILER_FILES)
 
 parser: mkdir
-	jjtree $(JJTREE_FLAGS) src/$(JJT)/jmm.jjt
-	javacc $(JAVACC_FLAGS) parser/$(JJT)/jmm.jj
+	@jjtree $(JJTREE_FLAGS) jmm/$(JJT)/jmm.jjt
+	@javacc $(JAVACC_FLAGS) parser/$(JJT)/jmm.jj
 	@${MAKE} -s load-java
-	javac  $(JAVAC_FLAGS)  -sourcepath parser parser/$(JJT)/*.java
+	@javac  $(JAVAC_FLAGS) src/$(JJT)/*.java
 
 parser-debug: mkdir
-	jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) src/$(JJT)/jmm.jjt
-	javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) parser/$(JJT)/jmm.jj
+	@jjtree $(JJTREE_FLAGS) $(JJTREE_DEBUG) jmm/$(JJT)/jmm.jjt
+	@javacc $(JAVACC_FLAGS) $(JAVACC_DEBUG) parser/$(JJT)/jmm.jj
 	@${MAKE} -s load-java
-	javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG)  -sourcepath parser parser/$(JJT)/*.java
+	@javac  $(JAVAC_FLAGS)  $(JAVAC_DEBUG) src/$(JJT)/*.java
 
 load-java:
-	@cp src/jjt/SimpleNode.java parser/jjt/SimpleNode.java
-	@cp src/jjt/ParseException.java parser/jjt/ParseException.java
-	@cp -t src/jjt/ parser/jjt/Node.java
+	@cp jmm/jjt/SimpleNode.java parser/jjt/SimpleNode.java
+	@cp jmm/jjt/ParseException.java parser/jjt/ParseException.java
+	@cp -t src/jjt/ parser/jjt/*.java
 
 mkdir:
 	@mkdir -p bin parser

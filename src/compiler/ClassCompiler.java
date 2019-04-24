@@ -1,5 +1,7 @@
 package compiler;
 
+import static jjt.jmmTreeConstants.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -22,11 +24,6 @@ final class ClassCompiler {
   private int resultCode = 0;
   private Exception resultException;
 
-  private static SimpleNode jjtGetChild(SimpleNode node, int i) {
-    assert node != null && node.jjtGetNumChildren() > i && i >= 0;
-    return (SimpleNode) node.jjtGetChild(i);
-  }
-
   public int getResultCode() {
     return resultCode;
   }
@@ -41,7 +38,10 @@ final class ClassCompiler {
     // Parse source file
     try {
       SimpleNode rootNode = jmm.parseClass(sourcefile);
-      this.classNode = jjtGetChild(rootNode, 0);
+      assert rootNode.is(JJTPROGRAM);
+
+      this.classNode = rootNode.jjtGetChild(0);
+      assert this.classNode.is(JJTCLASSDECLARATION);
     } catch (FileNotFoundException e) {
       System.err.println("Input source " + sourcefile.getPath() + " cannot be used ...");
       this.resultCode = 1;
@@ -54,8 +54,6 @@ final class ClassCompiler {
       return;
     }
 
-    assert this.classNode != null;
-
     // Parse ClassHeader: Get class name, extends clause, create jmmClass object.
     this.parseClassHeader();
     if (this.resultCode != 0)
@@ -67,10 +65,12 @@ final class ClassCompiler {
 
   private void parseClassHeader() {
     // ClassHeader
-    SimpleNode classHeader = jjtGetChild(classNode, 0);
+    SimpleNode classHeader = classNode.jjtGetChild(0);
+    assert classHeader.is(JJTCLASSHEADER);
 
     // ClassHeader > ClassType
-    SimpleNode classType = jjtGetChild(classHeader, 0);
+    SimpleNode classType = classHeader.jjtGetChild(0);
+    assert classType.is(JJTCLASSTYPE);
 
     String className = classType.jjtGetVal();
     if (TypeDescriptor.has(className))
@@ -89,15 +89,24 @@ final class ClassCompiler {
 
   private void parseClassMemberVariables() {
     // ClassBody
-    SimpleNode classBody = jjtGetChild(classNode, 0);
+    SimpleNode classBody = classNode.jjtGetChild(1);
+    assert classBody.is(JJTCLASSBODY);
 
     // ClassBody > ClassVarDeclarations
-    SimpleNode classVarDeclarations = jjtGetChild(classBody, 0);
+    SimpleNode classVarDeclarations = classBody.jjtGetChild(0);
+    assert classVarDeclarations.is(JJTCLASSVARDECLARATIONS);
 
     // ClassVarDeclarations > ClassVarDeclaration
     for (int i = 0; i < classVarDeclarations.jjtGetNumChildren(); ++i) {
-      SimpleNode varDeclaration = jjtGetChild(classVarDeclarations, i);
-      // ...
+      SimpleNode varDeclaration = classVarDeclarations.jjtGetChild(i);
+      assert varDeclaration.is(JJTCLASSVARDECLARATION);
+
+      switch (varDeclaration.getId()) {
+      case JJTINT:
+      case JJTINTARRAY:
+      case JJTBOOLEAN:
+      case JJTCLASSTYPE:
+      }
     }
   }
 }
