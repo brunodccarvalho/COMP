@@ -21,6 +21,7 @@ import static jjt.jmmTreeConstants.JJTVARIABLEDECLARATION;
 import java.util.HashMap;
 
 import compiler.FunctionSignature;
+import compiler.DiagnosticsHandler;
 import compiler.symbols.FunctionDescriptor;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.JMMClassDescriptor;
@@ -129,6 +130,7 @@ class SymbolsTable extends CompilerModule {
     // ERROR: Repeated class member variable.
     if (jmmClass.resolve(identifier) != null) {
       System.err.println("Error: class variable " + identifier + " is already defined");
+      DiagnosticsHandler.self.errorLine(nameNode.jjtGetFirstToken());
       status(MINOR_ERRORS);
       return;
     }
@@ -197,6 +199,7 @@ class SymbolsTable extends CompilerModule {
     // Error: Repeated methods - Two methods with the same name and signature.
     if (jmmClass.hasMethod(name, signature)) {
       System.err.println("Error: method " + name + signature + " is already defined");
+      DiagnosticsHandler.self.errorLine(methodNameNode.jjtGetFirstToken());
       status(MINOR_ERRORS);
       return;
     }
@@ -204,6 +207,7 @@ class SymbolsTable extends CompilerModule {
     // Error: Repeated parameter names -- Two parameters have the same name.
     if (!FunctionDescriptor.validateParameterNames(paramNames)) {
       System.err.println("Error: method " + name + signature + " has conflicting parameter names");
+      DiagnosticsHandler.self.errorLine(methodNameNode.jjtGetFirstToken());
       status(MINOR_ERRORS);
       return;
     }
@@ -230,6 +234,7 @@ class SymbolsTable extends CompilerModule {
     // Error: Repeated methods - Two methods with the same name and signature.
     if (jmmClass.hasMain()) {
       System.err.println("Error: main method is already defined");
+      DiagnosticsHandler.self.errorLine(mainNode.jjtGetFirstToken());
       status(MINOR_ERRORS);
       return;
     }
@@ -269,6 +274,7 @@ class SymbolsTable extends CompilerModule {
       // Error: Redefinition of identifier -- same identifier is used twice locally.
       if (locals.hasVariable(name)) {
         System.err.println("Error: " + name + " is already locally defined in " + method);
+        DiagnosticsHandler.self.errorLine(nameNode.jjtGetFirstToken());
         status(MINOR_ERRORS);
         continue;
       }
@@ -276,6 +282,7 @@ class SymbolsTable extends CompilerModule {
       // Error: Redefinition of parameter -- same identifier is a function parameter.
       if (method.hasParameter(name)) {
         System.err.println("Error: locally defined " + name + " is a parameter of " + method);
+        DiagnosticsHandler.self.errorLine(nameNode.jjtGetFirstToken());
         status(MINOR_ERRORS);
         continue;
       }

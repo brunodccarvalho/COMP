@@ -5,8 +5,10 @@ import static jjt.jmmTreeConstants.JJTPROGRAM;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import compiler.symbols.JMMClassDescriptor;
+import compiler.DiagnosticsHandler;
 import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
@@ -21,6 +23,14 @@ public final class ClassCompiler extends CompilerModule {
   JMMClassDescriptor jmmClass;
 
   public ClassCompiler(File sourcefile) {
+    try {
+      DiagnosticsHandler.self= new DiagnosticsHandler(sourcefile);
+    } catch (IOException e) {
+      System.err.println("File " + sourcefile.getName() + " was not found.");
+      status(FATAL);
+      return;
+    }
+
     // Parse source file
     try {
       SimpleNode rootNode = jmm.parseClass(sourcefile);
