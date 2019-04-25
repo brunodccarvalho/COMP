@@ -28,10 +28,22 @@ public abstract class TypeDescriptor extends Descriptor {
 
   private static HashMap<String, TypeDescriptor> typesMap = new HashMap<>();
 
+  /**
+   * @param name A typename being resolved.
+   * @return The TypeDescriptor instance for the given typename, or null if none
+   *         exists.
+   */
   public static TypeDescriptor get(String name) {
     return typesMap.get(name);
   }
 
+  /**
+   * Creates a new instance of UnknownClassDescriptor for this typename if none
+   * exists.
+   *
+   * @param name A typename being resolved or created.
+   * @return The TypeDescriptor instance for this typename, possibly just created.
+   */
   public static TypeDescriptor getOrCreate(String name) {
     if (typesMap.containsKey(name))
       return typesMap.get(name);
@@ -41,10 +53,19 @@ public abstract class TypeDescriptor extends Descriptor {
     return classDescriptor;
   }
 
+  /**
+   * @param name A typename being resolved.
+   * @return true if the type exists, false otherwise.
+   */
   public static boolean exists(String name) {
     return typesMap.containsKey(name);
   }
 
+  /**
+   * Construct a new instance of a TypeDescriptor with the given name.
+   *
+   * @param name The typename
+   */
   protected TypeDescriptor(String name) {
     assert name != null;
     this.name = name;
@@ -53,14 +74,38 @@ public abstract class TypeDescriptor extends Descriptor {
     typesMap.put(name, this);
   }
 
+  /**
+   * @return The typename
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * The only primitive types in JMM are int and boolean.
+   *
+   * If true, this is an instance of PrimitiveDescriptor.
+   *
+   * @return true if this is a primitive type, false otherwise.
+   */
   public abstract boolean isPrimitive();
 
+  /**
+   * Almost everything in JMM is a class, including String.
+   *
+   * If true, this is an instance of ClassDescriptor.
+   *
+   * @return true if this is a class type, false otherwise.
+   */
   public abstract boolean isClass();
 
+  /**
+   * The only array type in JMM is int[].
+   *
+   * If true, this is an instance of PrimitiveDescriptor.
+   *
+   * @return true if this is an array type, false otherwise.
+   */
   public abstract boolean isArray();
 
   @Override

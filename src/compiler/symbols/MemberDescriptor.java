@@ -4,15 +4,26 @@ package compiler.symbols;
  * A descriptor for a class's data member.
  */
 public class MemberDescriptor extends VariableDescriptor {
-  private final ClassDescriptor instanceClass;
+  private final JMMClassDescriptor parent;
 
-  public MemberDescriptor(TypeDescriptor type, String name, ClassDescriptor instanceClass) {
+  /**
+   * Create a new member variable descriptor.
+   *
+   * @param type   The member variable's type
+   * @param name   The member variable's name
+   * @param parent The instance class this member variable will be added to.
+   */
+  public MemberDescriptor(TypeDescriptor type, String name, JMMClassDescriptor parent) {
     super(type, name);
-    assert instanceClass != null;
-    this.instanceClass = instanceClass;
+    assert parent != null && !parent.hasMember(name);
+    this.parent = parent;
+    parent.addMember(this);
   }
 
-  public ClassDescriptor getParentClass() {
-    return instanceClass;
+  /**
+   * @return The member variable's instance class.
+   */
+  public JMMClassDescriptor getParentClass() {
+    return parent;
   }
 }

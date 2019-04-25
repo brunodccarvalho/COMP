@@ -9,16 +9,28 @@ public abstract class VariableDescriptor extends Descriptor {
   protected final TypeDescriptor type;
   protected final String name;
 
-  public VariableDescriptor(TypeDescriptor type, String name) {
+  /**
+   * Creates a new variable descriptor.
+   *
+   * @param type The variable's type
+   * @param name The variable's name
+   */
+  protected VariableDescriptor(TypeDescriptor type, String name) {
     assert type != null && name != null;
     this.type = type;
     this.name = name;
   }
 
+  /**
+   * @return The variable's type descriptor
+   */
   public TypeDescriptor getType() {
     return type;
   }
 
+  /**
+   * @return The variable's name
+   */
   public String getName() {
     return name;
   }

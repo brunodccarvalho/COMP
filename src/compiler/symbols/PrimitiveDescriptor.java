@@ -21,26 +21,38 @@ public class PrimitiveDescriptor extends TypeDescriptor {
     }
   }
 
-  public static final PrimitiveDescriptor intDescriptor = new PrimitiveDescriptor(INT);
-  public static final PrimitiveDescriptor intArrayDescriptor = new PrimitiveDescriptor(INTARRAY);
-  public static final PrimitiveDescriptor booleanDescriptor = new PrimitiveDescriptor(BOOLEAN);
-
   private final Type primitive;
 
-  public PrimitiveDescriptor(Type primitive) {
+  // The descriptor of the type "int"
+  public static final PrimitiveDescriptor intDescriptor = new PrimitiveDescriptor(INT);
+
+  // The descriptor of the type "int[]"
+  public static final PrimitiveDescriptor intArrayDescriptor = new PrimitiveDescriptor(INTARRAY);
+
+  // The descriptor of the type "boolean"
+  public static final PrimitiveDescriptor booleanDescriptor = new PrimitiveDescriptor(BOOLEAN);
+
+  /**
+   * Constructs a new Primitive type.
+   *
+   * All instances of this class should be public static fields above.
+   */
+  private PrimitiveDescriptor(Type primitive) {
     super(primitive.toString());
     this.primitive = primitive;
-
   }
 
+  @Override
   public boolean isPrimitive() {
-    return true;
+    return primitive != Type.INTARRAY;
   }
 
+  @Override
   public boolean isClass() {
     return false;
   }
 
+  @Override
   public boolean isArray() {
     return primitive == Type.INTARRAY;
   }
@@ -55,6 +67,9 @@ public class PrimitiveDescriptor extends TypeDescriptor {
     case BOOLEAN:
       return "boolean";
     }
+
+    // We should never arrive here.
+    assert false;
     return null;
   }
 
