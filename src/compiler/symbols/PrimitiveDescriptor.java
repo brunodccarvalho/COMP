@@ -1,8 +1,8 @@
 package compiler.symbols;
 
-import static compiler.symbols.PrimitiveDescriptor.Type.*;
-
-import java.util.Objects;
+import static compiler.symbols.PrimitiveDescriptor.Type.BOOLEAN;
+import static compiler.symbols.PrimitiveDescriptor.Type.INT;
+import static compiler.symbols.PrimitiveDescriptor.Type.INTARRAY;
 
 /**
  * Up for refactoring any day.
@@ -59,44 +59,5 @@ public class PrimitiveDescriptor extends TypeDescriptor {
   @Override
   public boolean isArray() {
     return primitive == Type.INTARRAY;
-  }
-
-  @Override
-  public String toString() {
-    switch (primitive) {
-    case INT:
-      return "int";
-    case INTARRAY:
-      return "int[]";
-    case BOOLEAN:
-      return "boolean";
-    }
-
-    // We should never arrive here.
-    assert false;
-    return null;
-  }
-
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = super.hashCode();
-    result = prime * result + Objects.hash(primitive);
-    return result;
-  }
-
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!super.equals(obj)) return false;
-    if (!(obj instanceof PrimitiveDescriptor)) return false;
-    PrimitiveDescriptor other = (PrimitiveDescriptor) obj;
-    return primitive == other.primitive;
   }
 }

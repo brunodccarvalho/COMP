@@ -1,5 +1,7 @@
 package compiler.symbols;
 
+import java.util.Objects;
+
 /**
  * Descriptor for a local variable instance.
  */
@@ -32,5 +34,28 @@ public class LocalDescriptor extends VariableDescriptor {
    */
   public BaseFunctionDescriptor getFunction() {
     return table.getFunction();
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + Objects.hash(table);
+    return result;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (!(obj instanceof LocalDescriptor)) return false;
+    LocalDescriptor other = (LocalDescriptor) obj;
+    return Objects.equals(table, other.table);
   }
 }

@@ -90,7 +90,7 @@ public class FunctionLocals extends Descriptor {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(function, variables);
+    return Objects.hash(function);
   }
 
   /* (non-Javadoc)
@@ -102,6 +102,6 @@ public class FunctionLocals extends Descriptor {
     if (obj == null) return false;
     if (!(obj instanceof FunctionLocals)) return false;
     FunctionLocals other = (FunctionLocals) obj;
-    return Objects.equals(function, other.function) && Objects.equals(variables, other.variables);
+    return Objects.equals(function, other.function);
   }
 }

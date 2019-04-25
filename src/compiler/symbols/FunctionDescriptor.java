@@ -1,6 +1,5 @@
 package compiler.symbols;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -179,7 +178,6 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + Arrays.hashCode(parameters);
     result = prime * result + Objects.hash(returnType, signature);
     return result;
   }
@@ -193,8 +191,7 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
     if (!super.equals(obj)) return false;
     if (!(obj instanceof FunctionDescriptor)) return false;
     FunctionDescriptor other = (FunctionDescriptor) obj;
-    return Arrays.equals(parameters, other.parameters)
-        && Objects.equals(returnType, other.returnType)
+    return Objects.equals(returnType, other.returnType)
         && Objects.equals(signature, other.signature);
   }
 }

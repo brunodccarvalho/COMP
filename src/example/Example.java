@@ -4,6 +4,7 @@ import java.io.File;
 
 class Example {
   int counter;
+  // Duplicate field Example.counter
   boolean counter;
   int[] array;
   boolean inited;
@@ -26,6 +27,7 @@ class Example {
     return file;
   }
 
+  // Duplicate method getFile(File) in type Example
   public void getFile(File f) {
     return file;
   }
@@ -50,6 +52,12 @@ class Example {
     int[] b;
     boolean c;
     File d;
+    int e;
+
+    // The operator && is undefined for argument types int, int
+    int f = a && e;
+
+    int File;
 
     a = b.length;
     b = new int[5];
@@ -63,7 +71,6 @@ class Example {
     io.println(new Example().getCounter());
   }
 
-  public static void main(String[] lol) {
-
-  }
+  // Duplicate method main(String[]) in type Example
+  public static void main(String[] lol) {}
 }
