@@ -4,15 +4,33 @@ package compiler.symbols;
  * Descriptor for a local variable instance.
  */
 public class LocalDescriptor extends VariableDescriptor {
-  private final FunctionDescriptor function;
+  private final FunctionLocals table;
 
-  public LocalDescriptor(TypeDescriptor type, String name, FunctionDescriptor function) {
+  /**
+   * Create a new local variable descriptor.
+   *
+   * @param type  The local variable's type
+   * @param name  The local variable's name
+   * @param table The table of function locals this variable will be added to.
+   */
+  public LocalDescriptor(TypeDescriptor type, String name, FunctionLocals table) {
     super(type, name);
-    assert function != null;
-    this.function = function;
+    assert table != null && !table.hasVariable(name);
+    this.table = table;
+    table.addVariable(this);
   }
 
-  public FunctionDescriptor getFunction() {
-    return function;
+  /**
+   * @return The local's table.
+   */
+  public FunctionLocals getTable() {
+    return table;
+  }
+
+  /**
+   * @return The local's containing function.
+   */
+  public BaseFunctionDescriptor getFunction() {
+    return table.getFunction();
   }
 }

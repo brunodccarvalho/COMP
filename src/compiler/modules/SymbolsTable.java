@@ -274,8 +274,7 @@ class SymbolsTable extends CompilerModule {
         continue;
       }
 
-      LocalDescriptor local = new LocalDescriptor(type, name, method);
-      locals.addVariable(local);
+      LocalDescriptor local = new LocalDescriptor(type, name, locals);
     }
 
     methodLocalsMap.put(method, locals);

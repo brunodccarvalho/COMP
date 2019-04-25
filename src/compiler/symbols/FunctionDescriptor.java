@@ -82,17 +82,19 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
     return returnType;
   }
 
-  /**
-   * @return true if this function takes at least one argument.
-   */
+  @Override
+  public boolean hasParameter(String name) {
+    for (ParameterDescriptor var : parameters)
+      if (var.getName().equals(name))
+        return true;
+    return false;
+  }
+
   @Override
   public boolean hasParameters() {
     return parameters.length > 0;
   }
 
-  /**
-   * @return the number of parameters of this function.
-   */
   @Override
   public int getNumParameters() {
     return signature.getNumParameters();
@@ -130,18 +132,6 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
 
   /**
    * @param name The name of the parameter
-   * @return true if this function has a parameter with the given name.
-   */
-  @Override
-  public boolean hasParameter(String name) {
-    for (ParameterDescriptor var : parameters)
-      if (var.getName().equals(name))
-        return true;
-    return false;
-  }
-
-  /**
-   * @param name The name of the parameter
    * @return the parameter descriptor for the given name.
    */
   public ParameterDescriptor getParameter(String name) {
@@ -165,12 +155,6 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
         && FunctionSignature.matches(this.signature, signature);
   }
 
-  /**
-   * Should be overriden in descendant classes.
-   *
-   * @param name The variable name to be resolved
-   * @return the parameter descriptor for the given name, or null if not found.
-   */
   @Override
   public VariableDescriptor resolve(String name) {
     return getParameter(name);
