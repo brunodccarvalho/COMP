@@ -1,9 +1,24 @@
 package compiler.modules;
 
-import static jjt.jmmTreeConstants.*;
+import static jjt.jmmTreeConstants.JJTCLASSBODY;
+import static jjt.jmmTreeConstants.JJTCLASSDECLARATION;
+import static jjt.jmmTreeConstants.JJTCLASSHEADER;
+import static jjt.jmmTreeConstants.JJTCLASSMETHODDECLARATIONS;
+import static jjt.jmmTreeConstants.JJTCLASSTYPE;
+import static jjt.jmmTreeConstants.JJTCLASSVARDECLARATION;
+import static jjt.jmmTreeConstants.JJTCLASSVARDECLARATIONS;
+import static jjt.jmmTreeConstants.JJTIDENTIFIER;
+import static jjt.jmmTreeConstants.JJTMAINDECLARATION;
+import static jjt.jmmTreeConstants.JJTMAINPARAMETERLIST;
+import static jjt.jmmTreeConstants.JJTMETHODBODY;
+import static jjt.jmmTreeConstants.JJTMETHODDECLARATION;
+import static jjt.jmmTreeConstants.JJTMETHODNAME;
+import static jjt.jmmTreeConstants.JJTPARAMETER;
+import static jjt.jmmTreeConstants.JJTPARAMETERLIST;
+import static jjt.jmmTreeConstants.JJTRETURNSTATEMENT;
+import static jjt.jmmTreeConstants.JJTVARIABLEDECLARATION;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import compiler.FunctionSignature;
 import compiler.symbols.FunctionDescriptor;
@@ -141,7 +156,6 @@ class SymbolsTable extends CompilerModule {
     }
   }
 
-  // ClassBody 1> ClassMethodDeclarations > 1 MethodDeclaration
   private void readOneClassMethodDeclaration(SimpleNode methodNode) {
     assert methodNode.is(JJTMETHODDECLARATION) && methodNode.jjtGetNumChildren() == 5;
 
@@ -150,7 +164,7 @@ class SymbolsTable extends CompilerModule {
     SimpleNode paramsListNode = methodNode.jjtGetChild(2);
     SimpleNode methodBodyNode = methodNode.jjtGetChild(3);
     SimpleNode returnStmtNode = methodNode.jjtGetChild(4);
-    assert methodNameNode.is(JJTIDENTIFIER);
+    assert methodNameNode.is(JJTMETHODNAME);
     assert paramsListNode.is(JJTPARAMETERLIST);
     assert methodBodyNode.is(JJTMETHODBODY);
     assert returnStmtNode.is(JJTRETURNSTATEMENT);
@@ -230,7 +244,6 @@ class SymbolsTable extends CompilerModule {
     }
   }
 
-  // MethodDeclaration 3> MethodBody > 1 VariableDeclaration
   private void readOneMethodLocals(MethodDescriptor method) {
     SimpleNode methodNode = methodNodesMap.get(method);
     assert method != null && methodNode != null && methodNode.is(JJTMETHODDECLARATION);

@@ -1,6 +1,10 @@
 package compiler.modules;
 
-import static jjt.jmmTreeConstants.*;
+import static jjt.jmmTreeConstants.JJTBOOLEAN;
+import static jjt.jmmTreeConstants.JJTCLASSTYPE;
+import static jjt.jmmTreeConstants.JJTIDENTIFIER;
+import static jjt.jmmTreeConstants.JJTINT;
+import static jjt.jmmTreeConstants.JJTINTARRAY;
 
 import compiler.symbols.PrimitiveDescriptor;
 import compiler.symbols.TypeDescriptor;
@@ -30,7 +34,8 @@ public class CompilerModule {
   }
 
   protected TypeDescriptor getOrCreateTypeFromNode(SimpleNode node) {
-    assert node.is(JJTINT) || node.is(JJTINTARRAY) || node.is(JJTBOOLEAN) || node.is(JJTCLASSTYPE);
+    assert node.is(JJTINT) || node.is(JJTINTARRAY) || node.is(JJTBOOLEAN) || node.is(JJTCLASSTYPE)
+        || node.is(JJTIDENTIFIER);
 
     switch (node.getId()) {
     case JJTINT:
@@ -40,6 +45,7 @@ public class CompilerModule {
     case JJTBOOLEAN:
       return PrimitiveDescriptor.booleanDescriptor;
     case JJTCLASSTYPE:
+    case JJTIDENTIFIER:
       return TypeDescriptor.getOrCreate(node.jjtGetVal());
     }
 

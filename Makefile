@@ -20,6 +20,9 @@ JAVACC_FLAGS := -output_directory=parser/$(JJT)
 JAVAC_DEBUG := -g
 JAVAC_FLAGS := -cp bin -d bin -Werror -sourcepath src
 
+JAVA_DEBUG :=
+JAVA_FLAGS := -cp bin -ea
+
 COMPILER_FILES := $(shell find src/${COMPILER} -name '*.java' -type f)
 
 .PHONY: all debug parser parser-debug load-java mkdir clean test run
@@ -56,7 +59,7 @@ clean: mkdir
 	@rm -rf bin/* parser/* compiled jjt
 
 test:
-	@java -cp bin compiler.Compiler test_files/$(TEST_FILE) || true
+	@java $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(TEST_FILE) || true
 
 parser-test:
-	@java -cp bin jjt.jmm test_files/$(TEST_FILE) || true
+	@java $(JAVA_DEBUG) $(JAVA_FLAGS) jjt.jmm test_files/$(TEST_FILE) || true
