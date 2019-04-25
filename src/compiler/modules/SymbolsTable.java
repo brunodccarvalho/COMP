@@ -18,8 +18,8 @@ import jjt.SimpleNode;
 
 /**
  * Compiler module that populates the jmm class descriptor's symbol tables (data
- * members, member methods, their signatures) and constructs a map of methods to
- * SimpleNodes.
+ * members, member methods, their signatures), constructs a map of methods to
+ * SimpleNodes, and populates the local symbol tables for each of the methods.
  */
 class SymbolsTable extends CompilerModule {
   private final SimpleNode classNode;
@@ -29,36 +29,45 @@ class SymbolsTable extends CompilerModule {
   SimpleNode mainNode;
   FunctionLocals mainLocals;
 
+  /**
+   * Construct an instance of this class for a class node.
+   *
+   * The class node should point to a unique class name, or else this stage fails
+   * immediately.
+   */
   SymbolsTable(SimpleNode classNode) {
+    assert classNode.is(JJTCLASSDECLARATION);
     this.classNode = classNode;
-    assert this.classNode.is(JJTCLASSDECLARATION);
 
     this.methodNodesMap = new HashMap<>();
     this.methodLocalsMap = new HashMap<>();
 
-    // 1.1: Read ClassHeader: Get class name, extends clause, create jmmClass
-    // object.
+    // 1.1: Read ClassHeader: Get class name, extends clause, jmmClass object.
     readClassHeader();
     if (status() >= FATAL)
       return;
 
-    // 1.2: Read ClassBody's variable declarations.
+    // 1.2: Read ClassBody's variable declarations:
+    // Construct MemberDescriptors for each of the class member variables.
     readClassMemberVariables();
     if (status() >= FATAL)
       return;
 
-    // 1.3: Read ClassBody's method declarations.
+    // 1.3: Read ClassBody's method declarations:
+    // Construct MethodDescriptors for each of the class member methods.
+    // Construct a JMMMainDescriptor for the main class if it is found.
+    // Construct the SimpleNode maps while we're at it.
     readClassMethodDeclarations();
     if (status() >= FATAL)
       return;
 
     // 2. Read function local variables into local symbol tables.
+    // Construct a FunctionLocals table for each method (and main).
     readMethodLocals();
     if (status() >= FATAL)
       return;
   }
 
-  // ClassDeclaration 0> ClassHeader *
   private void readClassHeader() {
     SimpleNode classHeader = classNode.jjtGetChild(0);
     assert classHeader.is(JJTCLASSHEADER);
@@ -67,12 +76,15 @@ class SymbolsTable extends CompilerModule {
     assert classType.is(JJTCLASSTYPE);
 
     String className = classType.jjtGetVal();
+
+    // FATAL: The name given to this class is already the name of another type.
     if (TypeDescriptor.exists(className)) {
       System.err.println("Invalid class name " + className);
       status(FATAL);
       return;
     }
 
+    // Extends clause...
     if (classHeader.jjtGetNumChildren() == 1) {
       this.jmmClass = new JMMClassDescriptor(className);
     } else {
@@ -81,7 +93,6 @@ class SymbolsTable extends CompilerModule {
     }
   }
 
-  // ClassBody 0> ClassVarDeclarations *
   private void readClassMemberVariables() {
     SimpleNode classBody = classNode.jjtGetChild(1);
     assert classBody.is(JJTCLASSBODY);
@@ -95,7 +106,6 @@ class SymbolsTable extends CompilerModule {
     }
   }
 
-  // ClassBody 0> ClassVarDeclarations > 1 ClassVarDeclaration
   private void readOneClassMemberVariable(SimpleNode varDeclarationNode) {
     assert varDeclarationNode.is(JJTCLASSVARDECLARATION);
 
@@ -105,8 +115,9 @@ class SymbolsTable extends CompilerModule {
 
     String identifier = nameNode.jjtGetVal();
 
+    // ERROR: Repeated class member variable.
     if (jmmClass.resolve(identifier) != null) {
-      System.err.println("Error: variable " + identifier + " is already defined in class " + jmmClass.getClassName());
+      System.err.println("Error: class variable " + identifier + " is already defined");
       status(MINOR_ERRORS);
       return;
     }
@@ -116,7 +127,6 @@ class SymbolsTable extends CompilerModule {
     jmmClass.addMember(variable);
   }
 
-  // ClassBody 1> ClassMethodDeclarations {signatures}
   private void readClassMethodDeclarations() {
     SimpleNode classBody = classNode.jjtGetChild(1);
     assert classBody.is(JJTCLASSBODY);
@@ -185,6 +195,8 @@ class SymbolsTable extends CompilerModule {
     // Error: Repeated parameter names -- Two parameters have the same name.
     if (!FunctionDescriptor.validateParameterNames(paramNames)) {
       System.err.println("Error: method " + name + signature + " has conflicting parameter names");
+      status(MINOR_ERRORS);
+      return;
     }
 
     MethodDescriptor method = new MethodDescriptor(jmmClass, name, returnType, signature, paramNames);
@@ -192,7 +204,6 @@ class SymbolsTable extends CompilerModule {
     this.methodNodesMap.put(method, methodNode);
   }
 
-  // ClassBody 0> ClassMethodDeclarations > MainDeclaration
   private void readClassMainDeclaration(SimpleNode mainNode) {
     assert mainNode.is(JJTMAINDECLARATION) && mainNode.jjtGetNumChildren() == 2;
 
@@ -204,6 +215,7 @@ class SymbolsTable extends CompilerModule {
     SimpleNode paramNameNode = paramListNode.jjtGetChild(0);
     assert paramNameNode.is(JJTIDENTIFIER);
 
+    // The dummy name given to parameter String[]
     String paramName = paramNameNode.jjtGetVal();
 
     // Error: Repeated methods - Two methods with the same name and signature.
@@ -218,15 +230,15 @@ class SymbolsTable extends CompilerModule {
     this.mainNode = mainNode;
   }
 
-  // MethodDeclaration 3> MethodBody > VariableDeclaration *
   private void readMethodLocals() {
-    for (Map.Entry<MethodDescriptor, SimpleNode> entry : methodNodesMap.entrySet()) {
-      readOneMethodLocals(entry.getKey(), entry.getValue());
+    for (MethodDescriptor method : methodNodesMap.keySet()) {
+      readOneMethodLocals(method);
     }
   }
 
   // MethodDeclaration 3> MethodBody > 1 VariableDeclaration
-  private void readOneMethodLocals(MethodDescriptor method, SimpleNode methodNode) {
+  private void readOneMethodLocals(MethodDescriptor method) {
+    SimpleNode methodNode = methodNodesMap.get(method);
     assert method != null && methodNode != null && methodNode.is(JJTMETHODDECLARATION);
 
     SimpleNode methodBodyNode = methodNode.jjtGetChild(3);
@@ -269,7 +281,6 @@ class SymbolsTable extends CompilerModule {
     methodLocalsMap.put(method, locals);
   }
 
-  // Dump the symbol tables to a String.
   @Override
   public String toString() {
     MemberDescriptor[] members = jmmClass.getMembersList();
@@ -301,7 +312,6 @@ class SymbolsTable extends CompilerModule {
     return string.append('\n').toString();
   }
 
-  // Dump the symbols table to standard output.
   void dump() {
     System.out.print(toString());
   }

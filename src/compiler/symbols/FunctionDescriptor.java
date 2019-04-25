@@ -6,22 +6,25 @@ import java.util.HashSet;
 import compiler.FunctionSignature;
 
 /**
- * Base class of all _declared_ function descriptors. It has an associated
- * signature, a name, and names for each of its parameters, which may be
- * necessary when compiling its body.
+ * Base class of all function descriptors. It has an associated signature, a
+ * name, and names for each of its parameters, which may be necessary when
+ * compiling its body.
  *
  * This descriptor does not know of its own function body, however. The
  * signature and name provided in the constructors cannot be changed, so this
  * class is essentially immutable.
  */
-public class FunctionDescriptor extends Descriptor {
-  private final String functionName;
+public class FunctionDescriptor extends BaseFunctionDescriptor {
   private final TypeDescriptor returnType;
   private final FunctionSignature signature;
   private final ParameterDescriptor[] parameters;
 
   /**
-   * Ensures there are no two parameters with the same name.
+   * Ensures there are no two parameters with the same name and no null
+   * parameters.
+   *
+   * @param names The array of names to validate
+   * @return True iff the array has no duplicate names and no null values.
    */
   public static boolean validateParameterNames(String[] names) {
     HashSet<String> set = new HashSet<>();
@@ -36,8 +39,7 @@ public class FunctionDescriptor extends Descriptor {
 
   /**
    * Creates a new function descriptor with a deduced return type, complete
-   * signature and names for each of the parameters. The function's body is
-   * presumably known.
+   * signature and names for each of the parameters.
    *
    * @param name      The function's name.
    * @param ret       The function's return type.
@@ -45,12 +47,13 @@ public class FunctionDescriptor extends Descriptor {
    * @param params    The names of the function's parameters.
    */
   public FunctionDescriptor(String name, TypeDescriptor ret, FunctionSignature signature, String[] params) {
-    assert name != null && signature != null && signature.isComplete();
+    super(name);
+
     if (params == null)
       params = new String[0];
-    assert signature.getNumParameters() == params.length;
 
-    this.functionName = name;
+    assert signature != null && signature.isComplete() && signature.getNumParameters() == params.length;
+
     this.returnType = ret;
     this.signature = signature;
 
@@ -66,71 +69,70 @@ public class FunctionDescriptor extends Descriptor {
   }
 
   /**
-   * Returns this function's parameter signature.
+   * @return this function's parameter signature.
    */
   public FunctionSignature getSignature() {
     return signature;
   }
 
   /**
-   * Returns this function's return type.
+   * @return this function's return type.
    */
   public TypeDescriptor getReturnType() {
     return returnType;
   }
 
   /**
-   * Returns this function's name.
+   * @return true if this function takes at least one argument.
    */
-  public String getName() {
-    return functionName;
-  }
-
-  /**
-   * Returns true if this function takes at least one argument.
-   */
+  @Override
   public boolean hasParameters() {
     return parameters.length > 0;
   }
 
   /**
-   * Returns the number of parameters of this function.
+   * @return the number of parameters of this function.
    */
+  @Override
   public int getNumParameters() {
     return signature.getNumParameters();
   }
 
   /**
-   * Returns the type of the parameter at the given position.
+   * @param index The index of the parameter
+   * @return the type of the parameter at the given position.
    */
   public TypeDescriptor getParameterType(int index) {
     return signature.getParameterType(index);
   }
 
   /**
-   * Returns an array with the types of all parameters.
+   * @return an array with the types of all parameters.
    */
   public TypeDescriptor[] getParameterTypes() {
-    return signature.getParameterTypes();
+    return signature.getParameterTypes().clone();
   }
 
   /**
-   * Returns the parameter at the given position.
+   * @param index The index of the parameter
+   * @return the parameter at the given position.
    */
   public ParameterDescriptor getParameter(int index) {
     return parameters[index];
   }
 
   /**
-   * Returns an array with all the parameters.
+   * @return an array with all the parameters.
    */
   public ParameterDescriptor[] getParameters() {
-    return parameters;
+    return parameters.clone();
   }
 
   /**
-   * Returns true if this function has a parameter with the given name.
+   * @param name The name of the parameter
+   * @return true if this function has a parameter with the given name.
    */
+  @Override
   public boolean hasParameter(String name) {
     for (ParameterDescriptor var : parameters)
       if (var.getName().equals(name))
@@ -139,7 +141,8 @@ public class FunctionDescriptor extends Descriptor {
   }
 
   /**
-   * Returns the parameter descriptor for the given name.
+   * @param name The name of the parameter
+   * @return the parameter descriptor for the given name.
    */
   public ParameterDescriptor getParameter(String name) {
     for (ParameterDescriptor var : parameters)
@@ -149,11 +152,27 @@ public class FunctionDescriptor extends Descriptor {
   }
 
   /**
-   * Returns the parameter descriptor for the given name.
+   * Checks whether an invocation of a method with the same name, with the given
+   * (presumably incomplete) signature and given return type could be an
+   * invocation of this function.
    *
-   * Should be overriden in descendant classes.
+   * @param signature  The deduced invocation signature
+   * @param returnType The deduced invocation return type
+   * @return true if it might be an invocation of this method, false otherwise.
    */
-  public Descriptor resolve(String name) {
+  public boolean matches(FunctionSignature signature, TypeDescriptor returnType) {
+    return (returnType == null || this.returnType.equals(returnType))
+        && FunctionSignature.matches(this.signature, signature);
+  }
+
+  /**
+   * Should be overriden in descendant classes.
+   *
+   * @param name The variable name to be resolved
+   * @return the parameter descriptor for the given name, or null if not found.
+   */
+  @Override
+  public VariableDescriptor resolve(String name) {
     return getParameter(name);
   }
 

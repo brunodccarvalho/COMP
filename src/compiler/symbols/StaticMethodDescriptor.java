@@ -22,8 +22,8 @@ public class StaticMethodDescriptor extends FunctionDescriptor {
   }
 
   @Override
-  public Descriptor resolve(String name) {
-    Descriptor var = super.resolve(name);
+  public VariableDescriptor resolve(String name) {
+    VariableDescriptor var = super.resolve(name);
     if (var != null)
       return var;
     else

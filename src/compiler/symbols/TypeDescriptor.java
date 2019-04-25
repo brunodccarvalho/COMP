@@ -36,7 +36,7 @@ public abstract class TypeDescriptor extends Descriptor {
     if (typesMap.containsKey(name))
       return typesMap.get(name);
 
-    TypeDescriptor classDescriptor = new JavaClassDescriptor(name);
+    TypeDescriptor classDescriptor = new UnknownClassDescriptor(name);
     assert classDescriptor.isClass();
     return classDescriptor;
   }

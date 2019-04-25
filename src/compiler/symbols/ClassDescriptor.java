@@ -36,7 +36,7 @@ public abstract class ClassDescriptor extends TypeDescriptor {
   }
 
   /**
-   * Returns true if this class has a data member identified by name.
+   * Returns true if this class has at least one member method identified by name.
    */
   public abstract boolean hasMethod(String name);
 
@@ -47,12 +47,18 @@ public abstract class ClassDescriptor extends TypeDescriptor {
   public abstract boolean hasMethod(String name, FunctionSignature signature);
 
   /**
+   * Returns true if this class has at least one member method identified by name
+   * and matching the corresponding signature, that returns the specified type.
+   */
+  public abstract boolean hasReturning(String name, FunctionSignature signature, TypeDescriptor returnType);
+
+  /**
    * Resolve the given name non-statically.
    */
-  public abstract Descriptor resolve(String name);
+  public abstract VariableDescriptor resolve(String name);
 
   /**
    * Resolve the given name statically.
    */
-  public abstract Descriptor resolveStatic(String name);
+  public abstract VariableDescriptor resolveStatic(String name);
 }

@@ -21,11 +21,8 @@ import jjt.jmm;
 public final class ClassCompiler extends CompilerModule {
   SimpleNode classNode;
   JMMClassDescriptor jmmClass;
-  HashMap<MethodDescriptor, SimpleNode> methodNodeMap;
 
   public ClassCompiler(File sourcefile) {
-    // this.sourcefile = sourcefile;
-
     // Parse source file
     try {
       SimpleNode rootNode = jmm.parseClass(sourcefile);
@@ -43,7 +40,11 @@ public final class ClassCompiler extends CompilerModule {
       return;
     }
 
+    // Construct Symbols Tables; this does stages 1 and 2.
     SymbolsTable symbolsTable = new SymbolsTable(this.classNode);
+    if (status(symbolsTable.status()) >= MAJOR_ERRORS)
+      return;
+
     this.jmmClass = symbolsTable.jmmClass;
 
     symbolsTable.dump();
