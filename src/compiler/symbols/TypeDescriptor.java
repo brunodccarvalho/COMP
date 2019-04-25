@@ -1,6 +1,7 @@
 package compiler.symbols;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * Base class of a type descriptor (class and primitive type descriptors).
@@ -26,7 +27,7 @@ import java.util.HashMap;
 public abstract class TypeDescriptor extends Descriptor {
   protected final String name;
 
-  private static HashMap<String, TypeDescriptor> typesMap = new HashMap<>();
+  private static final HashMap<String, TypeDescriptor> typesMap = new HashMap<>();
 
   /**
    * @param name A typename being resolved.
@@ -45,8 +46,7 @@ public abstract class TypeDescriptor extends Descriptor {
    * @return The TypeDescriptor instance for this typename, possibly just created.
    */
   public static TypeDescriptor getOrCreate(String name) {
-    if (typesMap.containsKey(name))
-      return typesMap.get(name);
+    if (typesMap.containsKey(name)) return typesMap.get(name);
 
     TypeDescriptor classDescriptor = new UnknownClassDescriptor(name);
     assert classDescriptor.isClass();
@@ -113,28 +113,23 @@ public abstract class TypeDescriptor extends Descriptor {
     return name;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((name == null) ? 0 : name.hashCode());
-    return result;
+    return Objects.hash(name);
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (!(obj instanceof TypeDescriptor)) return false;
     TypeDescriptor other = (TypeDescriptor) obj;
-    if (name == null) {
-      if (other.name != null)
-        return false;
-    } else if (!name.equals(other.name))
-      return false;
-    return true;
+    return Objects.equals(name, other.name);
   }
 }

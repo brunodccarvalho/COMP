@@ -16,8 +16,8 @@ public class MethodDescriptor extends FunctionDescriptor {
    * @param ret       The member method's return type
    * @param signature The member method's signature
    */
-  public MethodDescriptor(JMMClassDescriptor parent, String name, TypeDescriptor ret, FunctionSignature signature,
-      String[] params) {
+  public MethodDescriptor(JMMClassDescriptor parent, String name, TypeDescriptor ret,
+                          FunctionSignature signature, String[] params) {
     super(name, ret, signature, params);
     assert parent != null && !parent.hasMethod(name, signature);
     this.parent = parent;
@@ -25,7 +25,7 @@ public class MethodDescriptor extends FunctionDescriptor {
   }
 
   /**
-   * @return This member method's instance class
+   * @return This member method's instance class.
    */
   public JMMClassDescriptor getThis() {
     return parent;

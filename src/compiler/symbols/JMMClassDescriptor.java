@@ -66,28 +66,24 @@ public class JMMClassDescriptor extends ClassDescriptor {
   @Override
   public boolean hasMethod(String name, FunctionSignature signature) {
     HashMap<FunctionSignature, MethodDescriptor> map = methods.get(name);
-    if (map == null)
-      return false;
+    if (map == null) return false;
     if (signature.isComplete())
       return map.containsKey(signature);
     else
       for (FunctionSignature candidate : map.keySet())
-        if (FunctionSignature.matches(candidate, signature))
-          return true;
+        if (FunctionSignature.matches(candidate, signature)) return true;
     return false;
   }
 
   @Override
   public boolean hasReturning(String name, FunctionSignature signature, TypeDescriptor returnType) {
     HashMap<FunctionSignature, MethodDescriptor> map = methods.get(name);
-    if (map == null)
-      return false;
+    if (map == null) return false;
     if (signature.isComplete())
       return map.containsKey(signature);
     else
       for (MethodDescriptor candidate : map.values())
-        if (candidate.matches(signature, returnType))
-          return true;
+        if (candidate.matches(signature, returnType)) return true;
     return false;
   }
 
@@ -119,7 +115,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
    *
    * @param var The new data member variable
    */
-  public void addMember(MemberDescriptor var) {
+  void addMember(MemberDescriptor var) {
     assert !members.containsKey(var.getName());
     members.put(var.getName(), var);
   }
@@ -129,7 +125,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
    *
    * @param method The new member method
    */
-  public void addMethod(MethodDescriptor method) {
+  void addMethod(MethodDescriptor method) {
     assert method.getSignature().isComplete();
 
     HashMap<FunctionSignature, MethodDescriptor> map;
@@ -158,7 +154,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
    *
    * @param main The JMM class's main method
    */
-  public void setMain(JMMMainDescriptor main) {
+  void setMain(JMMMainDescriptor main) {
     assert main != null && this.main == null;
     this.main = main;
   }

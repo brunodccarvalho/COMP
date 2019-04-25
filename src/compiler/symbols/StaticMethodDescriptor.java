@@ -10,8 +10,8 @@ import compiler.FunctionSignature;
 public class StaticMethodDescriptor extends FunctionDescriptor {
   private final ClassDescriptor parent;
 
-  public StaticMethodDescriptor(ClassDescriptor parent, String name, TypeDescriptor ret, FunctionSignature signature,
-      String[] params) {
+  public StaticMethodDescriptor(ClassDescriptor parent, String name, TypeDescriptor ret,
+                                FunctionSignature signature, String[] params) {
     super(name, ret, signature, params);
     assert parent != null;
     this.parent = parent;

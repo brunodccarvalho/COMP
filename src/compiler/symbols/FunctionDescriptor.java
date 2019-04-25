@@ -2,6 +2,7 @@ package compiler.symbols;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 
 import compiler.FunctionSignature;
 
@@ -30,8 +31,7 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
     HashSet<String> set = new HashSet<>();
     for (String name : names) {
       assert name != null;
-      if (set.contains(name))
-        return false;
+      if (set.contains(name)) return false;
       set.add(name);
     }
     return true;
@@ -46,13 +46,14 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
    * @param signature The function's complete signature.
    * @param params    The names of the function's parameters.
    */
-  public FunctionDescriptor(String name, TypeDescriptor ret, FunctionSignature signature, String[] params) {
+  public FunctionDescriptor(String name, TypeDescriptor ret, FunctionSignature signature,
+                            String[] params) {
     super(name);
 
-    if (params == null)
-      params = new String[0];
+    if (params == null) params = new String[0];
 
-    assert signature != null && signature.isComplete() && signature.getNumParameters() == params.length;
+    assert signature != null && signature.isComplete()
+        && signature.getNumParameters() == params.length;
 
     this.returnType = ret;
     this.signature = signature;
@@ -85,8 +86,7 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
   @Override
   public boolean hasParameter(String name) {
     for (ParameterDescriptor var : parameters)
-      if (var.getName().equals(name))
-        return true;
+      if (var.getName().equals(name)) return true;
     return false;
   }
 
@@ -136,8 +136,7 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
    */
   public ParameterDescriptor getParameter(String name) {
     for (ParameterDescriptor var : parameters)
-      if (var.getName().equals(name))
-        return var;
+      if (var.getName().equals(name)) return var;
     return null;
   }
 
@@ -167,50 +166,35 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
     string.append('(');
     if (parameters.length > 0) {
       string.append(parameters[0]);
-      for (int i = 1; i < parameters.length; ++i)
-        string.append(", ").append(parameters[i]);
+      for (int i = 1; i < parameters.length; ++i) string.append(", ").append(parameters[i]);
     }
     string.append(')');
     return string.toString();
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = 1;
-    result = prime * result + ((functionName == null) ? 0 : functionName.hashCode());
+    int result = super.hashCode();
     result = prime * result + Arrays.hashCode(parameters);
-    result = prime * result + ((returnType == null) ? 0 : returnType.hashCode());
-    result = prime * result + ((signature == null) ? 0 : signature.hashCode());
+    result = prime * result + Objects.hash(returnType, signature);
     return result;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (!(obj instanceof FunctionDescriptor)) return false;
     FunctionDescriptor other = (FunctionDescriptor) obj;
-    if (functionName == null) {
-      if (other.functionName != null)
-        return false;
-    } else if (!functionName.equals(other.functionName))
-      return false;
-    if (!Arrays.equals(parameters, other.parameters))
-      return false;
-    if (returnType == null) {
-      if (other.returnType != null)
-        return false;
-    } else if (!returnType.equals(other.returnType))
-      return false;
-    if (signature == null) {
-      if (other.signature != null)
-        return false;
-    } else if (!signature.equals(other.signature))
-      return false;
-    return true;
+    return Arrays.equals(parameters, other.parameters)
+        && Objects.equals(returnType, other.returnType)
+        && Objects.equals(signature, other.signature);
   }
 }

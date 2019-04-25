@@ -1,6 +1,7 @@
 package compiler.symbols;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * A symbol table of declared function local variables. This table is associated
@@ -44,7 +45,7 @@ public class FunctionLocals extends Descriptor {
    *
    * @param var The new variable descriptor
    */
-  public void addVariable(LocalDescriptor var) {
+  void addVariable(LocalDescriptor var) {
     assert !variables.containsKey(var.getName()) && !function.hasParameter(var.getName());
     variables.put(var.getName(), var);
   }
@@ -84,34 +85,23 @@ public class FunctionLocals extends Descriptor {
     return string.toString();
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((function == null) ? 0 : function.hashCode());
-    result = prime * result + ((variables == null) ? 0 : variables.hashCode());
-    return result;
+    return Objects.hash(function, variables);
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (!(obj instanceof FunctionLocals)) return false;
     FunctionLocals other = (FunctionLocals) obj;
-    if (function == null) {
-      if (other.function != null)
-        return false;
-    } else if (!function.equals(other.function))
-      return false;
-    if (variables == null) {
-      if (other.variables != null)
-        return false;
-    } else if (!variables.equals(other.variables))
-      return false;
-    return true;
+    return Objects.equals(function, other.function) && Objects.equals(variables, other.variables);
   }
 }

@@ -2,12 +2,16 @@ package compiler.symbols;
 
 import static compiler.symbols.PrimitiveDescriptor.Type.*;
 
+import java.util.Objects;
+
 /**
  * Up for refactoring any day.
  */
 public class PrimitiveDescriptor extends TypeDescriptor {
   public enum Type {
-    INT("int"), INTARRAY("int[]"), BOOLEAN("boolean");
+    INT("int"),
+    INTARRAY("int[]"),
+    BOOLEAN("boolean");
 
     private String str;
 
@@ -73,25 +77,26 @@ public class PrimitiveDescriptor extends TypeDescriptor {
     return null;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((primitive == null) ? 0 : primitive.hashCode());
+    result = prime * result + Objects.hash(primitive);
     return result;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (!(obj instanceof PrimitiveDescriptor)) return false;
     PrimitiveDescriptor other = (PrimitiveDescriptor) obj;
-    if (primitive != other.primitive)
-      return false;
-    return true;
+    return primitive == other.primitive;
   }
 }

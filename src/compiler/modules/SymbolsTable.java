@@ -44,28 +44,24 @@ class SymbolsTable extends CompilerModule {
 
     // 1.1: Read ClassHeader: Get class name, extends clause, jmmClass object.
     readClassHeader();
-    if (status() >= FATAL)
-      return;
+    if (status() >= FATAL) return;
 
     // 1.2: Read ClassBody's variable declarations:
     // Construct MemberDescriptors for each of the class member variables.
     readClassMemberVariables();
-    if (status() >= FATAL)
-      return;
+    if (status() >= FATAL) return;
 
     // 1.3: Read ClassBody's method declarations:
     // Construct MethodDescriptors for each of the class member methods.
     // Construct a JMMMainDescriptor for the main class if it is found.
     // Construct the SimpleNode maps while we're at it.
     readClassMethodDeclarations();
-    if (status() >= FATAL)
-      return;
+    if (status() >= FATAL) return;
 
     // 2. Read function local variables into local symbol tables.
     // Construct a FunctionLocals table for each method (and main).
     readMethodLocals();
-    if (status() >= FATAL)
-      return;
+    if (status() >= FATAL) return;
   }
 
   private void readClassHeader() {
@@ -124,7 +120,6 @@ class SymbolsTable extends CompilerModule {
 
     TypeDescriptor type = getOrCreateTypeFromNode(typeNode);
     MemberDescriptor variable = new MemberDescriptor(type, identifier, jmmClass);
-    jmmClass.addMember(variable);
   }
 
   private void readClassMethodDeclarations() {
@@ -199,8 +194,8 @@ class SymbolsTable extends CompilerModule {
       return;
     }
 
-    MethodDescriptor method = new MethodDescriptor(jmmClass, name, returnType, signature, paramNames);
-    jmmClass.addMethod(method);
+    MethodDescriptor method = new MethodDescriptor(jmmClass, name, returnType, signature,
+                                                   paramNames);
     this.methodNodesMap.put(method, methodNode);
   }
 
@@ -226,7 +221,6 @@ class SymbolsTable extends CompilerModule {
     }
 
     JMMMainDescriptor main = new JMMMainDescriptor(jmmClass, paramName);
-    jmmClass.setMain(main);
     this.mainNode = mainNode;
   }
 
@@ -250,8 +244,7 @@ class SymbolsTable extends CompilerModule {
       SimpleNode varDeclaration = methodBodyNode.jjtGetChild(i);
 
       // Break when a child which is not a variable declaration is found.
-      if (!varDeclaration.is(JJTVARIABLEDECLARATION))
-        break;
+      if (!varDeclaration.is(JJTVARIABLEDECLARATION)) break;
 
       SimpleNode typeNode = varDeclaration.jjtGetChild(0);
       SimpleNode nameNode = varDeclaration.jjtGetChild(1);
@@ -291,22 +284,18 @@ class SymbolsTable extends CompilerModule {
 
     // Member variables
     string.append(">>> Member Variables:\n");
-    for (MemberDescriptor member : members)
-      string.append(member).append('\n');
+    for (MemberDescriptor member : members) string.append(member).append('\n');
 
     // Member methods
     string.append("\n>>> Member Methods:\n");
-    for (MethodDescriptor method : methods)
-      string.append(method).append('\n');
+    for (MethodDescriptor method : methods) string.append(method).append('\n');
 
     // Main
-    if (jmmClass.hasMain())
-      string.append('\n').append(jmmClass.getMain()).append('\n');
+    if (jmmClass.hasMain()) string.append('\n').append(jmmClass.getMain()).append('\n');
 
     // Local tables
     string.append("\n>>> Function Locals Tables:\n");
-    for (FunctionLocals locals : methodLocalsMap.values())
-      string.append(locals);
+    for (FunctionLocals locals : methodLocalsMap.values()) string.append(locals);
 
     return string.append('\n').toString();
   }

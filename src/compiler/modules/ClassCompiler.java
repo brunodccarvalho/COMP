@@ -5,10 +5,8 @@ import static jjt.jmmTreeConstants.JJTPROGRAM;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
 
 import compiler.symbols.JMMClassDescriptor;
-import compiler.symbols.MethodDescriptor;
 import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
@@ -42,8 +40,7 @@ public final class ClassCompiler extends CompilerModule {
 
     // Construct Symbols Tables; this does stages 1 and 2.
     SymbolsTable symbolsTable = new SymbolsTable(this.classNode);
-    if (status(symbolsTable.status()) >= MAJOR_ERRORS)
-      return;
+    if (status(symbolsTable.status()) >= MAJOR_ERRORS) return;
 
     this.jmmClass = symbolsTable.jmmClass;
 

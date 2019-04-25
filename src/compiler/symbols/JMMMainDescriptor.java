@@ -1,11 +1,13 @@
 package compiler.symbols;
 
+import java.util.Objects;
+
 /**
  * A descriptor for a JMM class's main method.
  */
 public class JMMMainDescriptor extends BaseFunctionDescriptor {
   private final JMMClassDescriptor parent;
-  private String paramName;
+  private final String paramName;
 
   /**
    * Creates a new main static method descriptor for a JMM class.
@@ -17,11 +19,15 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
    */
   public JMMMainDescriptor(JMMClassDescriptor parent, String paramName) {
     super("main");
-    assert parent != null && paramName != null;
+    assert parent != null && paramName != null && !parent.hasMain();
     this.parent = parent;
     this.paramName = paramName;
+    parent.setMain(this);
   }
 
+  /**
+   * @return The name assigned to the parameter with type String[]
+   */
   public String getParameterName() {
     return paramName;
   }
@@ -51,34 +57,26 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
     return "main(String[] " + paramName + ")";
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = super.hashCode();
-    result = prime * result + ((paramName == null) ? 0 : paramName.hashCode());
-    result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+    result = prime * result + Objects.hash(paramName, parent);
     return result;
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (!(obj instanceof JMMMainDescriptor)) return false;
     JMMMainDescriptor other = (JMMMainDescriptor) obj;
-    if (paramName == null) {
-      if (other.paramName != null)
-        return false;
-    } else if (!paramName.equals(other.paramName))
-      return false;
-    if (parent == null) {
-      if (other.parent != null)
-        return false;
-    } else if (!parent.equals(other.parent))
-      return false;
-    return true;
+    return Objects.equals(paramName, other.paramName) && Objects.equals(parent, other.parent);
   }
 }

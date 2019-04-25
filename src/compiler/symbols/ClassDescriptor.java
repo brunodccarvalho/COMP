@@ -14,7 +14,7 @@ public abstract class ClassDescriptor extends TypeDescriptor {
    *
    * @param name The class's name
    */
-  public ClassDescriptor(String name) {
+  protected ClassDescriptor(String name) {
     super(name);
   }
 
@@ -62,7 +62,8 @@ public abstract class ClassDescriptor extends TypeDescriptor {
    *         and matching the corresponding signature and returning the specified
    *         type.
    */
-  public abstract boolean hasReturning(String name, FunctionSignature signature, TypeDescriptor returnType);
+  public abstract boolean hasReturning(String name, FunctionSignature signature,
+                                       TypeDescriptor returnType);
 
   /**
    * @param name The variable name to be resolved non-statically

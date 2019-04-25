@@ -1,5 +1,7 @@
 package compiler.symbols;
 
+import java.util.Objects;
+
 /**
  * Base class for function descriptors. Simply holds the name of the function
  * and abstracts for the parameter names and number of parameters, but not their
@@ -11,7 +13,7 @@ package compiler.symbols;
  * Leave this package-private.
  */
 abstract class BaseFunctionDescriptor extends Descriptor {
-  protected String functionName;
+  protected final String functionName;
 
   /**
    * Construct a new function with the given name.
@@ -57,28 +59,23 @@ abstract class BaseFunctionDescriptor extends Descriptor {
     return functionName + "(...)";
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((functionName == null) ? 0 : functionName.hashCode());
-    return result;
+    return Objects.hash(functionName);
   }
 
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (!(obj instanceof BaseFunctionDescriptor)) return false;
     BaseFunctionDescriptor other = (BaseFunctionDescriptor) obj;
-    if (functionName == null) {
-      if (other.functionName != null)
-        return false;
-    } else if (!functionName.equals(other.functionName))
-      return false;
-    return true;
+    return Objects.equals(functionName, other.functionName);
   }
 }

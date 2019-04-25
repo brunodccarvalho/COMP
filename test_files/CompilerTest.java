@@ -47,6 +47,8 @@ class Example {
     int[] b;
     boolean c;
     File d;
+    Example e;
+    Lol f;
 
     a = b.length;
     b = new int[5];

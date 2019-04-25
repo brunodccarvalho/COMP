@@ -21,8 +21,7 @@ public class CompilerModule {
   private int currentCompilationStatus = OK;
 
   protected int status(int status) {
-    if (this.currentCompilationStatus < status)
-      this.currentCompilationStatus = status;
+    if (this.currentCompilationStatus < status) this.currentCompilationStatus = status;
     return this.currentCompilationStatus;
   }
 
