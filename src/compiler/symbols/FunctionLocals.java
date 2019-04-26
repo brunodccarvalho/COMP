@@ -22,6 +22,10 @@ public class FunctionLocals extends Descriptor {
     assert function != null;
     this.function = function;
     this.variables = new HashMap<>();
+
+    // Add the 'this' variable to the variables table.
+    if (!function.isStatic())
+      variables.put("this", new LocalDescriptor(function.getParentClass(), "this", this));
   }
 
   /**

@@ -48,6 +48,16 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
   }
 
   @Override
+  public boolean isStatic() {
+    return true;
+  }
+
+  @Override
+  public JMMClassDescriptor getParentClass() {
+    return parent;
+  }
+
+  @Override
   public VariableDescriptor resolve(String name) {
     return parent.resolveStatic(name);
   }

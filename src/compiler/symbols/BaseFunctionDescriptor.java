@@ -54,6 +54,16 @@ abstract class BaseFunctionDescriptor extends Descriptor {
    */
   public abstract VariableDescriptor resolve(String name);
 
+  /**
+   * @return true if this function is static, false otherwise.
+   */
+  public abstract boolean isStatic();
+
+  /**
+   * @return The class this function belongs to.
+   */
+  public abstract ClassDescriptor getParentClass();
+
   @Override
   public String toString() {
     return functionName + "(...)";

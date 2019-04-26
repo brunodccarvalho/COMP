@@ -24,10 +24,13 @@ public class MethodDescriptor extends FunctionDescriptor {
     parent.addMethod(this);
   }
 
-  /**
-   * @return This member method's instance class.
-   */
-  public JMMClassDescriptor getThis() {
+  @Override
+  public boolean isStatic() {
+    return false;
+  }
+
+  @Override
+  public JMMClassDescriptor getParentClass() {
     return parent;
   }
 

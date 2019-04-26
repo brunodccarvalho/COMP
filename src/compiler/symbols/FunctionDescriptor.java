@@ -14,7 +14,7 @@ import compiler.FunctionSignature;
  * signature and name provided in the constructors cannot be changed, so this
  * class is essentially immutable.
  */
-public class FunctionDescriptor extends BaseFunctionDescriptor {
+public abstract class FunctionDescriptor extends BaseFunctionDescriptor {
   private final TypeDescriptor returnType;
   private final FunctionSignature signature;
   private final ParameterDescriptor[] parameters;
@@ -45,8 +45,8 @@ public class FunctionDescriptor extends BaseFunctionDescriptor {
    * @param signature The function's complete signature.
    * @param params    The names of the function's parameters.
    */
-  public FunctionDescriptor(String name, TypeDescriptor ret, FunctionSignature signature,
-                            String[] params) {
+  protected FunctionDescriptor(String name, TypeDescriptor ret, FunctionSignature signature,
+                               String[] params) {
     super(name);
 
     if (params == null) params = new String[0];
