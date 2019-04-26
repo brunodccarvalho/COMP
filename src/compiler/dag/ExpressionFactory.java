@@ -100,6 +100,7 @@ public class ExpressionFactory extends CompilerModule {
       status(MINOR_ERRORS);
     }
 
+    // TODO: Handle InvalidIntegerConstant Error
     return null;
   }
 
@@ -108,12 +109,28 @@ public class ExpressionFactory extends CompilerModule {
     return null;
   }
 
+  /**
+   * Does not fail.
+   *
+   * @param node A JJT node holding a true or false boolean literal.
+   * @return A new DAGBooleanConstant holding the constant.
+   */
   private DAGBooleanConstant buildBoolean(SimpleNode node) {
-    return null;
+    assert node.is(JJTTRUE) || node.is(JJTFALSE);
+
+    if (node.is(JJTTRUE)) {
+      return new DAGBooleanConstant(true);
+    } else {
+      return new DAGBooleanConstant(false);
+    }
   }
 
+  /**
+   * @param node A JJT node holding a this literal keyword.
+   * @return A new DAGThis.
+   */
   private DAGThis buildThis(SimpleNode node) {
-    return null;
+    assert node.is(JJTTHIS);
   }
 
   private DAGNewIntArray buildNewIntArray(SimpleNode node) {
