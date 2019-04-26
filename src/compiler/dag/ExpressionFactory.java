@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import compiler.modules.CompilerModule;
 import compiler.symbols.FunctionLocals;
+import compiler.symbols.VariableDescriptor;
 import jjt.SimpleNode;
 
 /**
@@ -104,8 +105,16 @@ public class ExpressionFactory extends CompilerModule {
   }
 
   private DAGVariable buildVariable(SimpleNode node) {
-    assert node.is(JJTIDENTIFIER);
-    return null;
+    assert node.is(JJTIDENTIFIER)     ;
+
+    String varName = node.jjtGetVal();
+    VariableDescriptor var = locals.resolve(varName);
+
+    if(var == null){
+      
+    }
+
+    return new DAGVariable(varDescriptor);
   }
 
   private DAGBooleanConstant buildBoolean(SimpleNode node) {
