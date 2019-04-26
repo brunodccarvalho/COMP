@@ -69,6 +69,8 @@ class Example {
 
   public static void main(String[] args) {
     io.println(new Example().getCounter());
+
+    this.a = 2;
   }
 
   // Duplicate method main(String[]) in type Example

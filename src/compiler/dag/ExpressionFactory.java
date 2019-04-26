@@ -6,6 +6,8 @@ import java.util.HashSet;
 
 import compiler.modules.CompilerModule;
 import compiler.symbols.FunctionLocals;
+import compiler.symbols.LocalDescriptor;
+import jdk.vm.ci.meta.Local;
 import jjt.SimpleNode;
 
 /**
@@ -86,6 +88,12 @@ public class ExpressionFactory extends CompilerModule {
     return null;
   }
 
+  /**
+   * @SemanticError: Integer literal constant value is not representable.
+   *
+   * @param node A JJT node holding an integer literal constant
+   * @return A new DAGIntegerConstant holding the constant.
+   */
   private DAGIntegerConstant buildInteger(SimpleNode node) {
     assert node.is(JJTINTEGER);
 
@@ -94,8 +102,9 @@ public class ExpressionFactory extends CompilerModule {
     try {
       int constant = Integer.parseInt(intString);
       return new DAGIntegerConstant(constant);
-    } catch (NumberFormatException e) {
-      // ERROR: Integer literal constant value is not representable.
+    }
+    // ERROR: Integer literal constant value is not representable.
+    catch (NumberFormatException e) {
       System.err.println("The literal " + intString + " of type int is out of range");
       status(MINOR_ERRORS);
     }
@@ -110,9 +119,7 @@ public class ExpressionFactory extends CompilerModule {
   }
 
   /**
-   * Does not fail.
-   *
-   * @param node A JJT node holding a true or false boolean literal.
+   * @param node A JJT node holding a true or false boolean literal
    * @return A new DAGBooleanConstant holding the constant.
    */
   private DAGBooleanConstant buildBoolean(SimpleNode node) {
@@ -126,11 +133,24 @@ public class ExpressionFactory extends CompilerModule {
   }
 
   /**
-   * @param node A JJT node holding a this literal keyword.
+   * @SemanticError: Cannot use this in a static context.
+   *
+   * @param node A JJT node holding a this literal keyword
    * @return A new DAGThis.
    */
   private DAGThis buildThis(SimpleNode node) {
     assert node.is(JJTTHIS);
+
+    LocalDescriptor thisVar = locals.getThis();
+
+    // ERROR: Cannot use this in a static context.
+    if (thisVar == null) {
+      System.err.println("Error: cannot use this in a static context");
+      status(MAJOR_ERRORS);
+      return null;
+    }
+
+    return new DAGThis(thisVar);
   }
 
   private DAGNewIntArray buildNewIntArray(SimpleNode node) {

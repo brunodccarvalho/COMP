@@ -1,3 +1,9 @@
 package compiler.dag;
 
-public class DAGThis extends DAGTerm {}
+import compiler.symbols.LocalDescriptor;
+
+public class DAGThis extends DAGVariable {
+  DAGThis(LocalDescriptor thisVariable) {
+    super(thisVariable);
+  }
+}

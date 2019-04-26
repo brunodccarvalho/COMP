@@ -29,6 +29,13 @@ public class FunctionLocals extends Descriptor {
   }
 
   /**
+   * @return The 'this' variable, which will be null for static functions.
+   */
+  public LocalDescriptor getThis() {
+    return variables.get("this");
+  }
+
+  /**
    * @param name The name of the variable
    * @return true if this function has a local with the given name.
    */
