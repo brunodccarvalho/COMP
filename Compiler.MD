@@ -76,13 +76,51 @@ Parse the function statements in depth-first order.
         a DAGExpression                 [varies]
             c DAGBinaryOp               [varies; +,-,*,/ -> int; &&,< -> boolean]
             ap DAGTerm
-                c DAGUnaryOp            [varies; ! -> boolean]
-                c DAGLength             [int]
-                cm DAGCall              [return(method)]
-                c DAGBracket            [int]
-                cm DAGNew               [type(class)]
                 c DAGVariable           [type(variable)]
                 c DAGIntegerConstant    [int]
-                c DAGBooleanConstant   [boolean]
+                c DAGBooleanConstant    [boolean]
+                c DAGUnaryOp            [varies; ! -> boolean]
+                adp DAGNew               [varies; class type or int[]]
+                    c DAGNewIntArray    [int[]]
+                    c DAGNewClass       [type(class)]
+                c DAGLength             [int]
+                cd DAGCall              [return(method)]
+                c DAGBracket            [int]
+        cd DAGAssignment
+            cd DAGBracketAssignment
+
         ...Multi expressions... (checkpoint 3)
         ...Control flow... (checkpoint 3)
+
+    DAGExpression
+        getType()
+        DAGBinaryOp
+            getOperation()
+            getOperandTypes()
+        DAGTerm
+
+### AST branches for an Expression
+
+    SimpleNode
+        Integer            [0]
+        Identifier         [0]
+        True               [0]
+        False              [0]
+        This               [0]
+        --
+        NewIntArray        [1] Expression
+        NewClass           [1] ClassType
+        Length             [1] ExpressionT
+        NOT                [1] ExpressionT
+        --
+        AND                [2] ExpressionT Expression
+        LT                 [2] ExpressionT Expression
+        SUM                [2] ExpressionT Expression
+        SUB                [2] ExpressionT Expression
+        MUL                [2] Expression Expression
+        DIV                [2] Expression Expression
+        Bracket            [2] ExpressionT Expression
+        --
+        Call               [3] ExpressionT MethodName ArgumentList
+        --
+        ArgumentList       [n] [Expression, ...]

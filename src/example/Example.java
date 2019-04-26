@@ -3,7 +3,7 @@ package example;
 import java.io.File;
 
 class Example {
-  int counter;
+  int counter = 100000000000000000;
   // Duplicate field Example.counter
   boolean counter;
   int[] array;
