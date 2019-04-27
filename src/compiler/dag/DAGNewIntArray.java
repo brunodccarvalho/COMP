@@ -10,7 +10,6 @@ public class DAGNewIntArray extends DAGNew {
     this.indexExpression = indexExpression;
   }
 
-  @Override
   public DAGExpression getIndex() {
     return indexExpression;
   }

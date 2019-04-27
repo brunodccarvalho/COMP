@@ -27,6 +27,8 @@ import java.util.Objects;
 public abstract class TypeDescriptor extends Descriptor {
   protected final String name;
 
+  public static final VoidDescriptor voidDescriptor = new VoidDescriptor();
+
   private static final HashMap<String, TypeDescriptor> typesMap = new HashMap<>();
 
   /**

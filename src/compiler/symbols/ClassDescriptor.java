@@ -66,6 +66,31 @@ public abstract class ClassDescriptor extends TypeDescriptor {
                                        TypeDescriptor returnType);
 
   /**
+   * @param name A static method's name
+   * @return true if this class has at least one static method identified by name.
+   */
+  public abstract boolean hasStaticMethod(String name);
+
+  /**
+   * @param name      A static method's name
+   * @param signature A static method's signature
+   * @return true if this class has at least one static method identified by name
+   *         and matching the corresponding signature.
+   */
+  public abstract boolean hasStaticMethod(String name, FunctionSignature signature);
+
+  /**
+   * @param name       A static method's name
+   * @param signature  A static method's deduced signature
+   * @param returnType A static method's deduced return type
+   * @return true if this class has at least one static method identified by name
+   *         and matching the corresponding signature and returning the specified
+   *         type.
+   */
+  public abstract boolean hasStaticReturning(String name, FunctionSignature signature,
+                                             TypeDescriptor returnType);
+
+  /**
    * @param name The variable name to be resolved non-statically
    * @return The variable descriptor for the given name, or null if not found.
    */

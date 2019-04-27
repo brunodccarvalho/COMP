@@ -3,7 +3,7 @@ package compiler.dag;
 import compiler.symbols.TypeDescriptor;
 import compiler.symbols.VariableDescriptor;
 
-public class DAGVariable extends DAGTerm {
+public class DAGVariable extends DAGExpression {
   private VariableDescriptor var;
 
   DAGVariable(VariableDescriptor var) {

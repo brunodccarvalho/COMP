@@ -32,6 +32,22 @@ public class UnknownClassDescriptor extends ClassDescriptor {
   }
 
   @Override
+  public boolean hasStaticMethod(String name) {
+    return true;
+  }
+
+  @Override
+  public boolean hasStaticMethod(String name, FunctionSignature signature) {
+    return true;
+  }
+
+  @Override
+  public boolean hasStaticReturning(String name, FunctionSignature signature,
+                                    TypeDescriptor returnType) {
+    return true;
+  }
+
+  @Override
   public VariableDescriptor resolve(String name) {
     return null;
   }

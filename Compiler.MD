@@ -54,6 +54,7 @@ Parse the function statements in depth-first order.
             a ClassDescriptor
                 c JMMClassDescriptor
                 c UnknownClassDescriptor
+            c VoidDescriptor
         ah VariableDescriptor
             ch LocalDescriptor
             ch ParameterDescriptor
@@ -68,36 +69,34 @@ Parse the function statements in depth-first order.
 ## Suggested DAG Hierarchy
 ---
 
-    a = abstract, c = public class, p = package-private class
+    a = abstract, i = interface, c = public class, p = package-private class
     d = Any two instances of this node are different
+    h = overrides hashCode() and equals()
     [...] = expression type
 
-    a DAGNode                           [varies]
-        a DAGExpression                 [varies]
-            c DAGBinaryOp               [varies; +,-,*,/ -> int; &&,< -> boolean]
-            ap DAGTerm
-                c DAGVariable           [type(variable)]
-                c DAGIntegerConstant    [int]
-                c DAGBooleanConstant    [boolean]
-                c DAGUnaryOp            [varies; ! -> boolean]
-                adp DAGNew              [varies; class type or int[]]
-                    c DAGNewIntArray    [int[]]
-                    c DAGNewClass       [type(class)]
-                c DAGLength             [int]
-                cd DAGCall              [return(method)]
-                c DAGBracket            [int]
+    a DAGNode                       [~varies]
+        a DAGExpression             [~varies]
+            c DAGIntegerConstant    [int]
+            c DAGVariable           [type(variable)]
+            c DAGBooleanConstant    [boolean]
+            c DAGThis               [type(this)]
+            ad DAGNew               [~varies]
+                c DAGNewIntArray    [int[]]
+                c DAGNewClass       [type(class)]
+            c DAGLength             [int]
+            ap DAGUnaryOp           [~varies]
+                c DAGNot            [boolean]
+            c DAGBinaryOp           [+,-,*,/ -> int; <,&& -> boolean]
+            c DAGBracket            [int]
+            ad DAGCall              [return(function)]
+                cd DAGMethodCall    [return(function)]
+                cd DAGStaticCall    [return(function)]
         cd DAGAssignment
             cd DAGBracketAssignment
 
         ...Multi expressions... (checkpoint 3)
         ...Control flow... (checkpoint 3)
 
-    DAGExpression
-        getType()
-        DAGBinaryOp
-            getOperation()
-            getOperandTypes()
-        DAGTerm
 
 ### AST branches for an Expression
 

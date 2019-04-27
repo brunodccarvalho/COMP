@@ -1,7 +1,10 @@
 package compiler.dag;
 
+import static jjt.jmmTreeConstants.*;
+
 import compiler.symbols.PrimitiveDescriptor;
 import compiler.symbols.TypeDescriptor;
+import jjt.SimpleNode;
 
 public enum BinaryOperator {
   SUM("+"),
@@ -44,6 +47,27 @@ public enum BinaryOperator {
       return PrimitiveDescriptor.intDescriptor;
     case AND:
       return PrimitiveDescriptor.booleanDescriptor;
+    }
+
+    // We should never arrive here
+    assert false;
+    return null;
+  }
+
+  public static BinaryOperator from(SimpleNode node) {
+    switch (node.getId()) {
+    case JJTAND:
+      return AND;
+    case JJTLT:
+      return LT;
+    case JJTSUM:
+      return SUM;
+    case JJTSUB:
+      return SUB;
+    case JJTMUL:
+      return MUL;
+    case JJTDIV:
+      return DIV;
     }
 
     // We should never arrive here

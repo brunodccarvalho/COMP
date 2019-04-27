@@ -2,7 +2,7 @@ package compiler.dag;
 
 import compiler.symbols.PrimitiveDescriptor;
 
-public class DAGNot extends DAGTerm {
+public class DAGNot extends DAGExpression {
   protected DAGExpression expression;
 
   DAGNot(DAGExpression expression) {

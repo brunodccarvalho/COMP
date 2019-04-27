@@ -50,14 +50,6 @@ public class JMMClassDescriptor extends ClassDescriptor {
     this.methods = new HashMap<>();
   }
 
-  /**
-   * @param name The name of the data member
-   * @return true if this class has a data member with the given name.
-   */
-  public boolean hasMember(String name) {
-    return members.containsKey(name);
-  }
-
   @Override
   public boolean hasMethod(String name) {
     return methods.containsKey(name);
@@ -87,12 +79,20 @@ public class JMMClassDescriptor extends ClassDescriptor {
     return false;
   }
 
-  /**
-   * @param name The data member name
-   * @return The data member identified by name.
-   */
-  public MemberDescriptor getMember(String name) {
-    return members.get(name);
+  @Override
+  public boolean hasStaticMethod(String name) {
+    return false;
+  }
+
+  @Override
+  public boolean hasStaticMethod(String name, FunctionSignature signature) {
+    return false;
+  }
+
+  @Override
+  public boolean hasStaticReturning(String name, FunctionSignature signature,
+                                    TypeDescriptor returnType) {
+    return false;
   }
 
   /**
@@ -108,16 +108,6 @@ public class JMMClassDescriptor extends ClassDescriptor {
       assert signature.isComplete();
       return map.get(signature);
     }
-  }
-
-  /**
-   * Add a new data member to this class.
-   *
-   * @param var The new data member variable
-   */
-  void addMember(MemberDescriptor var) {
-    assert !members.containsKey(var.getName());
-    members.put(var.getName(), var);
   }
 
   /**
@@ -157,6 +147,32 @@ public class JMMClassDescriptor extends ClassDescriptor {
   void setMain(JMMMainDescriptor main) {
     assert main != null && this.main == null;
     this.main = main;
+  }
+
+  /**
+   * @param name The name of the data member
+   * @return true if this class has a data member with the given name.
+   */
+  public boolean hasMember(String name) {
+    return members.containsKey(name);
+  }
+
+  /**
+   * @param name The data member name
+   * @return The data member identified by name.
+   */
+  public MemberDescriptor getMember(String name) {
+    return members.get(name);
+  }
+
+  /**
+   * Add a new data member to this class.
+   *
+   * @param var The new data member variable
+   */
+  void addMember(MemberDescriptor var) {
+    assert !members.containsKey(var.getName());
+    members.put(var.getName(), var);
   }
 
   @Override

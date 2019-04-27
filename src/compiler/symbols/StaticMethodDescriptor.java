@@ -17,6 +17,11 @@ public class StaticMethodDescriptor extends FunctionDescriptor {
     this.parent = parent;
   }
 
+  @Override
+  public boolean isStatic() {
+    return false;
+  }
+
   public ClassDescriptor getParentClass() {
     return parent;
   }

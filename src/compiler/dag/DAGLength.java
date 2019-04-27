@@ -2,7 +2,7 @@ package compiler.dag;
 
 import compiler.symbols.PrimitiveDescriptor;
 
-public class DAGLength extends DAGTerm {
+public class DAGLength extends DAGExpression {
   protected DAGExpression expression;
 
   DAGLength(DAGExpression expression) {

@@ -1,3 +1,3 @@
 package compiler.dag;
 
-abstract class DAGNew extends DAGTerm {}
+abstract class DAGNew extends DAGExpression {}

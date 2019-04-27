@@ -28,8 +28,8 @@ class Example {
   }
 
   // Duplicate method getFile(File) in type Example
-  public void getFile(File f) {
-    return file;
+  public void getFile(String f) {
+    counter = 0;
   }
 
   public Example setCounter(int newcounter) {
@@ -58,6 +58,9 @@ class Example {
     int f = a && e;
 
     int File;
+    File file;
+
+    File.listRoots();
 
     a = b.length;
     b = new int[5];
@@ -68,7 +71,11 @@ class Example {
 
     b = new int[c];
 
-    a = !0;
+    a = Example.abc();
+    getFile(e);
+
+    String s = "123";
+    int k = 0;
 
     return 0;
   }

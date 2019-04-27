@@ -1,16 +1,19 @@
 package compiler.dag;
 
-import static compiler.dag.BinaryOperator.*;
+import static compiler.dag.BinaryOperator.DIV;
+import static compiler.dag.BinaryOperator.LT;
+import static compiler.dag.BinaryOperator.MUL;
+import static compiler.dag.BinaryOperator.SUB;
+import static compiler.dag.BinaryOperator.SUM;
 
 import compiler.symbols.TypeDescriptor;
-import jjt.SimpleNode;
 
 public class DAGBinaryOp extends DAGExpression {
-  private final BinaryOperator op;
-  private final DAGExpression lhs;
-  private final DAGExpression rhs;
+  protected final BinaryOperator op;
+  protected final DAGExpression lhs;
+  protected final DAGExpression rhs;
 
-  DAGBinaryOp(BinaryOp op, DAGExpression lhs, DAGExpression rhs) {
+  DAGBinaryOp(BinaryOperator op, DAGExpression lhs, DAGExpression rhs) {
     this.op = op;
     this.lhs = lhs;
     this.rhs = rhs;
