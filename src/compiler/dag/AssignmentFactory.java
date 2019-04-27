@@ -2,6 +2,7 @@ package compiler.dag;
 
 import static jjt.jmmTreeConstants.*;
 import compiler.symbols.FunctionLocals;
+import compiler.symbols.VariableDescriptor;
 import jjt.SimpleNode;
 
 /**
@@ -11,34 +12,42 @@ import jjt.SimpleNode;
  *
  * Two assignments are always different.
  */
-public class AssignmentFactory extends CompilerModule {
-    FunctionLocals locals;
-    ExpressionFactory factory;
+public class AssignmentFactory extends BaseDAGFactory {
+  FunctionLocals locals;
+  ExpressionFactory factory;
 
-    AssignmentFactory(FunctionLocals locals){
-        assert locals != null && node != null;
-        this.locals = locals;
-        this.factory = new ExpressionFactory(locals);
+  public AssignmentFactory(FunctionLocals locals) {
+    assert locals != null;
+    this.locals = locals;
+    this.factory = new ExpressionFactory(locals);
+  }
+
+  @Override
+  public DAGAssignment build(SimpleNode assignmentNode) {
+    assert assignmentNode.is(JJTASSIGNMENT);
+
+    SimpleNode firstNode = assignmentNode.jjtGetChild(0);
+    assert firstNode.is(JJTIDENTIFIER) || firstNode.is(JJTBRACKET);
+
+    if (firstNode.is(JJTIDENTIFIER)) {
+      return buildAssignment(assignmentNode);
+    } else {
+      return buildBracketAssignment(assignmentNode);
     }
+  }
 
+  private DAGAssignment buildAssignment(SimpleNode assignmentNode) {
+    DAGVariable var = this.buildVariable(assignmentNode.jjtGetChild(0));
+    DAGExpression expression = this.factory.build(assignmentNode.jjtGetChild(2));
+    return new DAGAssignment(var, expression);
+  }
 
-    public DAGAssignment build(SimpleNode assignmentNode){
-        assert assignmentNode.is(JJTASSIGNMENT);
-    }
-
-    private DAGAssignment buildAssignment(SimpleNode assignmentNode){
-        
-        DAGVariable var = this.buildVariable(assignmentNode.jjtGetChild(0));
-        DAGExpression expression = this.factory.build(assignmentNode.jjtGetChild(2));
-        return new DAGAssignment(var,expression);
-    }
-
-    private DAGBracketAssignment buildBracketAssignment(SimpleNode assignmentNode){
-        DAGVariable var = this.buildVariable(assignmentNode.jjtGetChild(0));
-        DAGExpression indexExpression = this.factory.build(assignmentNode.jjtGetChild(2));
-        DAGExpression assignedExpression = this.factory.build(assignmentNode.jjtGetChild(5));
-        return new DAGBracketAssignment(var,assignedExpression,indexExpression);
-    }
+  private DAGBracketAssignment buildBracketAssignment(SimpleNode assignmentNode) {
+    DAGVariable var = this.buildVariable(assignmentNode.jjtGetChild(0));
+    DAGExpression indexExpression = this.factory.build(assignmentNode.jjtGetChild(2));
+    DAGExpression assignedExpression = this.factory.build(assignmentNode.jjtGetChild(5));
+    return new DAGBracketAssignment(var, assignedExpression, indexExpression);
+  }
 
   /**
    * @SemanticError: Variable name cannot be resolved to a variable.
@@ -64,7 +73,7 @@ public class AssignmentFactory extends CompilerModule {
     return new DAGVariable(var);
   }
 
-    private boolean compatibleTypes(DAGVariable var, DAGExpression expression){
-        return expression.getType().equals(var.getType());
-    }
+  private boolean compatibleTypes(DAGVariable var, DAGExpression expression) {
+    return expression.getType().equals(var.getType());
+  }
 }

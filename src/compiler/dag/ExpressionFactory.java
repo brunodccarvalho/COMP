@@ -6,7 +6,6 @@ import static compiler.symbols.PrimitiveDescriptor.*;
 import java.util.HashMap;
 
 import compiler.FunctionSignature;
-import compiler.modules.CompilerModule;
 import compiler.symbols.ClassDescriptor;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.LocalDescriptor;

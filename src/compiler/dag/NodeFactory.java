@@ -2,7 +2,6 @@ package compiler.dag;
 
 import static jjt.jmmTreeConstants.*;
 
-import compiler.modules.CompilerModule;
 import compiler.symbols.FunctionLocals;
 import jjt.SimpleNode;
 
@@ -23,6 +22,11 @@ public class NodeFactory extends BaseDAGFactory {
     case JJTASSIGNMENT:
       factory = new AssignmentFactory(locals);
       break;
+    case JJTIFELSESTATEMENT:
+    case JJTBLOCKSTATEMENT:
+    case JJTWHILESTATEMENT:
+      assert false;
+      return null;
     default:
       factory = new ExpressionFactory(locals);
       break;
