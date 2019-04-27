@@ -64,6 +64,12 @@ class Example {
     c = true;
     d = new File(str);
 
+    z = 2;
+
+    b = new int[c];
+
+    a = !0;
+
     return 0;
   }
 

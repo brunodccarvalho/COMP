@@ -1,13 +1,18 @@
 package compiler.dag;
 
 import static jjt.jmmTreeConstants.*;
+import static compiler.symbols.PrimitiveDescriptor.*;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 import compiler.modules.CompilerModule;
+import compiler.symbols.ClassDescriptor;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.LocalDescriptor;
-import jdk.vm.ci.meta.Local;
+import compiler.symbols.PrimitiveDescriptor;
+import compiler.symbols.TypeDescriptor;
+import compiler.symbols.VariableDescriptor;
+
 import jjt.SimpleNode;
 
 /**
@@ -21,7 +26,7 @@ public class ExpressionFactory extends CompilerModule {
   /**
    * Set of DAG expressions already constructed.
    */
-  private HashSet<DAGExpression> expressionSet = new HashSet<>();
+  private HashMap<DAGExpression, DAGExpression> expressionSet = new HashMap<>();
 
   private FunctionLocals locals;
   private SimpleNode expressionNode;
@@ -88,6 +93,16 @@ public class ExpressionFactory extends CompilerModule {
     return null;
   }
 
+  // Reuse DAGExpression nodes
+  private <DAGT extends DAGExpression> DAGT unduplicate(DAGT dagNode) {
+    if (expressionSet.containsKey(dagNode)) {
+      return (DAGT) expressionSet.get(dagNode);
+    } else {
+      expressionSet.put(dagNode, dagNode);
+      return dagNode;
+    }
+  }
+
   /**
    * @SemanticError: Integer literal constant value is not representable.
    *
@@ -107,15 +122,32 @@ public class ExpressionFactory extends CompilerModule {
     catch (NumberFormatException e) {
       System.err.println("The literal " + intString + " of type int is out of range");
       status(MINOR_ERRORS);
+      return new DAGIntegerConstant(1);
     }
-
-    // TODO: Handle InvalidIntegerConstant Error
-    return null;
   }
 
+  /**
+   * @SemanticError: Variable name cannot be resolved to a variable.
+   *
+   * @param node A JJT node holding a variable identifier
+   * @return A new DAGVariable holding the variable's descriptor.
+   */
   private DAGVariable buildVariable(SimpleNode node) {
     assert node.is(JJTIDENTIFIER);
-    return null;
+
+    String varName = node.jjtGetVal();
+    VariableDescriptor var = locals.resolve(varName);
+
+    // ERROR: $variablename cannot be resolved to a variable.
+    if (var == null) {
+      System.err.println(varName + " cannot be resolved to a variable");
+      status(MINOR_ERRORS);
+
+      // TODO: Handle UnresolvedVariableName error continuation
+      return null;
+    }
+
+    return new DAGVariable(var);
   }
 
   /**
@@ -136,7 +168,7 @@ public class ExpressionFactory extends CompilerModule {
    * @SemanticError: Cannot use this in a static context.
    *
    * @param node A JJT node holding a this literal keyword
-   * @return A new DAGThis.
+   * @return A new DAGThis node.
    */
   private DAGThis buildThis(SimpleNode node) {
     assert node.is(JJTTHIS);
@@ -145,7 +177,7 @@ public class ExpressionFactory extends CompilerModule {
 
     // ERROR: Cannot use this in a static context.
     if (thisVar == null) {
-      System.err.println("Error: cannot use this in a static context");
+      System.err.println("Cannot use this in a static context");
       status(MAJOR_ERRORS);
       return null;
     }
@@ -153,24 +185,136 @@ public class ExpressionFactory extends CompilerModule {
     return new DAGThis(thisVar);
   }
 
+  /**
+   * @SemanticError: Type mismatch: expected int, but found X.
+   *
+   * @param node A JJT node representing a new int array declaration.
+   * @return A new DAGNewIntArray node.
+   */
   private DAGNewIntArray buildNewIntArray(SimpleNode node) {
-    return null;
+    assert node.is(JJTNEWINTARRAY);
+
+    SimpleNode indexExpressionNode = node.jjtGetChild(0);
+
+    // Build the DAGExpression.
+    DAGExpression expression = build(indexExpressionNode);
+
+    // Reuse the DAGExpression?
+    if (expressionSet.containsKey(expression)) {
+      expression = expressionSet.get(expression);
+    } else {
+      expressionSet.put(expression, expression);
+    }
+
+    // ERROR: Type mismatch: expected int, but found X.
+    if (intDescriptor != expression.getType()) {
+      System.err.println("Type mismatch: expected int type, but found " + expression.getType());
+      status(MINOR_ERRORS);
+    }
+
+    return new DAGNewIntArray(expression);
   }
 
+  /**
+   * No semantic errors.
+   *
+   * @param node A JJT node representing a new declaration for a class type, with no args.
+   * @return A new DAGNewClass node.
+   */
   private DAGNewClass buildNewClass(SimpleNode node) {
-    return null;
+    assert node.is(JJTCLASSTYPE);
+
+    SimpleNode classTypeNode = node.jjtGetChild(0);
+    assert classTypeNode.is(JJTCLASSTYPE);
+
+    String className = classTypeNode.jjtGetVal();
+    ClassDescriptor classDescriptor = (ClassDescriptor) TypeDescriptor.getOrCreate(className);
+
+    return new DAGNewClass(classDescriptor);
   }
 
+  /**
+   * @SemanticError: Type mismatch: expected int[], but found X.
+   *
+   * @param node A JJT node representing access to a property called 'length' of an int array.
+   * @return A new DAGLength node.
+   */
   private DAGLength buildLength(SimpleNode node) {
-    return null;
+    assert node.is(JJTLENGTH);
+
+    SimpleNode expressionNode = node.jjtGetChild(0);
+
+    // Build the DAGExpression.
+    DAGExpression expression = build(expressionNode);
+
+    // Reuse the DAGExpression?
+    if (expressionSet.containsKey(expression)) {
+      expression = expressionSet.get(expression);
+    }
+
+    // ERROR: Type mismatch: expected int[], but found X.
+    if (intArrayDescriptor != expression.getType()) {
+      System.err.println("Type mismatch: expected int[] type, but found " + expression.getType());
+      status(MINOR_ERRORS);
+    }
+
+    return new DAGLength(expression);
   }
 
-  private DAGUnaryOp buildUnaryOp(SimpleNode node) {
-    return null;
+  /**
+   * @SemanticError: Type mismatch: expected boolean, but found X.
+   *
+   * @param node A JJT node representing a unary operation. Only ! is supported.
+   * @return A new DAGNot node.
+   */
+  private DAGNot buildUnaryOp(SimpleNode node) {
+    assert node.is(JJTNOT);
+
+    SimpleNode expressionNode = node.jjtGetChild(0);
+
+    // Build the DAGExpression.
+    DAGExpression expression = build(expressionNode);
+
+    // Reuse the DAGExpression?
+    if (expressionSet.containsKey(expression)) {
+      expression = expressionSet.get(expression);
+    }
+
+    // ERROR: Type mismatch: expected boolean, but found X.
+    if (booleanDescriptor != expression.getType()) {
+      System.err.println("Type mismatch: expected boolean type, but found " + expression.getType());
+      status(MINOR_ERRORS);
+    }
+
+    return new DAGNot(expression);
   }
 
-  private DAGBinaryOp buildBinaryOp(SimpleNode node) {
-    return null;
+  /**
+   * @SemanticError: Type mismatch: expected [int, boolean], but found X.
+   *
+   * @param node A JJT node representing a binary operation. Only ! is supported.
+   * @return A new DAGBinaryOp node, if not optimized.
+   */
+  private DAGExpression buildBinaryOp(SimpleNode node) {
+    assert node.is(JJTAND) || node.is(JJTLT) || node.is(JJTSUM) || node.is(JJTSUB)
+        || node.is(JJTMUL) || node.is(JJTDIV);
+
+    SimpleNode lhsNode = node.jjtGetChild(0);
+    SimpleNode rhsNode = node.jjtGetChild(1);
+
+    DAGExpression lhs = build(lhsNode);
+
+    // Reuse the DAGExpression?
+    if (expressionSet.containsKey(lhs)) {
+      lhs = expressionSet.get(lhs);
+    }
+
+    DAGExpression rhs = build(rhsNode);
+
+    // Reuse the DAGExpression?
+    if (expressionSet.containsKey(rhs)) {
+      rhs = expressionSet.get(rhs);
+    }
   }
 
   private DAGBracket buildBracket(SimpleNode node) {

@@ -4,11 +4,11 @@ import compiler.symbols.PrimitiveDescriptor;
 import compiler.symbols.TypeDescriptor;
 
 public enum BinaryOperator {
-  PLUS("+"),
-  MINUS("-"),
-  TIMES("*"),
-  DIVIDE("/"),
-  LESS("<"),
+  SUM("+"),
+  SUB("-"),
+  MUL("*"),
+  DIV("/"),
+  LT("<"),
   AND("&&");
 
   private String str;
@@ -19,12 +19,12 @@ public enum BinaryOperator {
 
   public TypeDescriptor getExpressionType() {
     switch (this) {
-    case PLUS:
-    case MINUS:
-    case TIMES:
-    case DIVIDE:
+    case SUM:
+    case SUB:
+    case MUL:
+    case DIV:
       return PrimitiveDescriptor.intDescriptor;
-    case LESS:
+    case LT:
     case AND:
       return PrimitiveDescriptor.booleanDescriptor;
     }
@@ -36,11 +36,11 @@ public enum BinaryOperator {
 
   public TypeDescriptor getOperandType() {
     switch (this) {
-    case PLUS:
-    case MINUS:
-    case TIMES:
-    case DIVIDE:
-    case LESS:
+    case SUM:
+    case SUB:
+    case MUL:
+    case DIV:
+    case LT:
       return PrimitiveDescriptor.intDescriptor;
     case AND:
       return PrimitiveDescriptor.booleanDescriptor;

@@ -80,7 +80,7 @@ Parse the function statements in depth-first order.
                 c DAGIntegerConstant    [int]
                 c DAGBooleanConstant    [boolean]
                 c DAGUnaryOp            [varies; ! -> boolean]
-                adp DAGNew               [varies; class type or int[]]
+                adp DAGNew              [varies; class type or int[]]
                     c DAGNewIntArray    [int[]]
                     c DAGNewClass       [type(class)]
                 c DAGLength             [int]

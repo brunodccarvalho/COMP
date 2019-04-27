@@ -2,10 +2,10 @@ package compiler.dag;
 
 import compiler.symbols.PrimitiveDescriptor;
 
-public class DAGLength extends DAGTerm {
+public class DAGNot extends DAGTerm {
   protected DAGExpression expression;
 
-  DAGLength(DAGExpression expression) {
+  DAGNot(DAGExpression expression) {
     this.expression = expression;
   }
 
@@ -15,6 +15,6 @@ public class DAGLength extends DAGTerm {
 
   @Override
   public PrimitiveDescriptor getType() {
-    return PrimitiveDescriptor.intDescriptor;
+    return PrimitiveDescriptor.booleanDescriptor;
   }
 }
