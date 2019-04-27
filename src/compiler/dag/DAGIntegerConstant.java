@@ -1,7 +1,6 @@
 package compiler.dag;
 
 import compiler.symbols.PrimitiveDescriptor;
-import compiler.symbols.TypeDescriptor;
 
 public class DAGIntegerConstant extends DAGExpression {
   protected int constant;
@@ -15,7 +14,7 @@ public class DAGIntegerConstant extends DAGExpression {
   }
 
   @Override
-  public TypeDescriptor getType() {
+  public PrimitiveDescriptor getType() {
     return PrimitiveDescriptor.intDescriptor;
   }
 }

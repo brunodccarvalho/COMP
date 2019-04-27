@@ -10,7 +10,6 @@ import compiler.modules.CompilerModule;
 import compiler.symbols.ClassDescriptor;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.LocalDescriptor;
-import compiler.symbols.PrimitiveDescriptor;
 import compiler.symbols.TypeDescriptor;
 import compiler.symbols.VariableDescriptor;
 
@@ -27,10 +26,10 @@ public class ExpressionFactory extends CompilerModule {
   /**
    * Set of DAG expressions already constructed.
    */
-  private HashMap<DAGExpression, DAGExpression> expressionSet = new HashMap<>();
+  private HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
 
   private FunctionLocals locals;
-  private SimpleNode expressionNode;
+  private DAGExpression factoryExpression;
 
   /**
    * @param locals The table of locals variables.
@@ -39,9 +38,11 @@ public class ExpressionFactory extends CompilerModule {
   public ExpressionFactory(FunctionLocals locals, SimpleNode expressionNode) {
     assert locals != null && expressionNode != null;
     this.locals = locals;
-    this.expressionNode = expressionNode;
+    this.factoryExpression = this.build(expressionNode);
+  }
 
-    this.build(expressionNode);
+  public DAGExpression get() {
+    return factoryExpression;
   }
 
   /**
@@ -59,11 +60,11 @@ public class ExpressionFactory extends CompilerModule {
     switch (node.getId()) {
     case JJTINTEGER:
       return buildInteger(node);
-    case JJTIDENTIFIER:
-      return buildVariable(node);
     case JJTTRUE:
     case JJTFALSE:
       return buildBoolean(node);
+    case JJTIDENTIFIER:
+      return buildVariable(node);
     case JJTTHIS:
       return buildThis(node);
     case JJTNEWINTARRAY:
@@ -95,10 +96,10 @@ public class ExpressionFactory extends CompilerModule {
   }
 
   private DAGExpression reuse(DAGExpression dagNode) {
-    if (expressionSet.containsKey(dagNode)) {
-      return expressionSet.get(dagNode);
+    if (cache.containsKey(dagNode)) {
+      return cache.get(dagNode);
     } else {
-      expressionSet.put(dagNode, dagNode);
+      cache.put(dagNode, dagNode);
       return dagNode;
     }
   }
@@ -127,6 +128,20 @@ public class ExpressionFactory extends CompilerModule {
   }
 
   /**
+   * @param node A JJT node holding a true or false boolean literal
+   * @return A new DAGBooleanConstant holding the constant.
+   */
+  private DAGBooleanConstant buildBoolean(SimpleNode node) {
+    assert node.is(JJTTRUE) || node.is(JJTFALSE);
+
+    if (node.is(JJTTRUE)) {
+      return new DAGBooleanConstant(true);
+    } else {
+      return new DAGBooleanConstant(false);
+    }
+  }
+
+  /**
    * @SemanticError: Variable name cannot be resolved to a variable.
    *
    * @param node A JJT node holding a variable identifier
@@ -148,20 +163,6 @@ public class ExpressionFactory extends CompilerModule {
     }
 
     return new DAGVariable(var);
-  }
-
-  /**
-   * @param node A JJT node holding a true or false boolean literal
-   * @return A new DAGBooleanConstant holding the constant.
-   */
-  private DAGBooleanConstant buildBoolean(SimpleNode node) {
-    assert node.is(JJTTRUE) || node.is(JJTFALSE);
-
-    if (node.is(JJTTRUE)) {
-      return new DAGBooleanConstant(true);
-    } else {
-      return new DAGBooleanConstant(false);
-    }
   }
 
   /**

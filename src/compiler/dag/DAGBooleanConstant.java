@@ -1,7 +1,6 @@
 package compiler.dag;
 
 import compiler.symbols.PrimitiveDescriptor;
-import compiler.symbols.TypeDescriptor;
 
 public class DAGBooleanConstant extends DAGExpression {
   protected boolean constant;
@@ -15,7 +14,7 @@ public class DAGBooleanConstant extends DAGExpression {
   }
 
   @Override
-  public TypeDescriptor getType() {
+  public PrimitiveDescriptor getType() {
     return PrimitiveDescriptor.booleanDescriptor;
   }
 }

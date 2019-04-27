@@ -1,7 +1,6 @@
 package compiler.dag;
 
 import compiler.symbols.ClassDescriptor;
-import compiler.symbols.TypeDescriptor;
 
 public class DAGNewClass extends DAGNew {
   protected ClassDescriptor classDescriptor;

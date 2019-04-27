@@ -20,7 +20,7 @@ public enum BinaryOperator {
     this.str = s;
   }
 
-  public TypeDescriptor getExpressionType() {
+  public PrimitiveDescriptor getExpressionType() {
     switch (this) {
     case SUM:
     case SUB:
@@ -37,7 +37,7 @@ public enum BinaryOperator {
     return null;
   }
 
-  public TypeDescriptor getOperandType() {
+  public PrimitiveDescriptor getOperandType() {
     switch (this) {
     case SUM:
     case SUB:

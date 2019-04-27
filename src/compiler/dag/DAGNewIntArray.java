@@ -1,7 +1,6 @@
 package compiler.dag;
 
 import compiler.symbols.PrimitiveDescriptor;
-import compiler.symbols.TypeDescriptor;
 
 public class DAGNewIntArray extends DAGNew {
   protected DAGExpression indexExpression;
@@ -10,12 +9,12 @@ public class DAGNewIntArray extends DAGNew {
     this.indexExpression = indexExpression;
   }
 
-  public DAGExpression getIndex() {
+  public DAGExpression getIndexExpression() {
     return indexExpression;
   }
 
   @Override
-  public TypeDescriptor getType() {
+  public PrimitiveDescriptor getType() {
     return PrimitiveDescriptor.intArrayDescriptor;
   }
 }

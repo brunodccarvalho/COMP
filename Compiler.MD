@@ -77,9 +77,9 @@ Parse the function statements in depth-first order.
     a DAGNode                       [~varies]
         a DAGExpression             [~varies]
             c DAGIntegerConstant    [int]
-            c DAGVariable           [type(variable)]
             c DAGBooleanConstant    [boolean]
-            c DAGThis               [type(this)]
+            c DAGVariable           [type(variable)]
+                c DAGThis           [type(this)]
             ad DAGNew               [~varies]
                 c DAGNewIntArray    [int[]]
                 c DAGNewClass       [type(class)]
@@ -123,3 +123,48 @@ Parse the function statements in depth-first order.
         Call               [3] ExpressionT MethodName ArgumentList
         --
         ArgumentList       [n] [Expression, ...]
+
+### DAG Methods
+
+    DAGNode
+        DAGExpression
+         + getType() -> TypeDescriptor
+            DAGIntegerConstant
+             + getValue() -> int
+            DAGBooleanConstant
+             + getValue() -> boolean
+            DAGVariable
+             + getVariable() -> VariableDescriptor
+                DAGThis
+                 + getVariable() -> LocalDescriptor
+            DAGNew
+                DAGNewIntArray
+                 + getIndexExpression() -> DAGExpression(int)
+                DAGNewClass
+                 + getClassDescriptor() -> ClassDescriptor
+            DAGLength
+             + getExpression() -> DAGExpression(int[])
+            DAGNot
+             + getExpression() -> DAGExpression(boolean)
+            DAGBinaryOp
+             + getOperator() -> BinaryOperator {+, -, *, /, <, &&}
+             + getLhs() -> DAGExpression(int or boolean)
+             + getRhs() -> DAGExpression(int or boolean)
+             + isArithmetic() -> boolean
+             + isComparison() -> boolean
+             + getOperandType() -> int or boolean
+            DAGBracket
+             + getArrayExpression() -> DAGExpression(int[])
+             + getIndexExpression() -> DAGExpression(int)
+            DAGCall
+             + isStatic() -> boolean
+             + getCallClass() -> ClassDescriptor
+             + getMethodName() -> String
+             + getSignature() -> FunctionSignature, possibly incomplete
+                DAGMethodCall
+                 + getObjectExpression() -> DAGExpression(classtype)
+                 > isStatic() -> false
+                 > getCallClass() -> class of expression
+                DAGStaticCall
+                 > isStatic() -> true
+                 > getCallClass() -> identifier class

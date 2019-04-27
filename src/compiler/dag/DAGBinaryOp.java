@@ -1,12 +1,8 @@
 package compiler.dag;
 
-import static compiler.dag.BinaryOperator.DIV;
-import static compiler.dag.BinaryOperator.LT;
-import static compiler.dag.BinaryOperator.MUL;
-import static compiler.dag.BinaryOperator.SUB;
-import static compiler.dag.BinaryOperator.SUM;
+import static compiler.dag.BinaryOperator.*;
 
-import compiler.symbols.TypeDescriptor;
+import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGBinaryOp extends DAGExpression {
   protected final BinaryOperator op;
@@ -39,12 +35,12 @@ public class DAGBinaryOp extends DAGExpression {
     return op == LT;
   }
 
-  public TypeDescriptor getOperandType() {
+  public PrimitiveDescriptor getOperandType() {
     return op.getOperandType();
   }
 
   @Override
-  public TypeDescriptor getType() {
+  public PrimitiveDescriptor getType() {
     return op.getExpressionType();
   }
 }

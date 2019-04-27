@@ -18,6 +18,10 @@ public class DAGMethodCall extends DAGCall {
     this.expression = expression;
   }
 
+  public DAGExpression getObjectExpression() {
+    return expression;
+  }
+
   @Override
   public boolean isStatic() {
     return false;
