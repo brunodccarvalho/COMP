@@ -17,8 +17,7 @@ public class AssignmentFactory extends BaseDAGFactory {
   ExpressionFactory factory;
 
   public AssignmentFactory(FunctionLocals locals) {
-    assert locals != null;
-    this.locals = locals;
+    super(locals);
     this.factory = new ExpressionFactory(locals);
   }
 

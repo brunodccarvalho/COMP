@@ -33,8 +33,7 @@ public class ExpressionFactory extends BaseDAGFactory {
    * @param locals The table of locals variables.
    */
   public ExpressionFactory(FunctionLocals locals) {
-    assert locals != null;
-    this.locals = locals;
+    super(locals);
   }
 
   /**

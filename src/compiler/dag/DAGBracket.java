@@ -9,6 +9,7 @@ public class DAGBracket extends DAGExpression {
   protected DAGExpression indexExpression;
 
   DAGBracket(DAGExpression array, DAGExpression index) {
+    assert array != null && index != null;
     this.arrayExpression = array;
     this.indexExpression = index;
   }

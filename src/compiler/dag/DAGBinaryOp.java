@@ -12,6 +12,7 @@ public class DAGBinaryOp extends DAGExpression {
   protected final DAGExpression rhs;
 
   DAGBinaryOp(BinaryOperator op, DAGExpression lhs, DAGExpression rhs) {
+    assert op != null && lhs != null && rhs != null;
     this.op = op;
     this.lhs = lhs;
     this.rhs = rhs;

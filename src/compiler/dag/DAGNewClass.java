@@ -8,6 +8,7 @@ public class DAGNewClass extends DAGNew {
   protected ClassDescriptor classDescriptor;
 
   DAGNewClass(ClassDescriptor classDescriptor) {
+    assert classDescriptor != null;
     this.classDescriptor = classDescriptor;
   }
 

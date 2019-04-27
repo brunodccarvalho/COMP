@@ -12,12 +12,14 @@ public class DAGStaticCall extends DAGCall {
   DAGStaticCall(ClassDescriptor classDescriptor, String methodName, FunctionSignature signature,
                 DAGExpression[] arguments) {
     super(methodName, signature, arguments);
+    assert classDescriptor != null;
     this.classDescriptor = classDescriptor;
   }
 
   DAGStaticCall(ClassDescriptor classDescriptor, String methodName, FunctionSignature signature,
                 TypeDescriptor returnType, DAGExpression[] arguments) {
     super(methodName, signature, returnType, arguments);
+    assert classDescriptor != null;
     this.classDescriptor = classDescriptor;
   }
 

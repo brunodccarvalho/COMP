@@ -8,6 +8,7 @@ public class DAGNewIntArray extends DAGNew {
   protected DAGExpression indexExpression;
 
   DAGNewIntArray(DAGExpression indexExpression) {
+    assert indexExpression != null;
     this.indexExpression = indexExpression;
   }
 
