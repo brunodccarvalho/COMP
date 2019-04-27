@@ -1,152 +1,155 @@
-Program 1:7 66:2
- ClassDeclaration 1:7 66:2
+Program 1:7 63:2
+ ClassDeclaration 1:7 63:2
   ClassHeader 1:7 1:14
    ClassType Example 1:7 1:14
-  ClassBody 2:3 66:2
-   ClassVarDeclarations 2:3 6:13
+  ClassBody 2:3 63:2
+   ClassVarDeclarations 2:3 5:13
     ClassVarDeclaration 2:3 2:15
      Int 2:3 2:6
      Identifier counter 2:7 2:14
-    ClassVarDeclaration 3:3 3:19
-     Boolean 3:3 3:10
-     Identifier counter 3:11 3:18
-    ClassVarDeclaration 4:3 4:15
-     IntArray 4:3 4:8
-      Int 4:3 4:6
-     Identifier array 4:9 4:14
-    ClassVarDeclaration 5:3 5:18
-     Boolean 5:3 5:10
-     Identifier inited 5:11 5:17
-    ClassVarDeclaration 6:3 6:13
-     ClassType File 6:3 6:7
-     Identifier file 6:8 6:12
-   ClassMethodDeclarations 8:10 65:4
-    MethodDeclaration 8:10 12:4
-     Int 8:10 8:13
-     MethodName getCounter 8:14 8:24
-     ParameterList 8:25 8:25
-     MethodBody 9:5 10:17
-      VariableDeclaration 9:5 9:16
-       Int 9:5 9:8
-       Identifier counter 9:9 9:16
-      PlainStatement 10:5 10:17
-       Assignment 10:5 10:16
-        Identifier counter 10:5 10:12
-        Integer 2 10:15 10:16
-     ReturnStatement 11:12 11:24
-      MUL 11:12 11:23
-       Identifier counter 11:12 11:19
-       Integer 2 11:22 11:23
-    MethodDeclaration 14:10 16:4
-     IntArray 14:10 14:15
-      Int 14:10 14:13
-     MethodName getArray 14:16 14:24
-     ParameterList 14:25 14:25
-     MethodBody 15:5 14:28
-     ReturnStatement 15:12 15:18
-      Identifier array 15:12 15:17
-    MethodDeclaration 18:10 20:4
-     Boolean 18:10 18:17
-     MethodName getInited 18:18 18:27
-     ParameterList 18:28 18:53
-      Parameter 18:28 18:33
-       Int 18:28 18:31
-       Identifier a 18:32 18:33
-      Parameter 18:35 18:42
-       IntArray 18:35 18:40
-        Int 18:35 18:38
-       Identifier b 18:41 18:42
-      Parameter 18:44 18:53
-       Boolean 18:44 18:51
-       Identifier c 18:52 18:53
-     MethodBody 19:5 18:56
-     ReturnStatement 19:12 19:19
-      Identifier inited 19:12 19:18
-    MethodDeclaration 22:10 24:4
-     ClassType File 22:10 22:14
-     MethodName getFile 22:15 22:22
-     ParameterList 22:23 22:29
-      Parameter 22:23 22:29
-       ClassType File 22:23 22:27
-       Identifier f 22:28 22:29
-     MethodBody 23:5 22:32
-     ReturnStatement 23:12 23:17
-      Identifier file 23:12 23:16
-    MethodDeclaration 26:10 28:4
-     Int 26:10 26:13
-     MethodName getFile 26:14 26:21
-     ParameterList 26:22 26:28
-      Parameter 26:22 26:28
-       ClassType File 26:22 26:26
-       Identifier f 26:27 26:28
-     MethodBody 27:5 26:31
-     ReturnStatement 27:12 27:17
-      Identifier file 27:12 27:16
-    MethodDeclaration 30:10 33:4
-     ClassType Example 30:10 30:17
-     MethodName setCounter 30:18 30:28
-     ParameterList 30:29 30:43
-      Parameter 30:29 30:43
-       Int 30:29 30:32
-       Identifier newcounter 30:33 30:43
-     MethodBody 31:5 31:26
-      PlainStatement 31:5 31:26
-       Assignment 31:5 31:25
-        Identifier counter 31:5 31:12
-        Identifier newcounter 31:15 31:25
-     ReturnStatement 32:12 32:17
-      This 32:12 32:16
-    MethodDeclaration 35:10 38:4
-     ClassType Example 35:10 35:17
-     MethodName setFile 35:18 35:25
-     ParameterList 35:26 35:38
-      Parameter 35:26 35:38
-       ClassType File 35:26 35:30
-       Identifier newfile 35:31 35:38
-     MethodBody 36:5 36:20
-      PlainStatement 36:5 36:20
-       Assignment 36:5 36:19
-        Identifier file 36:5 36:9
-        Identifier newfile 36:12 36:19
-     ReturnStatement 37:12 37:17
-      This 37:12 37:16
-    MethodDeclaration 40:10 43:4
-     Int 40:10 40:13
-     MethodName increment 40:14 40:23
-     ParameterList 40:24 40:31
-      Parameter 40:24 40:31
-       Int 40:24 40:27
-       Identifier add 40:28 40:31
-     MethodBody 41:5 41:29
-      PlainStatement 41:5 41:29
-       Assignment 41:5 41:28
-        Identifier counter 41:5 41:12
-        SUM 41:15 41:28
-         Identifier counter 41:15 41:22
-         Identifier add 41:25 41:28
-     ReturnStatement 42:12 42:20
-      Identifier counter 42:12 42:19
-    MethodDeclaration 45:10 57:4
-     Int 45:10 45:13
-     MethodName function 45:14 45:22
-     ParameterList 45:23 45:33
-      Parameter 45:23 45:33
-       String 45:23 45:29
-       Identifier str 45:30 45:33
-     MethodBody 46:5 54:20
-      VariableDeclaration 46:5 46:10
-       Int 46:5 46:8
-       Identifier a 46:9 46:10
+    ClassVarDeclaration 3:3 3:15
+     IntArray 3:3 3:8
+      Int 3:3 3:6
+     Identifier array 3:9 3:14
+    ClassVarDeclaration 4:3 4:18
+     Boolean 4:3 4:10
+     Identifier inited 4:11 4:17
+    ClassVarDeclaration 5:3 5:13
+     ClassType File 5:3 5:7
+     Identifier file 5:8 5:12
+   ClassMethodDeclarations 7:10 62:4
+    MethodDeclaration 7:10 11:4
+     Int 7:10 7:13
+     MethodName getCounter 7:14 7:24
+     ParameterList 7:25 7:25
+     MethodBody 8:5 9:17
+      VariableDeclaration 8:5 8:16
+       Int 8:5 8:8
+       Identifier counter 8:9 8:16
+      PlainStatement 9:5 9:17
+       Assignment 9:5 9:16
+        Identifier counter 9:5 9:12
+        Integer 2 9:15 9:16
+     ReturnStatement 10:12 10:24
+      MUL 10:12 10:23
+       Identifier counter 10:12 10:19
+       Integer 2 10:22 10:23
+    MethodDeclaration 13:10 15:4
+     IntArray 13:10 13:15
+      Int 13:10 13:13
+     MethodName getArray 13:16 13:24
+     ParameterList 13:25 13:25
+     MethodBody 14:5 13:28
+     ReturnStatement 14:12 14:18
+      Identifier array 14:12 14:17
+    MethodDeclaration 17:10 19:4
+     Boolean 17:10 17:17
+     MethodName getInited 17:18 17:27
+     ParameterList 17:28 17:53
+      Parameter 17:28 17:33
+       Int 17:28 17:31
+       Identifier a 17:32 17:33
+      Parameter 17:35 17:42
+       IntArray 17:35 17:40
+        Int 17:35 17:38
+       Identifier b 17:41 17:42
+      Parameter 17:44 17:53
+       Boolean 17:44 17:51
+       Identifier c 17:52 17:53
+     MethodBody 18:5 17:56
+     ReturnStatement 18:12 18:19
+      Identifier inited 18:12 18:18
+    MethodDeclaration 21:10 26:4
+     ClassType File 21:10 21:14
+     MethodName getFile 21:15 21:22
+     ParameterList 21:23 21:29
+      Parameter 21:23 21:29
+       ClassType File 21:23 21:27
+       Identifier f 21:28 21:29
+     MethodBody 22:5 24:11
+      VariableDeclaration 22:5 22:10
+       Int 22:5 22:8
+       Identifier i 22:9 22:10
+      VariableDeclaration 23:5 23:14
+       Boolean 23:5 23:12
+       Identifier j 23:13 23:14
+      PlainStatement 24:5 24:11
+       Assignment 24:5 24:10
+        Identifier i 24:5 24:6
+        Identifier j 24:9 24:10
+     ReturnStatement 25:12 25:14
+      Identifier f 25:12 25:13
+    MethodDeclaration 28:10 31:4
+     ClassType Example 28:10 28:17
+     MethodName setCounter 28:18 28:28
+     ParameterList 28:29 28:43
+      Parameter 28:29 28:43
+       Int 28:29 28:32
+       Identifier newcounter 28:33 28:43
+     MethodBody 29:5 29:26
+      PlainStatement 29:5 29:26
+       Assignment 29:5 29:25
+        Identifier counter 29:5 29:12
+        Identifier newcounter 29:15 29:25
+     ReturnStatement 30:12 30:17
+      This 30:12 30:16
+    MethodDeclaration 33:10 36:4
+     ClassType Example 33:10 33:17
+     MethodName setFile 33:18 33:25
+     ParameterList 33:26 33:38
+      Parameter 33:26 33:38
+       ClassType File 33:26 33:30
+       Identifier newfile 33:31 33:38
+     MethodBody 34:5 34:20
+      PlainStatement 34:5 34:20
+       Assignment 34:5 34:19
+        Identifier file 34:5 34:9
+        Identifier newfile 34:12 34:19
+     ReturnStatement 35:12 35:17
+      This 35:12 35:16
+    MethodDeclaration 38:10 41:4
+     Int 38:10 38:13
+     MethodName increment 38:14 38:23
+     ParameterList 38:24 38:31
+      Parameter 38:24 38:31
+       Int 38:24 38:27
+       Identifier add 38:28 38:31
+     MethodBody 39:5 39:29
+      PlainStatement 39:5 39:29
+       Assignment 39:5 39:28
+        Identifier counter 39:5 39:12
+        SUM 39:15 39:28
+         Identifier counter 39:15 39:22
+         Identifier add 39:25 39:28
+     ReturnStatement 40:12 40:20
+      Identifier counter 40:12 40:19
+    MethodDeclaration 43:10 58:4
+     Int 43:10 43:13
+     MethodName function 43:14 43:22
+     ParameterList 43:23 43:33
+      Parameter 43:23 43:33
+       ClassType String 43:23 43:29
+       Identifier str 43:30 43:33
+     MethodBody 44:5 55:20
+      VariableDeclaration 44:5 44:10
+       Int 44:5 44:8
+       Identifier a 44:9 44:10
+      VariableDeclaration 45:5 45:12
+       IntArray 45:5 45:10
+        Int 45:5 45:8
+       Identifier b 45:11 45:12
+      VariableDeclaration 46:5 46:14
+       Boolean 46:5 46:12
+       Identifier c 46:13 46:14
       VariableDeclaration 47:5 47:12
-       IntArray 47:5 47:10
-        Int 47:5 47:8
-       Identifier b 47:11 47:12
-      VariableDeclaration 48:5 48:14
-       Boolean 48:5 48:12
-       Identifier c 48:13 48:14
-      VariableDeclaration 49:5 49:12
-       Identifier File 49:5 49:9
-       Identifier d 49:10 49:11
+       Identifier File 47:5 47:9
+       Identifier d 47:10 47:11
+      VariableDeclaration 48:5 48:15
+       Identifier Example 48:5 48:12
+       Identifier e 48:13 48:14
+      VariableDeclaration 49:5 49:11
+       Identifier Lol 49:5 49:8
+       Identifier f 49:9 49:10
       PlainStatement 51:5 51:18
        Assignment 51:5 51:17
         Identifier a 51:5 51:6
@@ -157,32 +160,36 @@ Program 1:7 66:2
         Identifier b 52:5 52:6
         NewIntArray 52:17 52:19
          Integer 5 52:17 52:18
-      PlainStatement 53:5 53:14
-       Assignment 53:5 53:13
-        Identifier c 53:5 53:6
-        True 53:9 53:13
-      PlainStatement 54:5 54:20
-       Assignment 54:5 54:19
-        Identifier d 54:5 54:6
-        NewClass 54:13 54:19
-         ClassType File 54:13 54:17
-     ReturnStatement 56:12 56:14
-      Integer 0 56:12 56:13
-    MainDeclaration 59:36 61:4
-     MainParameterList 59:36 59:40
-      Identifier args 59:36 59:40
-     MethodBody 60:5 60:44
-      PlainStatement 60:5 60:44
-       Call 60:5 60:43
-        Identifier io 60:5 60:7
-        MethodName println 60:8 60:15
-        ArgumentList 60:20 60:42
-         Call 60:20 60:42
-          NewClass 60:20 60:29
-           ClassType Example 60:20 60:27
-          MethodName getCounter 60:30 60:40
-          ArgumentList 60:41 60:41
-    MainDeclaration 63:36 65:4
-     MainParameterList 63:36 63:39
-      Identifier lol 63:36 63:39
-     MethodBody 65:3 63:42
+      PlainStatement 53:5 53:18
+       Assignment 53:5 53:17
+        Bracket 53:5 53:13
+         Identifier b 53:5 53:6
+         MUL 53:7 53:12
+          Integer 2 53:7 53:8
+          Integer 2 53:11 53:12
+        Integer 3 53:16 53:17
+      PlainStatement 54:5 54:14
+       Assignment 54:5 54:13
+        Identifier c 54:5 54:6
+        True 54:9 54:13
+      PlainStatement 55:5 55:20
+       Assignment 55:5 55:19
+        Identifier d 55:5 55:6
+        NewClass 55:13 55:19
+         ClassType File 55:13 55:17
+     ReturnStatement 57:12 57:14
+      Integer 0 57:12 57:13
+    MainDeclaration 60:36 62:4
+     MainParameterList 60:36 60:40
+      Identifier args 60:36 60:40
+     MethodBody 61:5 61:44
+      PlainStatement 61:5 61:44
+       Call 61:5 61:43
+        Identifier io 61:5 61:7
+        MethodName println 61:8 61:15
+        ArgumentList 61:20 61:42
+         Call 61:20 61:42
+          NewClass 61:20 61:29
+           ClassType Example 61:20 61:27
+          MethodName getCounter 61:30 61:40
+          ArgumentList 61:41 61:41

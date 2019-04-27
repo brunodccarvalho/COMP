@@ -50,6 +50,7 @@ class Example {
 
     a = b.length;
     b = new int[5];
+    b[2 * 2] = 3;
     c = true;
     d = new File();
 
@@ -59,5 +60,4 @@ class Example {
   public static void main(String[] args) {
     io.println(new Example().getCounter());
   }
-
 }

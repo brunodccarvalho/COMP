@@ -22,27 +22,20 @@ import jjt.SimpleNode;
  *
  * If more Expressions are found within the initial JJT Expression (naturally) no more are created.
  */
-public class ExpressionFactory extends CompilerModule {
+public class ExpressionFactory extends BaseDAGFactory {
   /**
    * Set of DAG expressions already constructed.
    */
   private HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
 
   private FunctionLocals locals;
-  private DAGExpression factoryExpression;
 
   /**
    * @param locals The table of locals variables.
-   * @param topExpressionNode An expression node found in the AST tree.
    */
-  public ExpressionFactory(FunctionLocals locals, SimpleNode expressionNode) {
-    assert locals != null && expressionNode != null;
+  public ExpressionFactory(FunctionLocals locals) {
+    assert locals != null;
     this.locals = locals;
-    this.factoryExpression = this.build(expressionNode);
-  }
-
-  public DAGExpression get() {
-    return factoryExpression;
   }
 
   /**
@@ -53,7 +46,8 @@ public class ExpressionFactory extends CompilerModule {
    * @param node The AST's SimpleNode object.
    * @return The DAGExpression node.
    */
-  DAGExpression build(SimpleNode node) {
+  @Override
+  public DAGExpression build(SimpleNode node) {
     // ... common pre-build
 
     // Forward the build to the appropriate build function.
