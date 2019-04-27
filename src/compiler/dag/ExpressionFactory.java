@@ -29,20 +29,14 @@ public class ExpressionFactory extends CompilerModule {
   private HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
 
   private FunctionLocals locals;
-  private DAGExpression factoryExpression;
 
   /**
    * @param locals The table of locals variables.
    * @param topExpressionNode An expression node found in the AST tree.
    */
-  public ExpressionFactory(FunctionLocals locals, SimpleNode expressionNode) {
+  public ExpressionFactory(FunctionLocals locals) {
     assert locals != null && expressionNode != null;
     this.locals = locals;
-    this.factoryExpression = this.build(expressionNode);
-  }
-
-  public DAGExpression get() {
-    return factoryExpression;
   }
 
   /**
@@ -53,7 +47,7 @@ public class ExpressionFactory extends CompilerModule {
    * @param node The AST's SimpleNode object.
    * @return The DAGExpression node.
    */
-  DAGExpression build(SimpleNode node) {
+  public DAGExpression build(SimpleNode node) {
     // ... common pre-build
 
     // Forward the build to the appropriate build function.
