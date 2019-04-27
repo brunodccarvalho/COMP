@@ -409,7 +409,7 @@ public class ExpressionFactory extends CompilerModule {
       status(MAJOR_ERRORS);
     }
 
-    return new DAGStaticCall(classDescriptor, methodName, signature);
+    return new DAGStaticCall(classDescriptor, methodName, signature, arguments);
   }
 
   /**
@@ -465,6 +465,6 @@ public class ExpressionFactory extends CompilerModule {
       }
     }
 
-    return new DAGMethodCall(object, methodName, signature);
+    return new DAGMethodCall(object, methodName, signature, arguments);
   }
 }

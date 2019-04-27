@@ -3,7 +3,6 @@ package compiler.dag;
 import static jjt.jmmTreeConstants.*;
 
 import compiler.symbols.PrimitiveDescriptor;
-import compiler.symbols.TypeDescriptor;
 import jjt.SimpleNode;
 
 public enum BinaryOperator {

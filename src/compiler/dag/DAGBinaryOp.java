@@ -2,6 +2,8 @@ package compiler.dag;
 
 import static compiler.dag.BinaryOperator.*;
 
+import java.util.Objects;
+
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGBinaryOp extends DAGExpression {
@@ -42,5 +44,33 @@ public class DAGBinaryOp extends DAGExpression {
   @Override
   public PrimitiveDescriptor getType() {
     return op.getExpressionType();
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return lhs + " " + op + " " + rhs;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(lhs, op, rhs);
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (!(obj instanceof DAGBinaryOp)) return false;
+    DAGBinaryOp other = (DAGBinaryOp) obj;
+    return Objects.equals(lhs, other.lhs) && op == other.op && Objects.equals(rhs, other.rhs);
   }
 }
