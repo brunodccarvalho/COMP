@@ -9,7 +9,7 @@ public class NodeFactory extends BaseDAGFactory {
   private FunctionLocals locals;
 
   public NodeFactory(FunctionLocals locals) {
-    this.locals = locals;
+    super(locals);
   }
 
   @Override

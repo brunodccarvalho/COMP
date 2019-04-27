@@ -8,6 +8,7 @@ public class DAGNot extends DAGExpression {
   protected DAGExpression expression;
 
   DAGNot(DAGExpression expression) {
+    assert expression != null;
     this.expression = expression;
   }
 

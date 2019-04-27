@@ -8,6 +8,7 @@ public class DAGLength extends DAGExpression {
   protected DAGExpression expression;
 
   DAGLength(DAGExpression expression) {
+    assert expression != null;
     this.expression = expression;
   }
 

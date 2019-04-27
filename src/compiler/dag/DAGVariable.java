@@ -9,6 +9,7 @@ public class DAGVariable extends DAGExpression {
   private VariableDescriptor var;
 
   DAGVariable(VariableDescriptor var) {
+    assert var != null;
     this.var = var;
   }
 
