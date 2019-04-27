@@ -6,8 +6,10 @@ import static jjt.jmmTreeConstants.JJTPROGRAM;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.HashMap;
 
 import compiler.symbols.JMMClassDescriptor;
+import compiler.symbols.MethodDescriptor;
 import compiler.DiagnosticsHandler;
 import jjt.ParseException;
 import jjt.SimpleNode;
@@ -21,6 +23,7 @@ import jjt.jmm;
 public final class ClassCompiler extends CompilerModule {
   SimpleNode classNode;
   JMMClassDescriptor jmmClass;
+  HashMap<MethodDescriptor, MethodBody> methodBodies;  // TODO
 
   public ClassCompiler(File sourcefile) {
     try {
@@ -55,5 +58,12 @@ public final class ClassCompiler extends CompilerModule {
     this.jmmClass = symbolsTable.jmmClass;
 
     symbolsTable.dump();
+  }
+  /**
+   * Returns the class descriptor
+   * @return The class descriptor
+   */
+  public JMMClassDescriptor getJMMClassDescriptor() {
+    return this.jmmClass;
   }
 }

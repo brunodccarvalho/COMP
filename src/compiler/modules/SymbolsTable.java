@@ -17,10 +17,12 @@ import static jjt.jmmTreeConstants.JJTPARAMETER;
 import static jjt.jmmTreeConstants.JJTPARAMETERLIST;
 import static jjt.jmmTreeConstants.JJTRETURNSTATEMENT;
 import static jjt.jmmTreeConstants.JJTVARIABLEDECLARATION;
+import static jjt.jmmTreeConstants.*;
 
 import java.util.HashMap;
 
 import compiler.FunctionSignature;
+import compiler.dag.DAGExpression;
 import compiler.DiagnosticsHandler;
 import compiler.symbols.FunctionDescriptor;
 import compiler.symbols.FunctionLocals;
@@ -258,7 +260,8 @@ class SymbolsTable extends CompilerModule {
 
     FunctionLocals locals = new FunctionLocals(method);
 
-    for (int i = 0; i < methodBodyNode.jjtGetNumChildren(); ++i) {
+    int i;
+    for (i = 0; i < methodBodyNode.jjtGetNumChildren(); ++i) {
       SimpleNode varDeclaration = methodBodyNode.jjtGetChild(i);
 
       // Break when a child which is not a variable declaration is found.
@@ -289,6 +292,32 @@ class SymbolsTable extends CompilerModule {
 
       LocalDescriptor local = new LocalDescriptor(type, name, locals);
     }
+
+    for (;i < methodBodyNode.jjtGetNumChildren(); ++i) {
+
+      SimpleNode statement = methodBodyNode.jjtGetChild(i);
+      System.out.println("is statement");
+      if (statement.is(JJTASSIGNMENT)) {
+        System.out.println("is assignment");
+
+        SimpleNode leftNode = statement.jjtGetChild(0);
+        SimpleNode rightNode = statement.jjtGetChild(1);
+
+        if(leftNode.is(JJTIDENTIFIER) && rightNode.is(JJTIDENTIFIER)) {
+          TypeDescriptor leftType = getOrCreateTypeFromNode(leftNode);
+          TypeDescriptor rightType = getOrCreateTypeFromNode(rightNode);
+
+          if(leftType != rightType) {
+            System.err.println("Error: incompatible types");
+            DiagnosticsHandler.self.errorLine(leftNode.jjtGetFirstToken());
+            status(MINOR_ERRORS);
+            continue;
+          }
+        }
+
+      }
+    }
+
 
     methodLocalsMap.put(method, locals);
   }
