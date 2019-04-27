@@ -1,6 +1,5 @@
 class Example {
   int counter;
-  boolean counter;
   int[] array;
   boolean inited;
   File file;
@@ -20,11 +19,10 @@ class Example {
   }
 
   public File getFile(File f) {
-    return file;
-  }
-
-  public int getFile(File f) {
-    return file;
+    int i;
+    boolean j;
+    i = j;
+    return f;
   }
 
   public Example setCounter(int newcounter) {
@@ -62,7 +60,4 @@ class Example {
     io.println(new Example().getCounter());
   }
 
-  public static void main(String[] lol) {
-
-  }
 }
