@@ -27,6 +27,7 @@ public class AssignmentFactory extends CompilerModule {
     }
 
     private DAGAssignment buildAssignment(SimpleNode assignmentNode){
+        
         DAGVariable var = this.buildVariable(assignmentNode.jjtGetChild(0));
         DAGExpression expression = this.factory.build(assignmentNode.jjtGetChild(2));
         return new DAGAssignment(var,expression);
