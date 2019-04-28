@@ -5,7 +5,7 @@ import java.util.Objects;
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGBooleanConstant extends DAGExpression {
-  protected boolean constant;
+  protected final boolean constant;
 
   DAGBooleanConstant(boolean constant) {
     this.constant = constant;

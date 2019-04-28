@@ -13,8 +13,7 @@ import jjt.SimpleNode;
  * Two assignments are always different.
  */
 public class AssignmentFactory extends BaseDAGFactory {
-  FunctionLocals locals;
-  ExpressionFactory factory;
+  protected final ExpressionFactory factory;
 
   public AssignmentFactory(FunctionLocals locals) {
     super(locals);
@@ -77,9 +76,5 @@ public class AssignmentFactory extends BaseDAGFactory {
     }
 
     return new DAGVariable(var);
-  }
-
-  private boolean compatibleTypes(DAGVariable var, DAGExpression expression) {
-    return expression.getType().equals(var.getType());
   }
 }

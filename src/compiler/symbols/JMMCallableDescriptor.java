@@ -5,7 +5,7 @@ import java.util.HashSet;
 import compiler.FunctionSignature;
 
 public abstract class JMMCallableDescriptor extends CallableDescriptor implements JMMFunction {
-  protected ParameterDescriptor[] parameters;
+  protected final ParameterDescriptor[] parameters;
 
   /**
    * Ensures there are no two parameters with the same name and no null

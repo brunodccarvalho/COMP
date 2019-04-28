@@ -13,7 +13,7 @@ public enum BinaryOperator {
   LT("<"),
   AND("&&");
 
-  private String str;
+  private final String str;
 
   BinaryOperator(String s) {
     this.str = s;

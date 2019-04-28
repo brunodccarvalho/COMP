@@ -16,6 +16,14 @@ public class ThisDescriptor extends VariableDescriptor {
   }
 
   /**
+   * @return The this's class.
+   */
+  @Override
+  public ClassDescriptor getType() {
+    return (ClassDescriptor) super.getType();
+  }
+
+  /**
    * @return The this's table.
    */
   public FunctionLocals getTable() {

@@ -5,7 +5,7 @@ import java.util.Objects;
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGNewIntArray extends DAGNew {
-  protected DAGExpression indexExpression;
+  protected final DAGExpression indexExpression;
 
   DAGNewIntArray(DAGExpression indexExpression) {
     assert indexExpression != null;
@@ -35,17 +35,5 @@ public class DAGNewIntArray extends DAGNew {
   @Override
   public int hashCode() {
     return Objects.hash(indexExpression);
-  }
-
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (!(obj instanceof DAGNewIntArray)) return false;
-    DAGNewIntArray other = (DAGNewIntArray) obj;
-    return Objects.equals(indexExpression, other.indexExpression);
   }
 }

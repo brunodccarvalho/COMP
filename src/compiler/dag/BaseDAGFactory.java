@@ -5,7 +5,7 @@ import compiler.symbols.FunctionLocals;
 import jjt.SimpleNode;
 
 public abstract class BaseDAGFactory extends CompilerModule {
-  protected FunctionLocals locals;
+  protected final FunctionLocals locals;
 
   protected BaseDAGFactory(FunctionLocals locals) {
     assert locals != null;

@@ -1,8 +1,12 @@
 package compiler.dag;
 
+import java.util.Objects;
+
+import compiler.symbols.TypeDescriptor;
+
 public class DAGAssignment extends DAGNode {
-  private DAGVariable assignVariable;
-  private DAGExpression assignedExpression;
+  protected final DAGVariable assignVariable;
+  protected final DAGExpression assignedExpression;
 
   public DAGAssignment(DAGVariable assignVariable, DAGExpression assignedExpression) {
     this.assignVariable = assignVariable;
@@ -15,5 +19,39 @@ public class DAGAssignment extends DAGNode {
 
   public DAGExpression getExpression() {
     return this.assignedExpression;
+  }
+
+  public TypeDescriptor getType() {
+    assert assignVariable.getType() == assignedExpression.getType();
+    return assignVariable.getType();
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return assignVariable + " = " + assignedExpression;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(assignVariable, assignedExpression);
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (obj == null) return false;
+    if (!(obj instanceof DAGAssignment)) return false;
+    DAGAssignment other = (DAGAssignment) obj;
+    return Objects.equals(assignVariable, other.assignVariable)
+        && Objects.equals(assignedExpression, other.assignedExpression);
   }
 }

@@ -25,6 +25,7 @@ public class NodeFactory extends BaseDAGFactory {
     case JJTIFELSESTATEMENT:
     case JJTBLOCKSTATEMENT:
     case JJTWHILESTATEMENT:
+      // Control flow not implemented yet.
       assert false;
       return null;
     default:

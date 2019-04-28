@@ -8,7 +8,6 @@ import java.util.HashMap;
 import compiler.FunctionSignature;
 import compiler.symbols.ClassDescriptor;
 import compiler.symbols.FunctionLocals;
-import compiler.symbols.LocalDescriptor;
 import compiler.symbols.ThisDescriptor;
 import compiler.symbols.TypeDescriptor;
 import compiler.symbols.VariableDescriptor;

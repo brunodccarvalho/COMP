@@ -13,7 +13,7 @@ public class PrimitiveDescriptor extends TypeDescriptor {
     INTARRAY("int[]"),
     BOOLEAN("boolean");
 
-    private String str;
+    private final String str;
 
     Type(String s) {
       this.str = s;

@@ -7,7 +7,7 @@ import java.util.Objects;
  */
 public class JMMMainDescriptor
     extends BaseFunctionDescriptor implements JMMFunction, StaticFunction {
-  private final String paramName;
+  protected final String paramName;
 
   /**
    * Creates a new main static method descriptor for a JMM class.

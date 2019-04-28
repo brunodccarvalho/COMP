@@ -8,10 +8,10 @@ import compiler.symbols.ClassDescriptor;
 import compiler.symbols.TypeDescriptor;
 
 public abstract class DAGCall extends DAGExpression {
-  protected String methodName;
-  protected FunctionSignature signature;
-  protected TypeDescriptor returnType;
-  protected DAGExpression[] arguments;
+  protected final String methodName;
+  protected final FunctionSignature signature;
+  protected final TypeDescriptor returnType;
+  protected final DAGExpression[] arguments;
 
   DAGCall(String methodName, FunctionSignature signature, DAGExpression[] arguments) {
     assert methodName != null && signature != null && arguments != null;
@@ -114,12 +114,6 @@ public abstract class DAGCall extends DAGExpression {
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (!(obj instanceof DAGCall)) return false;
-    DAGCall other = (DAGCall) obj;
-    return Arrays.equals(arguments, other.arguments) && Objects.equals(methodName, other.methodName)
-        && Objects.equals(returnType, other.returnType)
-        && Objects.equals(signature, other.signature);
+    return obj instanceof DAGCall && this == obj;
   }
 }
