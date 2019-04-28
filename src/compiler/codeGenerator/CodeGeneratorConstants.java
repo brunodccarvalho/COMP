@@ -1,10 +1,20 @@
 package compiler.codeGenerator;
 
+import java.util.HashMap;
+
 public final class CodeGeneratorConstants {
 
     public static String DEFAULTSUPER = "java/lang/Object";
-    public static String DEFAULTINITIALIZER = ".method public <init>()V\naload_0\ninvokenonvirtual java/lang/Object/<init>()V\nreturn\n.end method";
+    public static String DEFAULTINITIALIZER = ".method public <init>()V\n\taload_0\n\tinvokenonvirtual java/lang/Object/<init>()V\n\treturn\n.end method";
     public static String INITIALIZERNAME = "<init>";
+    public static HashMap<String, String> types;
+    static {
+        types = new HashMap<>();
+        types.put("int", "I");
+        types.put("boolean", "Z");
+        types.put("int[]", "[I");
+    }
+
     /**
      * 1: name of the class
      */
@@ -13,6 +23,8 @@ public final class CodeGeneratorConstants {
      * 1: name of the super class
      */
     public static String SUPERNAME = ".super ?";
+
+    public static String CLASSTYPE = "L?";
     /**
      * 1: type descritor of the method's parameters
      */
@@ -23,10 +35,10 @@ public final class CodeGeneratorConstants {
      * 3: descriptor of the method
      * 4: return type
      */
-    public static String METHODSIGNATURE = "?/?/(?)/?";
+    public static String METHODSIGNATURE = "?/?(?)?";
     /**
      * 1: method signature
      * 2: method body
      */
-    public static String METHOD = ".method public ?\n?return\n.end method";
+    public static String METHOD = ".method public ?\n?\n\treturn\n.end method";
 }
