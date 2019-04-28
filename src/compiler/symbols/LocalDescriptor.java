@@ -32,7 +32,7 @@ public class LocalDescriptor extends VariableDescriptor {
   /**
    * @return The local's containing function.
    */
-  public BaseFunctionDescriptor getFunction() {
+  public JMMFunction getFunction() {
     return table.getFunction();
   }
 

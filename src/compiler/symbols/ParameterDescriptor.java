@@ -6,7 +6,7 @@ import java.util.Objects;
  * A descriptor for a function's parameter variable.
  */
 public class ParameterDescriptor extends VariableDescriptor {
-  private final FunctionDescriptor function;
+  private final JMMCallableDescriptor function;
   private final int index;
 
   /**
@@ -18,7 +18,7 @@ public class ParameterDescriptor extends VariableDescriptor {
    * @param function The parameter's parent function
    * @param index    The parameter's position in the parameter list
    */
-  ParameterDescriptor(TypeDescriptor type, String name, FunctionDescriptor function, int index) {
+  ParameterDescriptor(TypeDescriptor type, String name, JMMCallableDescriptor function, int index) {
     super(type, name);
     assert function != null && index >= 0;
     this.function = function;
@@ -28,7 +28,7 @@ public class ParameterDescriptor extends VariableDescriptor {
   /**
    * @return The parameter's parent function
    */
-  public FunctionDescriptor getFunction() {
+  public JMMCallableDescriptor getFunction() {
     return function;
   }
 

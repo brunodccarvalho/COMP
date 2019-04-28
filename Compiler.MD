@@ -168,3 +168,50 @@ Parse the function statements in depth-first order.
                 DAGStaticCall
                  > isStatic() -> true
                  > getCallClass() -> identifier class
+
+### Function Descriptor Hierarchy
+
+    a = abstract, i = interface
+    c = public class, p = package-private class
+
+    i Function
+        i JMMFunction
+        i JavaFunction
+        i MethodFunction
+        i StaticFunction
+        i Callable
+
+    p BaseFunctionDescriptor
+        c JMMMainDescriptor       i JMMFunction, StaticFunction
+        a CallableDescriptor          i Callable
+            a JavaCallableDescriptor      i JavaFunction
+                c JavaMethodDescriptor        i MethodFunction
+                c JavaStaticMethodDescriptor  i StaticFunction
+            a JMMCallableDescriptor       i JMMFunction
+                c JMMMethodDescriptor         i MethodFunction
+                c JMMStaticMethodDescriptor   i StaticFunction
+
+    FunctionLocals uses JMMFunction
+    ParameterDescriptor uses JMMCallableDescriptor
+
+### Type Descriptor Hierarchy
+
+    a = abstract, i = interface
+    c = public class, p = package-private class
+
+    a TypeDescriptor
+        a ClassDescriptor
+            c UnknownClassDescriptor
+            c JMMClassDescriptor
+        c VoidDescriptor
+        c PrimitiveDescriptor (int, int[], boolean)
+
+### Variable Descriptor Hierarchy
+
+    a = abstract, i = interface
+    c = public class, p = package-private class
+
+    a VariableDescriptor
+        c MemberDescriptor
+        c ParameterDescriptor
+        c LocalDescriptor

@@ -1,37 +1,12 @@
 package compiler.modules;
 
-import static jjt.jmmTreeConstants.JJTCLASSBODY;
-import static jjt.jmmTreeConstants.JJTCLASSDECLARATION;
-import static jjt.jmmTreeConstants.JJTCLASSHEADER;
-import static jjt.jmmTreeConstants.JJTCLASSMETHODDECLARATIONS;
-import static jjt.jmmTreeConstants.JJTCLASSTYPE;
-import static jjt.jmmTreeConstants.JJTCLASSVARDECLARATION;
-import static jjt.jmmTreeConstants.JJTCLASSVARDECLARATIONS;
-import static jjt.jmmTreeConstants.JJTIDENTIFIER;
-import static jjt.jmmTreeConstants.JJTMAINDECLARATION;
-import static jjt.jmmTreeConstants.JJTMAINPARAMETERLIST;
-import static jjt.jmmTreeConstants.JJTMETHODBODY;
-import static jjt.jmmTreeConstants.JJTMETHODDECLARATION;
-import static jjt.jmmTreeConstants.JJTMETHODNAME;
-import static jjt.jmmTreeConstants.JJTPARAMETER;
-import static jjt.jmmTreeConstants.JJTPARAMETERLIST;
-import static jjt.jmmTreeConstants.JJTRETURNSTATEMENT;
-import static jjt.jmmTreeConstants.JJTVARIABLEDECLARATION;
 import static jjt.jmmTreeConstants.*;
 
 import java.util.HashMap;
 
 import compiler.FunctionSignature;
-import compiler.dag.DAGExpression;
 import compiler.DiagnosticsHandler;
-import compiler.symbols.FunctionDescriptor;
-import compiler.symbols.FunctionLocals;
-import compiler.symbols.JMMClassDescriptor;
-import compiler.symbols.JMMMainDescriptor;
-import compiler.symbols.LocalDescriptor;
-import compiler.symbols.MemberDescriptor;
-import compiler.symbols.MethodDescriptor;
-import compiler.symbols.TypeDescriptor;
+import compiler.symbols.*;
 import jjt.SimpleNode;
 
 /**
@@ -42,8 +17,8 @@ import jjt.SimpleNode;
 class SymbolsTable extends CompilerModule {
   private final SimpleNode classNode;
   JMMClassDescriptor jmmClass;
-  HashMap<MethodDescriptor, SimpleNode> methodNodesMap;
-  HashMap<MethodDescriptor, FunctionLocals> methodLocalsMap;
+  HashMap<JMMMethodDescriptor, SimpleNode> methodNodesMap;
+  HashMap<JMMMethodDescriptor, FunctionLocals> methodLocalsMap;
   SimpleNode mainNode;
   FunctionLocals mainLocals;
 
@@ -207,15 +182,15 @@ class SymbolsTable extends CompilerModule {
     }
 
     // Error: Repeated parameter names -- Two parameters have the same name.
-    if (!FunctionDescriptor.validateParameterNames(paramNames)) {
+    if (!JMMCallableDescriptor.validateParameterNames(paramNames)) {
       System.err.println("Error: method " + name + signature + " has conflicting parameter names");
       DiagnosticsHandler.self.errorLine(methodNameNode.jjtGetFirstToken());
       status(MINOR_ERRORS);
       return;
     }
 
-    MethodDescriptor method = new MethodDescriptor(jmmClass, name, returnType, signature,
-                                                   paramNames);
+    JMMMethodDescriptor method = new JMMMethodDescriptor(name, jmmClass, returnType, signature,
+                                                         paramNames);
     this.methodNodesMap.put(method, methodNode);
   }
 
@@ -246,12 +221,12 @@ class SymbolsTable extends CompilerModule {
   }
 
   private void readMethodLocals() {
-    for (MethodDescriptor method : methodNodesMap.keySet()) {
+    for (JMMMethodDescriptor method : methodNodesMap.keySet()) {
       readOneMethodLocals(method);
     }
   }
 
-  private void readOneMethodLocals(MethodDescriptor method) {
+  private void readOneMethodLocals(JMMMethodDescriptor method) {
     SimpleNode methodNode = methodNodesMap.get(method);
     assert method != null && methodNode != null && methodNode.is(JJTMETHODDECLARATION);
 
@@ -293,8 +268,7 @@ class SymbolsTable extends CompilerModule {
       LocalDescriptor local = new LocalDescriptor(type, name, locals);
     }
 
-    for (;i < methodBodyNode.jjtGetNumChildren(); ++i) {
-
+    for (; i < methodBodyNode.jjtGetNumChildren(); ++i) {
       SimpleNode statement = methodBodyNode.jjtGetChild(i);
       System.out.println("is statement");
       if (statement.is(JJTASSIGNMENT)) {
@@ -303,21 +277,19 @@ class SymbolsTable extends CompilerModule {
         SimpleNode leftNode = statement.jjtGetChild(0);
         SimpleNode rightNode = statement.jjtGetChild(1);
 
-        if(leftNode.is(JJTIDENTIFIER) && rightNode.is(JJTIDENTIFIER)) {
+        if (leftNode.is(JJTIDENTIFIER) && rightNode.is(JJTIDENTIFIER)) {
           TypeDescriptor leftType = getOrCreateTypeFromNode(leftNode);
           TypeDescriptor rightType = getOrCreateTypeFromNode(rightNode);
 
-          if(leftType != rightType) {
+          if (leftType != rightType) {
             System.err.println("Error: incompatible types");
             DiagnosticsHandler.self.errorLine(leftNode.jjtGetFirstToken());
             status(MINOR_ERRORS);
             continue;
           }
         }
-
       }
     }
-
 
     methodLocalsMap.put(method, locals);
   }
@@ -325,7 +297,7 @@ class SymbolsTable extends CompilerModule {
   @Override
   public String toString() {
     MemberDescriptor[] members = jmmClass.getMembersList();
-    MethodDescriptor[] methods = jmmClass.getMethodsList();
+    JMMMethodDescriptor[] methods = jmmClass.getMethodsList();
 
     StringBuilder string = new StringBuilder();
 
@@ -337,7 +309,7 @@ class SymbolsTable extends CompilerModule {
 
     // Member methods
     string.append("\n>>> Member Methods:\n");
-    for (MethodDescriptor method : methods) string.append(method).append('\n');
+    for (JMMMethodDescriptor method : methods) string.append(method).append('\n');
 
     // Main
     if (jmmClass.hasMain()) string.append('\n').append(jmmClass.getMain()).append('\n');

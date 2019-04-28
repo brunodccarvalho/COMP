@@ -10,7 +10,7 @@ import java.util.Objects;
  * members...). The class is dynamic; new variables can be added.
  */
 public class FunctionLocals extends Descriptor {
-  private final BaseFunctionDescriptor function;
+  private final JMMFunction function;
   private final HashMap<String, LocalDescriptor> variables;
 
   /**
@@ -18,7 +18,7 @@ public class FunctionLocals extends Descriptor {
    *
    * @param function The encapsulating function.
    */
-  public FunctionLocals(BaseFunctionDescriptor function) {
+  public FunctionLocals(JMMFunction function) {
     assert function != null;
     this.function = function;
     this.variables = new HashMap<>();
@@ -62,9 +62,9 @@ public class FunctionLocals extends Descriptor {
   }
 
   /**
-   * @return the encapsulation function.
+   * @return the encapsulating function.
    */
-  public BaseFunctionDescriptor getFunction() {
+  public JMMFunction getFunction() {
     return function;
   }
 

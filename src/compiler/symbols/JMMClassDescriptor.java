@@ -20,7 +20,7 @@ import compiler.FunctionSignature;
 public class JMMClassDescriptor extends ClassDescriptor {
   private final ClassDescriptor superClass;
   private final HashMap<String, MemberDescriptor> members;
-  private final HashMap<String, HashMap<FunctionSignature, MethodDescriptor>> methods;
+  private final HashMap<String, HashMap<FunctionSignature, JMMMethodDescriptor>> methods;
   private JMMMainDescriptor main;
 
   /**
@@ -57,7 +57,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
 
   @Override
   public boolean hasMethod(String name, FunctionSignature signature) {
-    HashMap<FunctionSignature, MethodDescriptor> map = methods.get(name);
+    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
     if (map == null) return false;
     if (signature.isComplete())
       return map.containsKey(signature);
@@ -69,13 +69,13 @@ public class JMMClassDescriptor extends ClassDescriptor {
 
   @Override
   public boolean hasReturning(String name, FunctionSignature signature, TypeDescriptor returnType) {
-    HashMap<FunctionSignature, MethodDescriptor> map = methods.get(name);
+    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
     if (map == null) return false;
     if (signature.isComplete())
       return map.containsKey(signature);
     else
-      for (MethodDescriptor candidate : map.values())
-        if (candidate.matches(signature, returnType)) return true;
+      for (JMMMethodDescriptor candidate : map.values())
+        if (candidate.returning(signature, returnType)) return true;
     return false;
   }
 
@@ -100,8 +100,8 @@ public class JMMClassDescriptor extends ClassDescriptor {
    * @param signature The signature of the method (its parameter types)
    * @return The method descriptor, if it exists.
    */
-  public MethodDescriptor getMethod(String name, FunctionSignature signature) {
-    HashMap<FunctionSignature, MethodDescriptor> map = methods.get(name);
+  public JMMMethodDescriptor getMethod(String name, FunctionSignature signature) {
+    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
     if (map == null)
       return null;
     else {
@@ -115,10 +115,10 @@ public class JMMClassDescriptor extends ClassDescriptor {
    *
    * @param method The new member method
    */
-  void addMethod(MethodDescriptor method) {
+  void addMethod(JMMMethodDescriptor method) {
     assert method.getSignature().isComplete();
 
-    HashMap<FunctionSignature, MethodDescriptor> map;
+    HashMap<FunctionSignature, JMMMethodDescriptor> map;
     map = methods.computeIfAbsent(method.getName(), n -> new HashMap<>());
 
     assert !map.containsKey(method.getSignature());
@@ -204,11 +204,11 @@ public class JMMClassDescriptor extends ClassDescriptor {
   /**
    * Convenience methods to list all methods.
    */
-  public MethodDescriptor[] getMethodsList() {
-    HashSet<MethodDescriptor> methodsSet = new HashSet<>();
-    for (HashMap<FunctionSignature, MethodDescriptor> map : methods.values()) {
+  public JMMMethodDescriptor[] getMethodsList() {
+    HashSet<JMMMethodDescriptor> methodsSet = new HashSet<>();
+    for (HashMap<FunctionSignature, JMMMethodDescriptor> map : methods.values()) {
       methodsSet.addAll(map.values());
     }
-    return methodsSet.toArray(new MethodDescriptor[methodsSet.size()]);
+    return methodsSet.toArray(new JMMMethodDescriptor[methodsSet.size()]);
   }
 }

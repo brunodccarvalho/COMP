@@ -24,6 +24,10 @@ public class FunctionSignature {
     this.parameterTypes = params == null ? new TypeDescriptor[0] : params;
   }
 
+  public boolean hasParameter(int index) {
+    return parameterTypes.length > index;
+  }
+
   public boolean hasParameters() {
     return parameterTypes.length > 0;
   }

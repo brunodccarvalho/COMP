@@ -5,8 +5,8 @@ import java.util.Objects;
 /**
  * A descriptor for a JMM class's main method.
  */
-public class JMMMainDescriptor extends BaseFunctionDescriptor {
-  private final JMMClassDescriptor parent;
+public class JMMMainDescriptor
+    extends BaseFunctionDescriptor implements JMMFunction, StaticFunction {
   private final String paramName;
 
   /**
@@ -18,9 +18,8 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
    * @param paramName The name of the String[] parameter
    */
   public JMMMainDescriptor(JMMClassDescriptor parent, String paramName) {
-    super("main");
-    assert parent != null && paramName != null && !parent.hasMain();
-    this.parent = parent;
+    super("main", parent);
+    assert paramName != null && !parent.hasMain();
     this.paramName = paramName;
     parent.setMain(this);
   }
@@ -33,18 +32,8 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
   }
 
   @Override
-  public boolean hasParameter(String name) {
-    return false;
-  }
-
-  @Override
-  public boolean hasParameters() {
-    return false;
-  }
-
-  @Override
-  public int getNumParameters() {
-    return 1;
+  public JMMClassDescriptor getParentClass() {
+    return (JMMClassDescriptor) classDescriptor;
   }
 
   @Override
@@ -53,13 +42,43 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
   }
 
   @Override
-  public JMMClassDescriptor getParentClass() {
-    return parent;
+  public boolean isJMM() {
+    return true;
+  }
+
+  @Override
+  public boolean hasParameters() {
+    return true;
+  }
+
+  @Override
+  public int getNumParameters() {
+    return 1;
+  }
+
+  @Override
+  public VoidDescriptor getReturnType() {
+    return TypeDescriptor.voidDescriptor;
+  }
+
+  @Override
+  public boolean hasParameter(String name) {
+    return false;
+  }
+
+  @Override
+  public ParameterDescriptor getParameter(String name) {
+    return null;
+  }
+
+  @Override
+  public TypeDescriptor getParameterType(String name) {
+    return null;
   }
 
   @Override
   public VariableDescriptor resolve(String name) {
-    return parent.resolveStatic(name);
+    return getParentClass().resolveStatic(name);
   }
 
   @Override
@@ -72,10 +91,7 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
    */
   @Override
   public int hashCode() {
-    final int prime = 31;
-    int result = super.hashCode();
-    result = prime * result + Objects.hash(paramName, parent);
-    return result;
+    return Objects.hash(paramName);
   }
 
   /* (non-Javadoc)
@@ -84,9 +100,9 @@ public class JMMMainDescriptor extends BaseFunctionDescriptor {
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
-    if (!super.equals(obj)) return false;
+    if (obj == null) return false;
     if (!(obj instanceof JMMMainDescriptor)) return false;
     JMMMainDescriptor other = (JMMMainDescriptor) obj;
-    return Objects.equals(paramName, other.paramName) && Objects.equals(parent, other.parent);
+    return Objects.equals(paramName, other.paramName);
   }
 }
