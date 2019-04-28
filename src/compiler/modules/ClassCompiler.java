@@ -91,7 +91,7 @@ public final class ClassCompiler extends CompilerModule {
     }
 
     // Generate Code
-    CodeGenerator.generateCode(this.jmmClass, methodBodies);
+    CodeGenerator.generateCode(this.jmmClass, methodBodies, symbolsTable);
 
     // Do main() too..
 

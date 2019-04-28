@@ -8,11 +8,27 @@ public final class CodeGeneratorConstants {
     public static String DEFAULTINITIALIZER = ".method public <init>()V\n\taload_0\n\tinvokenonvirtual java/lang/Object/<init>()V\n\treturn\n.end method";
     public static String INITIALIZERNAME = "<init>";
     public static HashMap<String, String> types;
+    public static HashMap<String, String> store;
+    public static HashMap<String, String> load;
+    public static HashMap<String, String> binaryOperators;
     static {
         types = new HashMap<>();
+        store = new HashMap<>();
+        binaryOperators = new HashMap<>();
+        load = new HashMap<>();
         types.put("int", "I");
         types.put("boolean", "Z");
         types.put("int[]", "[I");
+        store.put("int", "\tistore ?");
+        store.put("boolean", "\tistore ?");
+        binaryOperators.put("+", "\tiadd");
+        binaryOperators.put("-", "\tisub");
+        binaryOperators.put("*", "\timul");
+        binaryOperators.put("/", "\tidiv");
+        binaryOperators.put("<", "\tdcmpg");
+        binaryOperators.put("&&", "\tiand");
+        load.put("int", "\tiload ?");
+        load.put("boolean", "\tiload ?");
     }
 
     /**
@@ -41,4 +57,20 @@ public final class CodeGeneratorConstants {
      * 2: method body
      */
     public static String METHOD = ".method public ?\n?\n\treturn\n.end method";
+    /**
+     * 1: index of the variable
+     */
+    public static String STOREADDRESS = "\tastore ?";
+    /**
+     * 1: index of the variable
+     */
+    public static String LOADADDRESS = "\taload ?";
+    /**
+     * 1: number to push to the stack - should be one of: 0,1,2,3,4,5 or m1 (-1)
+     */
+    public static String PUSHCONST = "\ticonst_?";
+    /**
+     * 1: number to push to the stack
+     */
+    public static String PUSHINT = "\tbipush ?";
 }

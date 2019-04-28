@@ -14,7 +14,7 @@ import jjt.SimpleNode;
  * members, member methods, their signatures), constructs a map of methods to
  * SimpleNodes, and populates the local symbol tables for each of the methods.
  */
-class SymbolsTable extends CompilerModule {
+public class SymbolsTable extends CompilerModule {
   private final SimpleNode classNode;
   JMMClassDescriptor jmmClass;
   final HashMap<JMMMethodDescriptor, SimpleNode> methodNodesMap = new HashMap<>();
@@ -320,5 +320,9 @@ class SymbolsTable extends CompilerModule {
 
   void dump() {
     System.out.print(toString());
+  }
+
+  public FunctionLocals getFunctionLocals(JMMMethodDescriptor methodDescriptor) {
+    return this.methodLocalsMap.get(methodDescriptor);
   }
 }

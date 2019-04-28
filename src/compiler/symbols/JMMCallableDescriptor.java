@@ -65,6 +65,11 @@ public abstract class JMMCallableDescriptor extends CallableDescriptor implement
   }
 
   @Override
+  public ParameterDescriptor[] getParameters() {
+    return this.parameters;
+  }
+
+  @Override
   public TypeDescriptor getParameterType(String name) {
     for (ParameterDescriptor param : parameters)
       if (param.getName().equals(name)) return param.getType();
