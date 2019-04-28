@@ -4,6 +4,7 @@ import compiler.codeGenerator.Config;
 import compiler.dag.BinaryOperator;
 import compiler.dag.DAGAssignment;
 import compiler.dag.DAGBinaryOp;
+import compiler.dag.DAGCall;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
 import compiler.dag.DAGNode;
@@ -160,7 +161,11 @@ public class CodeGenerator {
      */
     private String generateStore(DAGVariable variable) {
         VariableDescriptor variableDescriptor = variable.getVariable();
-        int variableIndex = this.variablesIndexes.get(variableDescriptor);
+        System.out.println("--------> " + variable.getVariable().getName());
+        Integer variableIndex = this.variablesIndexes.get(variableDescriptor);
+        if(variableIndex == null) { // class field
+            return "";
+        }
         String variableType = variableDescriptor.getType().toString();
         String regexStore = CodeGeneratorConstants.store.get(variableType);
         if(regexStore == null)
@@ -180,7 +185,10 @@ public class CodeGenerator {
 
     private String generateLoad(DAGVariable variable) {
         VariableDescriptor variableDescriptor = variable.getVariable();
-        int variableIndex = this.variablesIndexes.get(variableDescriptor);
+        Integer variableIndex = this.variablesIndexes.get(variableDescriptor);
+        if(variableIndex == null) { // class field
+            return "";
+        }
         String variableType = variableDescriptor.getType().toString();
         String regexLoad = CodeGeneratorConstants.load.get(variableType);
         if(regexLoad == null)
@@ -205,7 +213,11 @@ public class CodeGenerator {
             integerPushBody = subst(CodeGeneratorConstants.PUSHINT, String.valueOf(integerConstantValue));
         return integerPushBody + "\n";
     }
+    /*
+    private String generateMethodCall(DAGCall methodCall) {
 
+    }
+    */
     private String generateExpression(DAGExpression expression) {
         String expressionBody = new String();
         if(expression instanceof DAGBinaryOp) {
@@ -224,6 +236,10 @@ public class CodeGenerator {
         else if(expression instanceof DAGIntegerConstant) {
             String integerLoadBody = generateIntegerPush((DAGIntegerConstant)expression);
             expressionBody = expressionBody.concat(integerLoadBody);
+        }
+        else if(expression instanceof DAGCall) {
+            /*String callBody = generateMethodCall((DAGCall)expression);
+            expressionBody = expressionBody.concat(callBody);*/
         }
         return expressionBody;
 
