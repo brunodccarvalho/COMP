@@ -12,6 +12,7 @@ import java.util.Objects;
 public class FunctionLocals extends Descriptor {
   private final JMMFunction function;
   private final HashMap<String, LocalDescriptor> variables;
+  private final ThisDescriptor thisVariable;
 
   /**
    * Creates a new (mutable) table of function local variables.
@@ -25,14 +26,16 @@ public class FunctionLocals extends Descriptor {
 
     // Add the 'this' variable to the variables table.
     if (!function.isStatic())
-      variables.put("this", new LocalDescriptor(function.getParentClass(), "this", this));
+      thisVariable = new ThisDescriptor(this);
+    else
+      thisVariable = null;
   }
 
   /**
    * @return The 'this' variable, which will be null for static functions.
    */
-  public LocalDescriptor getThis() {
-    return variables.get("this");
+  public ThisDescriptor getThis() {
+    return thisVariable;
   }
 
   /**
@@ -57,7 +60,7 @@ public class FunctionLocals extends Descriptor {
    * @param var The new variable descriptor
    */
   void addVariable(LocalDescriptor var) {
-    assert !variables.containsKey(var.getName()) && !function.hasParameter(var.getName());
+    assert !hasVariable(var.getName()) && !function.hasParameter(var.getName());
     variables.put(var.getName(), var);
   }
 
@@ -77,6 +80,7 @@ public class FunctionLocals extends Descriptor {
    * @return The variable descriptor for the given name, or null if not found.
    */
   public VariableDescriptor resolve(String name) {
+    if (name == "this") return thisVariable;
     LocalDescriptor variable = variables.get(name);
     if (variable != null)
       return variable;

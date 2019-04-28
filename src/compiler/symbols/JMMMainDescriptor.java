@@ -91,7 +91,10 @@ public class JMMMainDescriptor
    */
   @Override
   public int hashCode() {
-    return Objects.hash(paramName);
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + Objects.hash(paramName);
+    return result;
   }
 
   /* (non-Javadoc)
@@ -100,7 +103,7 @@ public class JMMMainDescriptor
   @Override
   public boolean equals(Object obj) {
     if (this == obj) return true;
-    if (obj == null) return false;
+    if (!super.equals(obj)) return false;
     if (!(obj instanceof JMMMainDescriptor)) return false;
     JMMMainDescriptor other = (JMMMainDescriptor) obj;
     return Objects.equals(paramName, other.paramName);

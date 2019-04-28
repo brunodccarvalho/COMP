@@ -42,32 +42,7 @@ declared function return type or be convertible to it.
 
 Parse the function statements in depth-first order.
 
-## Implemented Descriptors Hierarchy
----
-
-    a = abstract, c = public class, p = package-private class
-    h = overrides hashCode() and equals()
-
-    p Descriptor
-        ah TypeDescriptor
-            c PrimitiveDescriptor
-            a ClassDescriptor
-                c JMMClassDescriptor
-                c UnknownClassDescriptor
-            c VoidDescriptor
-        ah VariableDescriptor
-            ch LocalDescriptor
-            ch ParameterDescriptor
-            ch MemberDescriptor
-        aph BaseFunctionDescriptor
-            ch FunctionDescriptor
-                c MethodDescriptor
-                c StaticMethodDescriptor
-            ch JMMMainDescriptor
-        ch FunctionLocals
-
-## Suggested DAG Hierarchy
----
+## DAG Hierarchy
 
     a = abstract, i = interface, c = public class, p = package-private class
     d = Any two instances of this node are different
@@ -180,8 +155,10 @@ Parse the function statements in depth-first order.
         i MethodFunction
         i StaticFunction
         i Callable
+        i CallableMethod   i Callable, MethodFunction
+        i CallableStatic   i Callable, StaticFunction
 
-    p BaseFunctionDescriptor
+    p BaseFunctionDescriptor  i Function
         c JMMMainDescriptor       i JMMFunction, StaticFunction
         a CallableDescriptor          i Callable
             a JavaCallableDescriptor      i JavaFunction
@@ -193,6 +170,9 @@ Parse the function statements in depth-first order.
 
     FunctionLocals uses JMMFunction
     ParameterDescriptor uses JMMCallableDescriptor
+    DAGCall uses Callable
+    DAGMethodCall uses CallableMethod
+    DAGStaticCall uses CallableStatic
 
 ### Type Descriptor Hierarchy
 
@@ -215,3 +195,11 @@ Parse the function statements in depth-first order.
         c MemberDescriptor
         c ParameterDescriptor
         c LocalDescriptor
+
+### Extra Descriptors
+
+    a = abstract, i = interface
+    c = public class, p = package-private class
+
+    ap Descriptor (base of all descriptors)
+        c FunctionLocals

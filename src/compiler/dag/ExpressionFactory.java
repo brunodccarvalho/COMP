@@ -9,6 +9,7 @@ import compiler.FunctionSignature;
 import compiler.symbols.ClassDescriptor;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.LocalDescriptor;
+import compiler.symbols.ThisDescriptor;
 import compiler.symbols.TypeDescriptor;
 import compiler.symbols.VariableDescriptor;
 
@@ -166,7 +167,7 @@ public class ExpressionFactory extends BaseDAGFactory {
   private DAGThis buildThis(SimpleNode node) {
     assert node.is(JJTTHIS);
 
-    LocalDescriptor thisVar = locals.getThis();
+    ThisDescriptor thisVar = locals.getThis();
 
     // ERROR: Cannot use this in a static context.
     if (thisVar == null) {

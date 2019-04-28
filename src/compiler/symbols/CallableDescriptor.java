@@ -1,5 +1,7 @@
 package compiler.symbols;
 
+import java.util.Objects;
+
 import compiler.FunctionSignature;
 
 public abstract class CallableDescriptor extends BaseFunctionDescriptor implements Callable {
@@ -64,5 +66,34 @@ public abstract class CallableDescriptor extends BaseFunctionDescriptor implemen
   @Override
   public boolean returning(FunctionSignature deducedSignature, TypeDescriptor deducedReturnType) {
     return returns(deducedReturnType) && matches(deducedSignature);
+  }
+
+  @Override
+  public String toString() {
+    return returnType + " " + functionName + signature;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + Objects.hash(returnType, signature);
+    return result;
+  }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#equals(java.lang.Object)
+   */
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) return true;
+    if (!super.equals(obj)) return false;
+    if (!(obj instanceof CallableDescriptor)) return false;
+    CallableDescriptor other = (CallableDescriptor) obj;
+    return Objects.equals(returnType, other.returnType)
+        && Objects.equals(signature, other.signature);
   }
 }

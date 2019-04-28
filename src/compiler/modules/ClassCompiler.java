@@ -9,7 +9,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import compiler.symbols.JMMClassDescriptor;
-import compiler.symbols.MethodDescriptor;
+import compiler.symbols.JMMMethodDescriptor;
+
 import compiler.DiagnosticsHandler;
 import jjt.ParseException;
 import jjt.SimpleNode;
@@ -23,11 +24,11 @@ import jjt.jmm;
 public final class ClassCompiler extends CompilerModule {
   SimpleNode classNode;
   JMMClassDescriptor jmmClass;
-  HashMap<MethodDescriptor, MethodBody> methodBodies;  // TODO
+  HashMap<JMMMethodDescriptor, MethodBody> methodBodies;  // TODO
 
   public ClassCompiler(File sourcefile) {
     try {
-      DiagnosticsHandler.self= new DiagnosticsHandler(sourcefile);
+      DiagnosticsHandler.self = new DiagnosticsHandler(sourcefile);
     } catch (IOException e) {
       System.err.println("File " + sourcefile.getName() + " was not found.");
       status(FATAL);

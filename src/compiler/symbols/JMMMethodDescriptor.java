@@ -6,6 +6,8 @@ public class JMMMethodDescriptor extends JMMCallableDescriptor implements Method
   public JMMMethodDescriptor(String name, JMMClassDescriptor parent, TypeDescriptor returnType,
                              FunctionSignature signature, String[] paramNames) {
     super(name, parent, returnType, signature, paramNames);
+    assert !parent.hasMethod(name, signature);
+    parent.addMethod(this);
   }
 
   @Override

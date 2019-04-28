@@ -1,9 +1,9 @@
 package compiler.dag;
 
-import compiler.symbols.LocalDescriptor;
+import compiler.symbols.ThisDescriptor;
 
 public class DAGThis extends DAGVariable {
-  DAGThis(LocalDescriptor thisVariable) {
+  DAGThis(ThisDescriptor thisVariable) {
     super(thisVariable);
   }
 }

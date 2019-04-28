@@ -7,6 +7,7 @@ public class JMMStaticMethodDescriptor extends JMMCallableDescriptor implements 
                                    TypeDescriptor returnType, FunctionSignature signature,
                                    String[] paramNames) {
     super(name, parent, returnType, signature, paramNames);
+    assert !parent.hasStaticMethod(name, signature);
   }
 
   @Override

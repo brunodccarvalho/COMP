@@ -59,7 +59,7 @@ clean: mkdir
 	@rm -rf bin/* parser/* compiled jjt
 
 test:
-	@java $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(TEST_FILE) || true
+	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(TEST_FILE) || true
 
 parser-test:
-	@java $(JAVA_DEBUG) $(JAVA_FLAGS) jjt.jmm test_files/$(TEST_FILE) || true
+	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) jjt.jmm test_files/$(TEST_FILE) || true

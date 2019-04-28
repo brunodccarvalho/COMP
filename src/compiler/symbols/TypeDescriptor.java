@@ -27,9 +27,10 @@ import java.util.Objects;
 public abstract class TypeDescriptor extends Descriptor {
   protected final String name;
 
-  public static final VoidDescriptor voidDescriptor = new VoidDescriptor();
+  public static final HashMap<String, TypeDescriptor> typesMap = new HashMap<>();
 
-  private static final HashMap<String, TypeDescriptor> typesMap = new HashMap<>();
+  // The descriptor of "void"
+  public static final VoidDescriptor voidDescriptor = new VoidDescriptor();
 
   /**
    * @param name A typename being resolved.

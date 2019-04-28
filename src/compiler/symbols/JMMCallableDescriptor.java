@@ -81,4 +81,11 @@ public abstract class JMMCallableDescriptor extends CallableDescriptor implement
     else
       return getParentClass().resolve(name);
   }
+
+  @Override
+  public String toString() {
+    String[] strings = new String[parameters.length];
+    for (int i = 0; i < parameters.length; ++i) strings[i] = parameters[i].toString();
+    return returnType + " " + functionName + "(" + String.join(", ", strings) + ")";
+  }
 }
