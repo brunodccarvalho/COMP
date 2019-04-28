@@ -19,6 +19,7 @@ public final class CodeGeneratorConstants {
         types.put("int", "I");
         types.put("boolean", "Z");
         types.put("int[]", "[I");
+        types.put("void", "V");
         store.put("int", "\tistore ?");
         store.put("boolean", "\tistore ?");
         binaryOperators.put("+", "\tiadd");
@@ -73,4 +74,8 @@ public final class CodeGeneratorConstants {
      * 1: number to push to the stack
      */
     public static String PUSHINT = "\tbipush ?";
+    /**
+     * 1: method signature
+     */
+    public static String INVOKEVIRTUAL = "\tinvokevirtual ? ";
 }

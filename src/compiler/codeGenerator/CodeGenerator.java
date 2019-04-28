@@ -1,5 +1,6 @@
 package compiler.codeGenerator;
 
+import compiler.FunctionSignature;
 import compiler.codeGenerator.Config;
 import compiler.dag.BinaryOperator;
 import compiler.dag.DAGAssignment;
@@ -11,6 +12,7 @@ import compiler.dag.DAGNode;
 import compiler.dag.DAGVariable;
 import compiler.symbols.JMMClassDescriptor;
 import compiler.symbols.JMMMethodDescriptor;
+import compiler.symbols.ClassDescriptor;
 import compiler.symbols.Descriptor;
 import compiler.symbols.LocalDescriptor;
 import compiler.symbols.ParameterDescriptor;
@@ -58,17 +60,21 @@ public class CodeGenerator {
         return (jvmType != null) ? jvmType : subst(CodeGeneratorConstants.CLASSTYPE, typeName);
     }
 
-    /**
-     * @return A JVM method descriptor, like: I;[I;Z;
-     */
-    private String getMethodDescriptor(JMMMethodDescriptor method) {
+    private String getMethodDescriptor(TypeDescriptor[] typeDescriptors) {
         String methodDescriptor = new String();
-        TypeDescriptor[] typeDescriptors = method.getParameterTypes();
         for(TypeDescriptor typeDescriptor: typeDescriptors) {
             String jvmType = subst(CodeGeneratorConstants.METHODDESCRIPTOR, getType(typeDescriptor));
             methodDescriptor = methodDescriptor.concat(jvmType);
         }
         return methodDescriptor;
+    }
+
+    /**
+     * @return A JVM method descriptor, like: I;[I;Z;
+     */
+    private String getMethodDescriptor(JMMMethodDescriptor method) {
+        TypeDescriptor[] typeDescriptors = method.getParameterTypes();
+        return this.getMethodDescriptor(typeDescriptors);
     }
 
     private CodeGenerator(JMMClassDescriptor classDescriptor, HashMap<JMMMethodDescriptor, MethodBody> methodBodies, SymbolsTable symbolsTable) {
@@ -107,6 +113,25 @@ public class CodeGenerator {
         writer.write(CodeGeneratorConstants.DEFAULTINITIALIZER + "\n\n");
     }
 
+    private String generateMethodSignature(String methodClass, String methodName, String methodDescriptor, String returnType) {
+        String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURE, methodClass, methodName, methodDescriptor, returnType);
+        return methodSignature;
+    }
+
+    private String generateMethodSignature(DAGCall methodCall) {
+        String methodClass = methodCall.getCallClass().toString();
+        String methodName = methodCall.getMethodName();
+        String methodDescriptor = this.getMethodDescriptor(methodCall.getSignature().getParameterTypes());
+        String returnType;
+        if(methodCall.getType() == null) {
+            returnType = CodeGeneratorConstants.types.get("void");
+        } else
+            returnType = getType(methodCall.getType());
+
+        String methodSignature = this.generateMethodSignature(methodClass, methodName, methodDescriptor, returnType);
+        return methodSignature;
+    }
+
     /**
      * @return The method's signature, like: <class_name>/<method_name>(<method_descriptor>)<return_type>
      */
@@ -115,8 +140,7 @@ public class CodeGenerator {
         String methodName = method.getName();
         String methodDescriptor = getMethodDescriptor(method);
         String returnType = getType(method.getReturnType());
-        String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURE, methodClass, methodName, methodDescriptor, returnType);
-        return methodSignature;
+        return this.generateMethodSignature(methodClass, methodName, methodDescriptor, returnType);
     }
 
     /**
@@ -213,11 +237,25 @@ public class CodeGenerator {
             integerPushBody = subst(CodeGeneratorConstants.PUSHINT, String.valueOf(integerConstantValue));
         return integerPushBody + "\n";
     }
-    /*
-    private String generateMethodCall(DAGCall methodCall) {
 
+    private String generateParameterPush(DAGExpression[] parameters) {
+        String parameterPush = new String();
+        for(DAGExpression parameter: parameters) {
+            String parameterExpression = this.generateExpression(parameter);
+            parameterPush = parameterPush.concat(parameterExpression);
+        }
+        return parameterPush;
     }
-    */
+    
+    private String generateMethodCall(DAGCall methodCall) {
+        String methodCallBody = new String();
+        String methodSignature = this.generateMethodSignature(methodCall) + "\n";
+        String parameterPush = this.generateParameterPush(methodCall.getArguments());
+        String invoke = this.subst(CodeGeneratorConstants.INVOKEVIRTUAL, methodSignature);
+        methodCallBody = methodCallBody.concat(parameterPush).concat(invoke);
+        return methodCallBody;
+    }
+    
     private String generateExpression(DAGExpression expression) {
         String expressionBody = new String();
         if(expression instanceof DAGBinaryOp) {
@@ -238,8 +276,8 @@ public class CodeGenerator {
             expressionBody = expressionBody.concat(integerLoadBody);
         }
         else if(expression instanceof DAGCall) {
-            /*String callBody = generateMethodCall((DAGCall)expression);
-            expressionBody = expressionBody.concat(callBody);*/
+            String callBody = generateMethodCall((DAGCall)expression);
+            expressionBody = expressionBody.concat(callBody);
         }
         return expressionBody;
 
