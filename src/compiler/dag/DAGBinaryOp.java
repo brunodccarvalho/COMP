@@ -52,7 +52,9 @@ public class DAGBinaryOp extends DAGExpression {
    */
   @Override
   public String toString() {
-    return lhs + " " + op + " " + rhs;
+    String l = lhs instanceof DAGBinaryOp ? "(" + lhs + ")" : lhs.toString();
+    String r = rhs instanceof DAGBinaryOp ? "(" + rhs + ")" : rhs.toString();
+    return l + " " + op + " " + r;
   }
 
   /* (non-Javadoc)

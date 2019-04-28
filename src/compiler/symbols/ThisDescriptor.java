@@ -19,8 +19,8 @@ public class ThisDescriptor extends VariableDescriptor {
    * @return The this's class.
    */
   @Override
-  public ClassDescriptor getType() {
-    return (ClassDescriptor) super.getType();
+  public JMMClassDescriptor getType() {
+    return (JMMClassDescriptor) super.getType();
   }
 
   /**

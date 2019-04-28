@@ -17,8 +17,8 @@ import jjt.SimpleNode;
 class SymbolsTable extends CompilerModule {
   private final SimpleNode classNode;
   JMMClassDescriptor jmmClass;
-  HashMap<JMMMethodDescriptor, SimpleNode> methodNodesMap = new HashMap<>();
-  HashMap<JMMMethodDescriptor, FunctionLocals> methodLocalsMap = new HashMap<>();
+  final HashMap<JMMMethodDescriptor, SimpleNode> methodNodesMap = new HashMap<>();
+  final HashMap<JMMMethodDescriptor, FunctionLocals> methodLocalsMap = new HashMap<>();
   SimpleNode mainNode;
   FunctionLocals mainLocals;
 
@@ -62,8 +62,6 @@ class SymbolsTable extends CompilerModule {
     assert classType.is(JJTCLASSTYPE);
 
     String className = classType.jjtGetVal();
-
-    HashMap<String, TypeDescriptor> typesMap = TypeDescriptor.typesMap;
 
     // FATAL: The name given to this class is already the name of another type.
     if (TypeDescriptor.exists(className)) {
@@ -112,7 +110,7 @@ class SymbolsTable extends CompilerModule {
     }
 
     TypeDescriptor type = getOrCreateTypeFromNode(typeNode);
-    MemberDescriptor variable = new MemberDescriptor(type, identifier, jmmClass);
+    new MemberDescriptor(type, identifier, jmmClass);
   }
 
   private void readClassMethodDeclarations() {
@@ -215,7 +213,7 @@ class SymbolsTable extends CompilerModule {
       return;
     }
 
-    JMMMainDescriptor main = new JMMMainDescriptor(jmmClass, paramName);
+    new JMMMainDescriptor(jmmClass, paramName);
     this.mainNode = mainNode;
   }
 
@@ -264,7 +262,7 @@ class SymbolsTable extends CompilerModule {
         continue;
       }
 
-      LocalDescriptor local = new LocalDescriptor(type, name, locals);
+      new LocalDescriptor(type, name, locals);
     }
 
     for (; i < methodBodyNode.jjtGetNumChildren(); ++i) {

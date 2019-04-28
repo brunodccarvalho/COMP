@@ -57,7 +57,7 @@ public abstract class DAGCall extends DAGExpression {
   /**
    * @return Number of arguments to this function call.
    */
-  public int numArguments() {
+  public int getNumArguments() {
     return arguments.length;
   }
 

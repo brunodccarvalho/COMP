@@ -2,6 +2,7 @@ package compiler.dag;
 
 import static jjt.jmmTreeConstants.*;
 import static compiler.symbols.PrimitiveDescriptor.*;
+import static compiler.symbols.TypeDescriptor.typematch;
 
 import java.util.HashMap;
 
@@ -27,8 +28,6 @@ public class ExpressionFactory extends BaseDAGFactory {
    */
   private HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
 
-  private FunctionLocals locals;
-
   /**
    * @param locals The table of locals variables.
    */
@@ -38,8 +37,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * Construct a new DAGExpression for this SimpleNode. It is possible for an equivalent
-   * DAGExpression to exist in the expressionSet; deciding whether to use the equivalent object or
-   * the newly created one is done elsewhere.
+   * DAGExpression to exist in the expression cache.
    *
    * @param node The AST's SimpleNode object.
    * @return The DAGExpression node.
@@ -51,36 +49,38 @@ public class ExpressionFactory extends BaseDAGFactory {
     // Forward the build to the appropriate build function.
     switch (node.getId()) {
     case JJTINTEGER:
-      return buildInteger(node);
+      return reuse(buildInteger(node));
     case JJTTRUE:
     case JJTFALSE:
-      return buildBoolean(node);
+      return reuse(buildBoolean(node));
     case JJTIDENTIFIER:
-      return buildVariable(node);
+      return reuse(buildVariable(node));
     case JJTTHIS:
-      return buildThis(node);
+      return reuse(buildThis(node));
     case JJTNEWINTARRAY:
-      return buildNewIntArray(node);
+      return reuse(buildNewIntArray(node));
     case JJTNEWCLASS:
-      return buildNewClass(node);
+      return reuse(buildNewClass(node));
     case JJTLENGTH:
-      return buildLength(node);
+      return reuse(buildLength(node));
     case JJTNOT:
-      return buildUnaryOp(node);
+      return reuse(buildUnaryOp(node));
     case JJTAND:
     case JJTLT:
     case JJTSUM:
     case JJTSUB:
     case JJTMUL:
     case JJTDIV:
-      return buildBinaryOp(node);
+      return reuse(buildBinaryOp(node));
     case JJTBRACKET:
-      return buildBracket(node);
+      return reuse(buildBracket(node));
     case JJTCALL:
-      return buildCall(node);
+      return reuse(buildCall(node));
     }
 
     // ... common post-build
+
+    System.err.println(node);
 
     // We should never arrive here
     assert false;
@@ -145,13 +145,11 @@ public class ExpressionFactory extends BaseDAGFactory {
     String varName = node.jjtGetVal();
     VariableDescriptor var = locals.resolve(varName);
 
-    // ERROR: $variablename cannot be resolved to a variable.
+    // ERROR: varName cannot be resolved to a variable.
     if (var == null) {
       System.err.println(varName + " cannot be resolved to a variable");
-      status(MINOR_ERRORS);
-
-      // TODO: Handle UnresolvedVariableName error continuation
-      return null;
+      status(MAJOR_ERRORS);
+      return new DAGVariable();
     }
 
     return new DAGVariable(var);
@@ -191,7 +189,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     DAGExpression expression = reuse(build(indexExpressionNode));
 
     // ERROR: Type mismatch: expected int, but found X.
-    if (intDescriptor != expression.getType()) {
+    if (!typematch(expression.getType(), intDescriptor)) {
       System.err.println("Type mismatch: expected int type, but found " + expression.getType());
       status(MINOR_ERRORS);
     }
@@ -206,7 +204,7 @@ public class ExpressionFactory extends BaseDAGFactory {
    * @return A new DAGNewClass node.
    */
   private DAGNewClass buildNewClass(SimpleNode node) {
-    assert node.is(JJTCLASSTYPE);
+    assert node.is(JJTNEWCLASS);
 
     SimpleNode classTypeNode = node.jjtGetChild(0);
     assert classTypeNode.is(JJTCLASSTYPE);
@@ -230,7 +228,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     DAGExpression expression = reuse(build(expressionNode));
 
     // ERROR: Type mismatch: expected int[], but found X.
-    if (intArrayDescriptor != expression.getType()) {
+    if (!typematch(expression.getType(), intArrayDescriptor)) {
       System.err.println("Type mismatch: expected int[] type, but found " + expression.getType());
       status(MINOR_ERRORS);
     }
@@ -251,7 +249,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     DAGExpression expression = build(expressionNode);
 
     // ERROR: Type mismatch: expected boolean, but found X.
-    if (booleanDescriptor != expression.getType()) {
+    if (!typematch(expression.getType(), booleanDescriptor)) {
       System.err.println("Type mismatch: expected boolean type, but found " + expression.getType());
       status(MINOR_ERRORS);
     }
@@ -277,14 +275,14 @@ public class ExpressionFactory extends BaseDAGFactory {
     BinaryOperator op = BinaryOperator.from(node);
 
     // ERROR: Type mismatch in the lhs.
-    if (lhs.getType() != op.getOperandType()) {
+    if (!typematch(lhs.getType(), op.getOperandType())) {
       System.err.println("Type mismatch: expected " + op.getOperandType() + " type, but found "
                          + lhs.getType());
       status(MINOR_ERRORS);
     }
 
     // ERROR: Type mismatch in the rhs.
-    if (rhs.getType() != op.getOperandType()) {
+    if (!typematch(rhs.getType(), op.getOperandType())) {
       System.err.println("Type mismatch: expected " + op.getOperandType() + " type, but found "
                          + rhs.getType());
       status(MINOR_ERRORS);
@@ -294,7 +292,7 @@ public class ExpressionFactory extends BaseDAGFactory {
   }
 
   /**
-   * @SemanticError: Type mismatch: Expected int[] array-type, but found X.
+   * @SemanticError: Type mismatch: Expected int[] type, but found X.
    * @SemanticError: Type mismatch: Expected int type for bracket index, but found X.
    *
    * @param node A JJT Bracket node representing an array access.
@@ -310,13 +308,13 @@ public class ExpressionFactory extends BaseDAGFactory {
     DAGExpression index = reuse(build(indexNode));
 
     // ERROR: Type mismatch in the array expression.
-    if (intArrayDescriptor != array.getType()) {
-      System.err.println("Type mismatch: expected int[] array-type, but found " + array.getType());
+    if (!typematch(intArrayDescriptor, array.getType())) {
+      System.err.println("Type mismatch: expected int[] type, but found " + array.getType());
       status(MINOR_ERRORS);
     }
 
     // ERROR: Type mismatch in the index expression.
-    if (intDescriptor != index.getType()) {
+    if (!typematch(intDescriptor, index.getType())) {
       System.err.println("Type mismatch: expected int type, but found " + index.getType());
       status(MINOR_ERRORS);
     }

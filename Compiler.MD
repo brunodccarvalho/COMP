@@ -42,134 +42,38 @@ declared function return type or be convertible to it.
 
 Parse the function statements in depth-first order.
 
-## DAG Hierarchy
+## Descriptors [compiler.symbols]
 
-    a = abstract, i = interface, c = public class, p = package-private class
-    d = Any two instances of this node are different
-    h = overrides hashCode() and equals()
-    [...] = expression type
+---
 
-    a DAGNode                       [~varies]
-        a DAGExpression             [~varies]
-            c DAGIntegerConstant    [int]
-            c DAGBooleanConstant    [boolean]
-            c DAGVariable           [type(variable)]
-                c DAGThis           [type(this)]
-            ad DAGNew               [~varies]
-                c DAGNewIntArray    [int[]]
-                c DAGNewClass       [type(class)]
-            c DAGLength             [int]
-            ap DAGUnaryOp           [~varies]
-                c DAGNot            [boolean]
-            c DAGBinaryOp           [+,-,*,/ -> int; <,&& -> boolean]
-            c DAGBracket            [int]
-            ad DAGCall              [return(function)]
-                cd DAGMethodCall    [return(function)]
-                cd DAGStaticCall    [return(function)]
-        cd DAGAssignment
-            cd DAGBracketAssignment
-
-        ...Multi expressions... (checkpoint 3)
-        ...Control flow... (checkpoint 3)
-
-
-### AST branches for an Expression
-
-    SimpleNode
-        Integer            [0]
-        Identifier         [0]
-        True               [0]
-        False              [0]
-        This               [0]
-        --
-        NewIntArray        [1] Expression
-        NewClass           [1] ClassType
-        Length             [1] ExpressionT
-        NOT                [1] ExpressionT
-        --
-        AND                [2] ExpressionT Expression
-        LT                 [2] ExpressionT Expression
-        SUM                [2] ExpressionT Expression
-        SUB                [2] ExpressionT Expression
-        MUL                [2] Expression Expression
-        DIV                [2] Expression Expression
-        Bracket            [2] ExpressionT Expression
-        --
-        Call               [3] ExpressionT MethodName ArgumentList
-        --
-        ArgumentList       [n] [Expression, ...]
-
-### DAG Methods
-
-    DAGNode
-        DAGExpression
-         + getType() -> TypeDescriptor
-            DAGIntegerConstant
-             + getValue() -> int
-            DAGBooleanConstant
-             + getValue() -> boolean
-            DAGVariable
-             + getVariable() -> VariableDescriptor
-                DAGThis
-                 + getVariable() -> LocalDescriptor
-            DAGNew
-                DAGNewIntArray
-                 + getIndexExpression() -> DAGExpression(int)
-                DAGNewClass
-                 + getClassDescriptor() -> ClassDescriptor
-            DAGLength
-             + getExpression() -> DAGExpression(int[])
-            DAGNot
-             + getExpression() -> DAGExpression(boolean)
-            DAGBinaryOp
-             + getOperator() -> BinaryOperator {+, -, *, /, <, &&}
-             + getLhs() -> DAGExpression(int or boolean)
-             + getRhs() -> DAGExpression(int or boolean)
-             + isArithmetic() -> boolean
-             + isComparison() -> boolean
-             + getOperandType() -> int or boolean
-            DAGBracket
-             + getArrayExpression() -> DAGExpression(int[])
-             + getIndexExpression() -> DAGExpression(int)
-            DAGCall
-             + isStatic() -> boolean
-             + getCallClass() -> ClassDescriptor
-             + getMethodName() -> String
-             + getSignature() -> FunctionSignature, possibly incomplete
-                DAGMethodCall
-                 + getObjectExpression() -> DAGExpression(classtype)
-                 > isStatic() -> false
-                 > getCallClass() -> class of expression
-                DAGStaticCall
-                 > isStatic() -> true
-                 > getCallClass() -> identifier class
-
-### Function Descriptor Hierarchy
+### Function Descriptor Hierarchy (28-04-2019)
 
     a = abstract, i = interface
     c = public class, p = package-private class
 
     i Function
-        i JMMFunction
-        i JavaFunction
-        i MethodFunction
-        i StaticFunction
-        i Callable
-        i CallableMethod   i Callable, MethodFunction
-        i CallableStatic   i Callable, StaticFunction
+        i JMMFunction       isJMM() -> true
+        i JavaFunction      isJMM() -> false
+        i MethodFunction    isStatic() -> false
+        i StaticFunction    isStatic() -> true
+        i Callable          getSignature()
 
-    p BaseFunctionDescriptor  i Function
-        c JMMMainDescriptor       i JMMFunction, StaticFunction
-        a CallableDescriptor          i Callable
-            a JavaCallableDescriptor      i JavaFunction
-                c JavaMethodDescriptor        i MethodFunction
-                c JavaStaticMethodDescriptor  i StaticFunction
-            a JMMCallableDescriptor       i JMMFunction
-                c JMMMethodDescriptor         i MethodFunction
-                c JMMStaticMethodDescriptor   i StaticFunction
+    p BaseFunctionDescriptor                  i Function
+        c JMMMainDescriptor                    i JMMFunction, StaticFunction
+        a CallableDescriptor                   i Callable
+            a JavaCallableDescriptor            i JavaFunction
+                c JavaMethodDescriptor           i MethodFunction
+                c JavaStaticMethodDescriptor     i StaticFunction
+            a JMMCallableDescriptor             i JMMFunction
+                c JMMMethodDescriptor            i MethodFunction
+                c JMMStaticMethodDescriptor      i StaticFunction
 
     FunctionLocals uses JMMFunction
     ParameterDescriptor uses JMMCallableDescriptor
+
+    Possibilities for future expansion:
+        i CallableMethod   i Callable, MethodFunction
+        i CallableStatic   i Callable, StaticFunction
     DAGCall uses Callable
     DAGMethodCall uses CallableMethod
     DAGStaticCall uses CallableStatic
@@ -195,6 +99,7 @@ Parse the function statements in depth-first order.
         c MemberDescriptor
         c ParameterDescriptor
         c LocalDescriptor
+        c ThisDescriptor
 
 ### Extra Descriptors
 
@@ -203,3 +108,119 @@ Parse the function statements in depth-first order.
 
     ap Descriptor (base of all descriptors)
         c FunctionLocals
+
+## DAG [compiler.dag]
+
+---
+
+### DAG Hierarchy
+
+    a = abstract, i = interface
+    c = public class, p = package-private class
+    d = Any two instances of this node are different
+    [...] = expression type
+
+    a DAGNode
+        a DAGExpression             [~varies]
+            c DAGIntegerConstant    [int]
+            c DAGBooleanConstant    [boolean]
+            c DAGVariable           [type(variable)]
+                c DAGThis           [type(this)]
+            ad DAGNew               [~varies]
+                c DAGNewIntArray    [int[]]
+                c DAGNewClass       [type(class)]
+            c DAGLength             [int]
+            c DAGNot                [boolean]
+            c DAGBinaryOp           [+,-,*,/ -> int; <,&& -> boolean]
+            c DAGBracket            [int]
+            ad DAGCall              [return(function)]
+                c DAGMethodCall     [return(function)]
+                c DAGStaticCall     [return(function)]
+        cd DAGAssignment
+            c DAGBracketAssignment
+
+        ...Multi expressions... (checkpoint 3)
+        ...Control flow... (checkpoint 3)
+
+### AST branches for an Expression
+
+    SimpleNode
+        Integer            [0]
+        Identifier         [0]
+        True               [0]
+        False              [0]
+        This               [0]
+        --
+        NewIntArray        [1] Expression
+        NewClass           [1] ClassType
+        Length             [1] ExpressionT
+        NOT                [1] ExpressionT
+        --
+        AND                [2] ExpressionT Expression
+        LT                 [2] ExpressionT Expression
+        SUM                [2] ExpressionT Expression
+        SUB                [2] ExpressionT Expression
+        MUL                [2] Expression  Expression
+        DIV                [2] Expression  Expression
+        Bracket            [2] ExpressionT Expression
+        --
+        Call               [3] ExpressionT MethodName ArgumentList
+        --
+        ArgumentList       [n] Expression, ...
+
+### DAG Methods
+
+    DAGNode
+        DAGExpression
+         + getType() -> TypeDescriptor
+            DAGIntegerConstant
+             + getValue() -> int
+             ! getType() -> int
+            DAGBooleanConstant
+             + getValue() -> boolean
+             ! getType() -> int
+            DAGVariable
+             + getVariable() -> VariableDescriptor
+                DAGThis
+                 + getVariable() -> ThisDescriptor
+                 ! getType() -> JMMClassDescriptor
+            DAGNew
+                DAGNewIntArray
+                 + getIndexExpression() -> DAGExpression(int)
+                 ! getType() -> int
+                DAGNewClass
+                 + getClassDescriptor() -> ClassDescriptor
+                 ! getType() -> ClassDescriptor
+            DAGLength
+             + getExpression() -> DAGExpression(int[])
+             ! getType() -> int
+            DAGNot
+             + getExpression() -> DAGExpression(boolean)
+             ! getType() -> boolean
+            DAGBinaryOp
+             + getOperator() -> BinaryOperator {+, -, *, /, <, &&}
+             + getLhs() -> DAGExpression(int or boolean)
+             + getRhs() -> DAGExpression(int or boolean)
+             + isArithmetic() -> true for +,-,*,/
+             + isComparison() -> true for <
+             + getOperandType() -> int or boolean
+             ! getType() -> int or boolean
+            DAGBracket
+             + getArrayExpression() -> DAGExpression(int[])
+             + getIndexExpression() -> DAGExpression(int)
+             ! getType() -> int
+            DAGCall
+             + isStatic() -> boolean
+             + getCallClass() -> ClassDescriptor
+             + getMethodName() -> String
+             + getSignature() -> FunctionSignature, possibly incomplete
+             + getNumArguments() -> int
+             + getArguments() -> DAGExpression[num args]
+             + getArgument(i) -> DAGExpression @ i
+                DAGMethodCall
+                 + getObjectExpression() -> DAGExpression(classtype)
+                 > isStatic() -> false
+                 > getCallClass() -> type of expression
+                DAGStaticCall
+                 > isStatic() -> true
+                 > getCallClass() -> identifier class

@@ -6,8 +6,6 @@ import compiler.symbols.FunctionLocals;
 import jjt.SimpleNode;
 
 public class NodeFactory extends BaseDAGFactory {
-  private FunctionLocals locals;
-
   public NodeFactory(FunctionLocals locals) {
     super(locals);
   }
@@ -16,9 +14,17 @@ public class NodeFactory extends BaseDAGFactory {
   public DAGNode build(SimpleNode node) {
     assert node != null;
 
+    if (!node.is(JJTPLAINSTATEMENT)) {
+      System.err.println("Not implemented yet; cannot build node " + node);
+      status(FATAL);
+      return null;
+    }
+
+    SimpleNode childNode = node.jjtGetChild(0);
+
     BaseDAGFactory factory;
 
-    switch (node.getId()) {
+    switch (childNode.getId()) {
     case JJTASSIGNMENT:
       factory = new AssignmentFactory(locals);
       break;
@@ -33,7 +39,7 @@ public class NodeFactory extends BaseDAGFactory {
       break;
     }
 
-    DAGNode result = factory.build(node);
+    DAGNode result = factory.build(childNode);
     status(factory.status());
     return result;
   }

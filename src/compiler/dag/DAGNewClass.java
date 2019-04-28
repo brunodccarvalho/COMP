@@ -26,7 +26,7 @@ public class DAGNewClass extends DAGNew {
    */
   @Override
   public String toString() {
-    return classDescriptor.toString();
+    return "new " + classDescriptor.toString() + "()";
   }
 
   /* (non-Javadoc)

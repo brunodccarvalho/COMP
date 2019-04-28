@@ -32,6 +32,7 @@ public class DAGMethodCall extends DAGCall {
 
   @Override
   public ClassDescriptor getCallClass() {
+    assert expression.getType() instanceof ClassDescriptor;
     return (ClassDescriptor) expression.getType();
   }
 

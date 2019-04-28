@@ -47,11 +47,6 @@ public class DAGAssignment extends DAGNode {
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (!(obj instanceof DAGAssignment)) return false;
-    DAGAssignment other = (DAGAssignment) obj;
-    return Objects.equals(assignVariable, other.assignVariable)
-        && Objects.equals(assignedExpression, other.assignedExpression);
+    return obj instanceof DAGAssignment && this == obj;
   }
 }

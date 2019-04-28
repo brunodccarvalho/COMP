@@ -13,13 +13,23 @@ public class DAGVariable extends DAGExpression {
     this.var = var;
   }
 
+  // Dummy variable.
+  DAGVariable() {
+    this.var = null;
+  }
+
+  public boolean isDummy() {
+    return var == null;
+  }
+
   public VariableDescriptor getVariable() {
+    assert var != null;
     return var;
   }
 
   @Override
   public TypeDescriptor getType() {
-    return var.getType();
+    return var == null ? null : var.getType();
   }
 
   /* (non-Javadoc)
@@ -27,7 +37,7 @@ public class DAGVariable extends DAGExpression {
    */
   @Override
   public String toString() {
-    return var.toString();
+    return var.getName();
   }
 
   /* (non-Javadoc)

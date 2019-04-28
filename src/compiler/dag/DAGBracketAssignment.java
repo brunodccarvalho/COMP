@@ -34,16 +34,4 @@ public class DAGBracketAssignment extends DAGAssignment {
     result = prime * result + Objects.hash(indexExpression);
     return result;
   }
-
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (!super.equals(obj)) return false;
-    if (!(obj instanceof DAGBracketAssignment)) return false;
-    DAGBracketAssignment other = (DAGBracketAssignment) obj;
-    return Objects.equals(indexExpression, other.indexExpression);
-  }
 }

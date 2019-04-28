@@ -1,6 +1,6 @@
 package compiler.dag;
 
-import compiler.symbols.ClassDescriptor;
+import compiler.symbols.JMMClassDescriptor;
 import compiler.symbols.ThisDescriptor;
 
 public class DAGThis extends DAGVariable {
@@ -13,7 +13,7 @@ public class DAGThis extends DAGVariable {
   }
 
   @Override
-  public ClassDescriptor getType() {
+  public JMMClassDescriptor getType() {
     return ((ThisDescriptor) var).getType();
   }
 }

@@ -65,6 +65,16 @@ public abstract class TypeDescriptor extends Descriptor {
   }
 
   /**
+   * @param type1 A TypeDescriptor, or null if the type is unknown.
+   * @param type2 A TypeDescriptor, or null if the type is unknown.
+   * @return true if the type 1 could be an instance of type 2. This will take inheritance in
+   *     consideration in the future.
+   */
+  public static boolean typematch(TypeDescriptor type1, TypeDescriptor type2) {
+    return type1 == null || type2 == null || type1 == type2;
+  }
+
+  /**
    * Construct a new instance of a TypeDescriptor with the given name.
    *
    * @param name The typename
