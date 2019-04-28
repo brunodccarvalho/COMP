@@ -13,6 +13,7 @@ import compiler.symbols.JMMClassDescriptor;
 import compiler.symbols.JMMMethodDescriptor;
 
 import compiler.DiagnosticsHandler;
+import compiler.codeGenerator.CodeGenerator;
 import compiler.dag.DAGNode;
 import jjt.ParseException;
 import jjt.SimpleNode;
@@ -88,6 +89,9 @@ public final class ClassCompiler extends CompilerModule {
       }
       System.out.println("   return " + body.returnExpression);
     }
+
+    // Generate Code
+    CodeGenerator.generateCode(this.jmmClass);
 
     // Do main() too..
 

@@ -133,6 +133,14 @@ public class JMMClassDescriptor extends ClassDescriptor {
   }
 
   /**
+   * @return The name of the super class
+   */
+  public String getSuperClassName() {
+    if(this.superClass == null) return null;
+    return this.superClass.getClassName();
+  }
+
+  /**
    * @return The main method of this class.
    */
   public JMMMainDescriptor getMain() {
