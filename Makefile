@@ -7,7 +7,7 @@ JJT := jjt
 COMPILER := compiler
 
 # Test file (in folder test_files)
-TEST_FILE := code_generator/CodeGeneratorTest.java
+TEST_FILE := code_generator/Dog.java
 
 # Flags
 JJTREE_DEBUG :=
