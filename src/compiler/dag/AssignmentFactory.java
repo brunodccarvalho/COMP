@@ -4,6 +4,7 @@ import static jjt.jmmTreeConstants.*;
 import static compiler.symbols.PrimitiveDescriptor.*;
 import static compiler.symbols.TypeDescriptor.typematch;
 
+import compiler.modules.DiagnosticsHandler;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.VariableDescriptor;
 import jjt.SimpleNode;
@@ -60,8 +61,7 @@ public class AssignmentFactory extends BaseDAGFactory {
 
     // Error: Type mismatch: Expected type T, but expression has type E.
     if (!typematch(var.getType(), expression.getType())) {
-      System.err.println("Type mismatch: expected type " + var.getType()
-                         + ", but expression has type " + expression.getType());
+      DiagnosticsHandler.typeMismatch(assignmentNode, var.getType(),expression.getType());
       status(MAJOR_ERRORS);
     }
 
@@ -89,15 +89,13 @@ public class AssignmentFactory extends BaseDAGFactory {
 
     // ERROR: Type mismatch in the assigned expression.
     if (!typematch(intDescriptor, assignedExpression.getType())) {
-      System.err.println("Type mismatch: expected expression of type int, but found type "
-                         + assignedExpression.getType());
+      DiagnosticsHandler.typeMismatch(assignmentNode, intDescriptor, assignedExpression.getType());
       status(MAJOR_ERRORS);
     }
 
     // ERROR: Type mismatch in the index expression.
     if (!typematch(intDescriptor, indexExpression.getType())) {
-      System.err.println("Type mismatch: expected index expression of type int, but found type "
-                         + indexExpression.getType());
+      DiagnosticsHandler.typeMismatch(indexExpressionNode, intDescriptor, assignedExpression.getType());
       status(MAJOR_ERRORS);
     }
 
@@ -118,7 +116,7 @@ public class AssignmentFactory extends BaseDAGFactory {
 
     // ERROR: varName cannot be resolved to a variable.
     if (var == null) {
-      System.err.println(varName + " cannot be resolved to a variable");
+      DiagnosticsHandler.unresolvedVarName(node, varName);
       status(MAJOR_ERRORS);
       return new DAGVariable();
     }
