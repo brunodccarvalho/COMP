@@ -56,4 +56,14 @@ public class UnknownClassDescriptor extends ClassDescriptor {
   public VariableDescriptor resolveStatic(String name) {
     return null;
   }
+
+  @Override
+  public TypeDescriptor getReturnType(String name, FunctionSignature signature) {
+    return null;
+  }
+
+  @Override
+  public TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature) {
+    return null;
+  }
 }
