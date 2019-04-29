@@ -13,6 +13,7 @@ import compiler.dag.DAGNode;
 import compiler.dag.DAGParameter;
 import compiler.dag.DAGVariable;
 import compiler.symbols.JMMClassDescriptor;
+import compiler.symbols.JMMMainDescriptor;
 import compiler.symbols.JMMMethodDescriptor;
 import compiler.symbols.Descriptor;
 import compiler.symbols.LocalDescriptor;
@@ -129,6 +130,13 @@ public class CodeGenerator {
         writer.write(CodeGeneratorConstants.DEFAULTINITIALIZER + "\n\n");
     }
 
+    private void generateMain() {
+        if(!this.classDescriptor.hasMain()) return;
+        JMMMainDescriptor main= this.classDescriptor.getMain();
+
+        //TODO
+    }
+
     private String generateMethodSignature(String methodName, String methodDescriptor, String returnType) {
         String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURE, methodName, methodDescriptor, returnType);
         return methodSignature;
@@ -219,11 +227,27 @@ public class CodeGenerator {
         return subst(regexStore, String.valueOf(variableIndex+1)) + "\n";
     }
 
+    private String generateStoreMember(DAGMember member) {
+        MemberDescriptor memberDescriptor = member.getVariable();
+        String memberName=memberDescriptor.getName();
+        String className=memberDescriptor.getParentClass().getClassName();
+        String type=memberDescriptor.getType().getName();
+        String memberType=CodeGeneratorConstants.types.get(type);
+        if(memberType==null)
+            memberType=subst(CodeGeneratorConstants.CLASSTYPE, type);
+        return subst(CodeGeneratorConstants.PUTFIELD, className,memberName,memberType) + "\n";
+    }
+
     private String generateAssignment(DAGAssignment assignment) {
         String assignmentBody = new String();
-        DAGVariable variable = assignment.getVariable();
+        DAGExpression variable = assignment.getVariable();
         DAGExpression expression = assignment.getExpression();
-        String variableStore = this.generateStore(variable);
+        String variableStore= new String();
+        System.out.println(variable.getClass() + " " +variable);
+        if(variable instanceof DAGMember)
+            variableStore = this.generateStoreMember((DAGMember)variable);
+        else 
+            variableStore = this.generateStore((DAGVariable)variable);
         String expressionBody = this.generateExpression(expression);
         assignmentBody = assignmentBody.concat(expressionBody).concat(variableStore);
         return assignmentBody;
@@ -304,7 +328,6 @@ public class CodeGenerator {
     
     private String generateExpression(DAGExpression expression) {
         String expressionBody = new String();
-        System.out.println(expression.getClass() + " " +expression);
         if(expression instanceof DAGBinaryOp) {
             DAGExpression lhs = ((DAGBinaryOp)expression).getLhs();
             DAGExpression rhs = ((DAGBinaryOp)expression).getRhs();
@@ -409,6 +432,9 @@ public class CodeGenerator {
 
         // generate constructors
         codeGenerator.generateConstructors();
+
+        // generate main
+        codeGenerator.generateMain();
 
         // generate methods
         codeGenerator.generateMethods();
