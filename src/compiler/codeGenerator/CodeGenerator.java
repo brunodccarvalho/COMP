@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * TODO: 
@@ -91,10 +92,18 @@ public class CodeGenerator {
         this.variablesIndexes = new HashMap<>();
         String className = classDescriptor.getClassName();
         File file = new File(Config.classFilesPath, className + ".j");
+        File path = new File(Config.classFilesPath);
         try {
+            if(!path.exists())path.mkdirs();
+            if(!file.exists())file.createNewFile();
             this.writer = new PrintWriter(file);
         } catch(FileNotFoundException e) {
+            e.printStackTrace();
             System.out.println("ERROR: could not generate .j file for class " + file.getAbsolutePath());
+            System.exit(1);
+        } catch(IOException e)
+        {
+            System.out.println("ERROR: could not create .j file for class " + file.getAbsolutePath());
             System.exit(1);
         }
     }

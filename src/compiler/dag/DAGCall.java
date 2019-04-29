@@ -69,7 +69,12 @@ public abstract class DAGCall extends DAGExpression {
   }
 
   public String[] getArgumentsNames() {
-    for(DAG)
+    String[] argumentsNames = new String[this.getNumArguments()];
+    for(DAGExpression de: this.getArguments())
+    {
+
+    }
+    return argumentsNames;
   }
 
   /**
