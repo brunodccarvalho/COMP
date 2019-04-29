@@ -77,6 +77,17 @@ public final class ClassCompiler extends CompilerModule {
       if (status() >= FATAL) return;
     }
 
+    // Construct MethodBody for main method.
+    FunctionLocals mainLocals = symbolsTable.mainLocals;
+    SimpleNode mainNode = symbolsTable.mainNode;
+    MethodBody mainBody;
+
+    if (mainNode != null) {
+      mainBody = new MethodBody(mainLocals, mainNode);
+      status(mainBody.status());
+      if (status() >= FATAL) return;
+    }
+
     // Dump MethodBody...
     System.out.println("\n\n=== CLASS " + jmmClass.getName() + " DAG LINES ===");
 
