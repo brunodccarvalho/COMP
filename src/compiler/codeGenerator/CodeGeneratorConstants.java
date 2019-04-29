@@ -40,7 +40,17 @@ public final class CodeGeneratorConstants {
      * 1: name of the super class
      */
     public static String SUPERNAME = ".super ?";
-
+    /**
+     * 1: Locals array size
+     */
+    public static String LOCALS = "\t.limit locals ?";
+    /**
+     * 1: Stack size
+     */
+    public static String STACK = "\t.limit stack ?";
+    /**
+     * 1: class descriptor
+     */
     public static String CLASSTYPE = "L?";
     /**
      * 1: type descritor of the method's parameters
@@ -55,9 +65,10 @@ public final class CodeGeneratorConstants {
     public static String METHODSIGNATURE = "?/?(?)?";
     /**
      * 1: method signature
-     * 2: method body
+     * 2: method stack and locals array size
+     * 3: method body
      */
-    public static String METHOD = ".method public ?\n?\n\treturn\n.end method";
+    public static String METHOD = ".method public ?\n?\n?\n\treturn\n.end method";
     /**
      * 1: index of the variable
      */

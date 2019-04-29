@@ -68,6 +68,10 @@ public class MethodBody extends CompilerModule {
     return this.statements;
   }
 
+  public DAGExpression getReturnExpression() {
+    return this.returnExpression;
+  }
+
   private static SimpleNode getMethodBodyNode(SimpleNode node) {
     assert (node.is(JJTMETHODDECLARATION) || node.is(JJTMAINDECLARATION));
     if (node.is(JJTMETHODDECLARATION)) return node.jjtGetChild(3);
