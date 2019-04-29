@@ -140,4 +140,16 @@ public final class CodeGeneratorConstants {
      * 1: jump label
      */
     public static String GOTO = "\tgoto ?";
+
+    /**
+     * 1: class name path
+     * 2: call variable name
+     * 3: type of variable
+     */
+    public static String PUTFIELD = "\taload 0\n\tswap\n\tputfield ?/? ?";
+    /**
+     * Main
+     */
+    public static String MAIN = ".method public static main([Ljava/lang/String;)V";
+
 }
