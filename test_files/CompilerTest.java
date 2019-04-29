@@ -22,6 +22,7 @@ class Example {
     int i;
     boolean j;
     i = j;
+    j = i;
     return f;
   }
 

@@ -14,7 +14,8 @@ public class MethodBody extends CompilerModule {
   DAGExpression returnExpression;
 
   public MethodBody(FunctionLocals functionLocals, SimpleNode methodNode) {
-    assert functionLocals != null && methodNode.is(JJTMETHODDECLARATION);
+    assert functionLocals != null && methodNode.is(JJTMETHODDECLARATION)
+        || methodNode.is(JJTMAINDECLARATION);
 
     SimpleNode methodBodyNode = getMethodBodyNode(methodNode);
 

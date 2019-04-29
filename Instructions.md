@@ -592,6 +592,7 @@ Support required by JMM:
       ... lots of stuff
 
     DAGBracket:
+      [4] aload
       [7] iaload
 
     DAGCall:
