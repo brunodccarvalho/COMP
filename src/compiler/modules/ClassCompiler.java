@@ -12,7 +12,7 @@ import compiler.symbols.FunctionLocals;
 import compiler.symbols.JMMClassDescriptor;
 import compiler.symbols.JMMMethodDescriptor;
 
-import compiler.DiagnosticsHandler;
+import compiler.modules.DiagnosticsHandler;
 import compiler.codeGenerator.CodeGenerator;
 import compiler.dag.DAGNode;
 import jjt.ParseException;
