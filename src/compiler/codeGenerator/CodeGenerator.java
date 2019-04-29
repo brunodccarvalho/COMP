@@ -7,6 +7,7 @@ import compiler.dag.DAGBinaryOp;
 import compiler.dag.DAGCall;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
+import compiler.dag.DAGMember;
 import compiler.dag.DAGNode;
 import compiler.dag.DAGVariable;
 import compiler.symbols.JMMClassDescriptor;
@@ -16,6 +17,7 @@ import compiler.symbols.LocalDescriptor;
 import compiler.symbols.ParameterDescriptor;
 import compiler.symbols.TypeDescriptor;
 import compiler.symbols.VariableDescriptor;
+import compiler.symbols.MemberDescriptor;
 import compiler.modules.MethodBody;
 import compiler.modules.SymbolsTable;
 
@@ -30,11 +32,9 @@ import java.io.IOException;
  * TODO: 
  *  - generate main method (invokespecial)
  *  - load/store fields
- *  - add correct values for stack and locals array size
  *  - test function invocation
  */
 
-// clang-format off
 /**
  * Code generator for a single class Expects: - The class symbol table outputs:
  * - The .j (JVM code) file corresponding to the given class
@@ -69,7 +69,7 @@ public class CodeGenerator {
     private String getMethodDescriptor(TypeDescriptor[] typeDescriptors) {
         String methodDescriptor = new String();
         for(TypeDescriptor typeDescriptor: typeDescriptors) {
-            String jvmType = subst(CodeGeneratorConstants.METHODDESCRIPTOR, getType(typeDescriptor));
+            String jvmType = subst(CodeGeneratorConstants.METHODDESCRIPTOR, getType(typeDescriptor)) + " ";
             methodDescriptor = methodDescriptor.concat(jvmType);
         }
         return methodDescriptor;
@@ -127,13 +127,12 @@ public class CodeGenerator {
         writer.write(CodeGeneratorConstants.DEFAULTINITIALIZER + "\n\n");
     }
 
-    private String generateMethodSignature(String methodClass, String methodName, String methodDescriptor, String returnType) {
-        String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURE, methodClass, methodName, methodDescriptor, returnType);
+    private String generateMethodSignature(String methodName, String methodDescriptor, String returnType) {
+        String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURE, methodName, methodDescriptor, returnType);
         return methodSignature;
     }
 
     private String generateMethodSignature(DAGCall methodCall) {
-        String methodClass = methodCall.getCallClass().toString();
         String methodName = methodCall.getMethodName();
         String methodDescriptor = this.getMethodDescriptor(methodCall.getSignature().getParameterTypes());
         String returnType;
@@ -142,7 +141,7 @@ public class CodeGenerator {
         } else
             returnType = getType(methodCall.getType());
 
-        String methodSignature = this.generateMethodSignature(methodClass, methodName, methodDescriptor, returnType);
+        String methodSignature = this.generateMethodSignature( methodName, methodDescriptor, returnType);
         return methodSignature;
     }
 
@@ -150,11 +149,10 @@ public class CodeGenerator {
      * @return The method's signature, like: <class_name>/<method_name>(<method_descriptor>)<return_type>
      */
     private String generateMethodSignature(JMMMethodDescriptor method) {
-        String methodClass = this.classDescriptor.getClassName();
         String methodName = method.getName();
         String methodDescriptor = getMethodDescriptor(method);
         String returnType = getType(method.getReturnType());
-        return this.generateMethodSignature(methodClass, methodName, methodDescriptor, returnType);
+        return this.generateMethodSignature(methodName, methodDescriptor, returnType);
     }
 
     private String generateMethodStackLocals(JMMMethodDescriptor method) {
@@ -242,6 +240,21 @@ public class CodeGenerator {
         return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
     }
 
+    private String generateMemberLoad(DAGMember member) {
+        System.out.println("here");
+        MemberDescriptor memberDescriptor = member.getVariable();
+        Integer variableIndex = this.variablesIndexes.get(memberDescriptor);
+        if(variableIndex == null) { // class field
+            return "";
+        }
+        String variableType = memberDescriptor.getType().toString();
+        String regexLoad = CodeGeneratorConstants.load.get(variableType);
+        if(regexLoad == null)
+            regexLoad = CodeGeneratorConstants.LOADADDRESS;
+        System.out.println("--->" + subst(regexLoad, String.valueOf(variableIndex)));
+        return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
+    }
+
     private String generateOperator(BinaryOperator operator) {
         return CodeGeneratorConstants.binaryOperators.get(operator.toString()) + "\n";
     }
@@ -255,7 +268,7 @@ public class CodeGenerator {
         else if((integerConstantValue >= 0) && (integerConstantValue <= 5)) {
             integerPushBody = subst(CodeGeneratorConstants.PUSHCONST, String.valueOf(integerConstantValue));
         }
-        else
+        else 
             integerPushBody = subst(CodeGeneratorConstants.PUSHINT, String.valueOf(integerConstantValue));
         return integerPushBody + "\n";
     }
@@ -268,7 +281,7 @@ public class CodeGenerator {
         }
         return parameterPush;
     }
-
+    
     private String generateMethodCall(DAGCall methodCall) {
         String methodCallBody = new String();
         String methodSignature = this.generateMethodSignature(methodCall) + "\n";
@@ -277,9 +290,10 @@ public class CodeGenerator {
         methodCallBody = methodCallBody.concat(parameterPush).concat(invoke);
         return methodCallBody;
     }
-
+    
     private String generateExpression(DAGExpression expression) {
         String expressionBody = new String();
+        System.out.println(expression.getClass() + " " +expression);
         if(expression instanceof DAGBinaryOp) {
             DAGExpression lhs = ((DAGBinaryOp)expression).getLhs();
             DAGExpression rhs = ((DAGBinaryOp)expression).getRhs();
@@ -288,6 +302,11 @@ public class CodeGenerator {
             String rhsBody = generateExpression(rhs);
             String operatorBody = generateOperator(operator);
             expressionBody = expressionBody.concat(lhsBody).concat(rhsBody).concat(operatorBody);
+        }
+        else if(expression instanceof DAGMember)
+        {
+            String member = generateMemberLoad((DAGMember)expression);
+            expressionBody = expressionBody.concat(member);
         }
         else if(expression instanceof DAGVariable) {
             String loadBody = generateLoad((DAGVariable)expression);
@@ -328,6 +347,7 @@ public class CodeGenerator {
     }
 
     private String generateMethod(JMMMethodDescriptor method) {
+
         this.generateParamDeclaration(method);
         this.generateMethodVarDeclaration(method);
         String methodHeader = this.generateMethodHeader(method);
