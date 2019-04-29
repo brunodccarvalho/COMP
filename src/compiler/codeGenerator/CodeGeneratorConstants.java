@@ -88,4 +88,10 @@ public final class CodeGeneratorConstants {
      * 1: method signature
      */
     public static String INVOKEVIRTUAL = "\tinvokevirtual ? ";
+    /**
+     * 1: class name path
+     * 2: call variable name
+     * 3: type of variable
+     */
+    public static String GETFIELD = "\taload 0\n\tgetfield ?/? ?";
 }

@@ -241,18 +241,14 @@ public class CodeGenerator {
     }
 
     private String generateMemberLoad(DAGMember member) {
-        System.out.println("here");
         MemberDescriptor memberDescriptor = member.getVariable();
-        Integer variableIndex = this.variablesIndexes.get(memberDescriptor);
-        if(variableIndex == null) { // class field
-            return "";
-        }
-        String variableType = memberDescriptor.getType().toString();
-        String regexLoad = CodeGeneratorConstants.load.get(variableType);
-        if(regexLoad == null)
-            regexLoad = CodeGeneratorConstants.LOADADDRESS;
-        System.out.println("--->" + subst(regexLoad, String.valueOf(variableIndex)));
-        return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
+        String memberName=memberDescriptor.getName();
+        String className=memberDescriptor.getParentClass().getClassName();
+        String type=memberDescriptor.getType().getName();
+        String memberType=CodeGeneratorConstants.types.get(type);
+        if(memberType==null)
+            memberType=subst(CodeGeneratorConstants.CLASSTYPE, type);
+        return subst(CodeGeneratorConstants.GETFIELD, className,memberName,memberType) + "\n";
     }
 
     private String generateOperator(BinaryOperator operator) {
