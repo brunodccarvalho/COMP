@@ -103,7 +103,7 @@ public final class CodeGeneratorConstants {
     /**
      * 1: method signature
      */
-    public static String INVOKEVIRTUAL = "\tinvokevirtual ? ";
+    public static String INVOKEVIRTUAL = "\taload ?\n\tinvokevirtual ? ";
     /**
      * 1: class name path
      * 2: call variable name
