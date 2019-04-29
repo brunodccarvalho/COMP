@@ -397,6 +397,9 @@ public class ExpressionFactory extends BaseDAGFactory {
       System.err.println("No static method " + methodName + " for class " + classDescriptor
                          + " matches the signature " + methodName + signature);
       status(MAJOR_ERRORS);
+    } else {
+      TypeDescriptor returnType = classDescriptor.getReturnType(methodName, signature);
+      return new DAGStaticCall(classDescriptor, methodName, signature, returnType, arguments);
     }
 
     return new DAGStaticCall(classDescriptor, methodName, signature, arguments);
@@ -452,6 +455,9 @@ public class ExpressionFactory extends BaseDAGFactory {
         System.err.println("No method " + methodName + " for type " + objectClass
                            + " matches the signature " + methodName + signature);
         status(MAJOR_ERRORS);
+      } else {
+        TypeDescriptor returnType = objectClass.getReturnType(methodName, signature);
+        return new DAGMethodCall(object, methodName, signature, returnType, arguments);
       }
     }
 

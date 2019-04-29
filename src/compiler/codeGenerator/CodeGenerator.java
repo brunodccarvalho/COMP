@@ -424,8 +424,8 @@ public class CodeGenerator {
         DAGExpression lhs = dag.getLhs();
         DAGExpression rhs = dag.getRhs();
 
-        String labelFalse = Integer.toString(++dagLessLabelCounter) + "\n";
-        String labelTrue = Integer.toString(++dagLessLabelCounter) + "\n";
+        String labelFalse = "FalseBranch_" + Integer.toString(++dagLessLabelCounter);
+        String labelTrue = "TrueBranch_" + Integer.toString(++dagLessLabelCounter);
 
         String lhsCode = generateExpression(lhs); // does this have newline?
         String rhsCode = generateExpression(rhs); // does this have newline?

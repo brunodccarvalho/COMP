@@ -101,4 +101,18 @@ public abstract class ClassDescriptor extends TypeDescriptor {
    * @return The variable descriptor for the given name, or null if not found.
    */
   public abstract VariableDescriptor resolveStatic(String name);
+
+  /**
+   * @param name The name of a method
+   * @param signature The signature of the method
+   * @return The return type of that method.
+   */
+  public abstract TypeDescriptor getReturnType(String name, FunctionSignature signature);
+
+  /**
+   * @param name The name of a static method
+   * @param signature The signature of the method
+   * @return The return type of that method.
+   */
+  public abstract TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature);
 }

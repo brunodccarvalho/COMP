@@ -95,6 +95,36 @@ public class JMMClassDescriptor extends ClassDescriptor {
     return false;
   }
 
+  @Override
+  public VariableDescriptor resolve(String name) {
+    MemberDescriptor var = members.get(name);
+    if (var != null)
+      return var;
+    else if (superClass != null)
+      return superClass.resolve(name);
+    else
+      return null;
+  }
+
+  @Override
+  public VariableDescriptor resolveStatic(String name) {
+    if (superClass != null)
+      return superClass.resolveStatic(name);
+    else
+      return null;
+  }
+
+  @Override
+  public TypeDescriptor getReturnType(String name, FunctionSignature signature) {
+    JMMMethodDescriptor method = getMethod(name, signature);
+    return method == null ? null : method.getReturnType();
+  }
+
+  @Override
+  public TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature) {
+    return null;
+  }
+
   /**
    * @param name      The name of the method
    * @param signature The signature of the method (its parameter types)
@@ -136,7 +166,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
    * @return The name of the super class
    */
   public String getSuperClassName() {
-    if(this.superClass == null) return null;
+    if (this.superClass == null) return null;
     return this.superClass.getClassName();
   }
 
@@ -181,25 +211,6 @@ public class JMMClassDescriptor extends ClassDescriptor {
   void addMember(MemberDescriptor var) {
     assert !members.containsKey(var.getName());
     members.put(var.getName(), var);
-  }
-
-  @Override
-  public VariableDescriptor resolve(String name) {
-    MemberDescriptor var = members.get(name);
-    if (var != null)
-      return var;
-    else if (superClass != null)
-      return superClass.resolve(name);
-    else
-      return null;
-  }
-
-  @Override
-  public VariableDescriptor resolveStatic(String name) {
-    if (superClass != null)
-      return superClass.resolveStatic(name);
-    else
-      return null;
   }
 
   /**
