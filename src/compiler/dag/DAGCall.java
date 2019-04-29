@@ -23,7 +23,7 @@ public abstract class DAGCall extends DAGExpression {
 
   DAGCall(String methodName, FunctionSignature signature, TypeDescriptor returnType,
           DAGExpression[] arguments) {
-    assert methodName != null && signature != null && returnType != null && arguments != null;
+    assert methodName != null && signature != null && arguments != null;
     this.methodName = methodName;
     this.signature = signature;
     this.returnType = returnType;

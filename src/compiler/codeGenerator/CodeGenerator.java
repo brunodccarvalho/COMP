@@ -137,12 +137,19 @@ public class CodeGenerator {
         //TODO
     }
 
+    private String generateMethodSignature(String methodClass, String methodName, String methodDescriptor, String returnType) {
+        String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURE, methodClass, methodName, methodDescriptor, returnType);
+        methodSignature = methodSignature.replaceAll("\\?","");
+        return methodSignature;
+    }
+
     private String generateMethodSignature(String methodName, String methodDescriptor, String returnType) {
-        String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURE, methodName, methodDescriptor, returnType);
+        String methodSignature = subst(CodeGeneratorConstants.METHODSIGNATURENOCLASS, methodName, methodDescriptor, returnType);
         return methodSignature;
     }
 
     private String generateMethodSignature(DAGCall methodCall) {
+        String methodClass = methodCall.getCallClass().toString();
         String methodName = methodCall.getMethodName();
         String methodDescriptor = this.getMethodDescriptor(methodCall.getSignature().getParameterTypes());
         String returnType;
@@ -151,19 +158,23 @@ public class CodeGenerator {
         } else
             returnType = getType(methodCall.getType());
 
-        String methodSignature = this.generateMethodSignature( methodName, methodDescriptor, returnType);
+        String methodSignature = this.generateMethodSignature(methodClass, methodName, methodDescriptor, returnType);
         return methodSignature;
     }
 
     /**
      * @return The method's signature, like: <class_name>/<method_name>(<method_descriptor>)<return_type>
      */
-    private String generateMethodSignature(JMMMethodDescriptor method) {
+    private String generateMethodSignature(JMMMethodDescriptor method, boolean includeClassName) {
+        String methodClass = this.classDescriptor.getClassName();
         String methodName = method.getName();
         String methodDescriptor = getMethodDescriptor(method);
         String returnType = getType(method.getReturnType());
-        return this.generateMethodSignature(methodName, methodDescriptor, returnType);
-    }
+        if(includeClassName)
+            return this.generateMethodSignature(methodClass, methodName, methodDescriptor, returnType);
+        else
+            return this.generateMethodSignature(methodName, methodDescriptor, returnType);
+        }
 
     private String generateMethodStackLocals(JMMMethodDescriptor method) {
         int localsSize = 99;
@@ -177,7 +188,7 @@ public class CodeGenerator {
      * @return The method's header, like: .method public <method_signature>\n?\n\treturn\n.end method
      */
     private String generateMethodHeader(JMMMethodDescriptor method) {
-        String methodSignature = this.generateMethodSignature(method);
+        String methodSignature = this.generateMethodSignature(method, false);
         String methodStackLocals = this.generateMethodStackLocals(method);
         String methodHeader = subst(CodeGeneratorConstants.METHOD, methodSignature, methodStackLocals);
         return methodHeader;

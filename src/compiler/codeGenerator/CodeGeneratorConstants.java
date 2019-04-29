@@ -64,11 +64,18 @@ public final class CodeGeneratorConstants {
      */
     public static String METHODDESCRIPTOR = "?";
     /**
+     * 1: name of the class to which the method belongs
+     * 2: name of the method
+     * 3: descriptor of the method
+     * 4: return type
+     */
+    public static String METHODSIGNATURE = "?/?(?)?";
+    /**
      * 1: name of the method
      * 2: descriptor of the method
      * 3: return type
      */
-    public static String METHODSIGNATURE = "?(?)?";
+    public static String METHODSIGNATURENOCLASS = "?(?)?";
     /**
      * 1: method signature
      * 2: method stack and locals array size

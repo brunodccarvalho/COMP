@@ -18,7 +18,6 @@ class Dog {
         boolean full;
         int sleepEatFactor;
         numberKm = numberKm + 1;
-        full = this.eat(3);
         this.sleep();
         sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
         return numberKm;
