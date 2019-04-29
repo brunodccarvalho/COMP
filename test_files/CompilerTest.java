@@ -26,38 +26,10 @@ class Example {
     return f;
   }
 
-  public Example setCounter(int newcounter) {
-    counter = newcounter;
-    return this;
-  }
-
-  public Example setFile(File newfile) {
-    file = newfile;
-    return this;
-  }
-
   public int increment(int add) {
     counter = counter + add;
-    return counter;
+    return add;
   }
-
-  public int function(String str) {
-    int a;
-    int[] b;
-    boolean c;
-    File d;
-    Example e;
-    Lol f;
-
-    a = b.length;
-    b = new int[5];
-    b[2 * 2] = 3;
-    c = true;
-    d = new File();
-
-    return 0;
-  }
-
   public static void main(String[] args) {
     io.println(new Example().getCounter());
   }

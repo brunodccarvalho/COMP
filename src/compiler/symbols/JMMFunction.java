@@ -19,11 +19,6 @@ public interface JMMFunction extends Function {
   public ParameterDescriptor getParameter(String name);
 
   /**
-   * @return The parameters of the given method.
-   */
-  public ParameterDescriptor[] getParameters();
-
-  /**
    * @param name The name of a parameter
    * @return The type descriptor for the parameter 'name'.
    */

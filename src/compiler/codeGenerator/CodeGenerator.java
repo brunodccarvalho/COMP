@@ -1,6 +1,5 @@
 package compiler.codeGenerator;
 
-import compiler.FunctionSignature;
 import compiler.codeGenerator.Config;
 import compiler.dag.BinaryOperator;
 import compiler.dag.DAGAssignment;
@@ -12,7 +11,6 @@ import compiler.dag.DAGNode;
 import compiler.dag.DAGVariable;
 import compiler.symbols.JMMClassDescriptor;
 import compiler.symbols.JMMMethodDescriptor;
-import compiler.symbols.ClassDescriptor;
 import compiler.symbols.Descriptor;
 import compiler.symbols.LocalDescriptor;
 import compiler.symbols.ParameterDescriptor;
@@ -24,10 +22,17 @@ import compiler.modules.SymbolsTable;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-import javax.lang.model.util.ElementScanner6;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+
+/**
+ * TODO: 
+ *  - generate main method (invokespecial)
+ *  - load/store fields
+ *  - add correct values for stack and locals array size
+ *  - test function invocation
+ */
 
 // clang-format off
 /**
@@ -88,10 +93,18 @@ public class CodeGenerator {
         this.variablesIndexes = new HashMap<>();
         String className = classDescriptor.getClassName();
         File file = new File(Config.classFilesPath, className + ".j");
+        File path = new File(Config.classFilesPath);
         try {
+            if(!path.exists())path.mkdirs();
+            if(!file.exists())file.createNewFile();
             this.writer = new PrintWriter(file);
         } catch(FileNotFoundException e) {
+            e.printStackTrace();
             System.out.println("ERROR: could not generate .j file for class " + file.getAbsolutePath());
+            System.exit(1);
+        } catch(IOException e)
+        {
+            System.out.println("ERROR: could not create .j file for class " + file.getAbsolutePath());
             System.exit(1);
         }
     }
@@ -144,12 +157,21 @@ public class CodeGenerator {
         return this.generateMethodSignature(methodClass, methodName, methodDescriptor, returnType);
     }
 
+    private String generateMethodStackLocals(JMMMethodDescriptor method) {
+        int localsSize = this.numberLocals + this.numberParam + this.numberTemp;
+        String methodStack = subst(CodeGeneratorConstants.STACK, String.valueOf(localsSize));
+        String methodLocals = subst(CodeGeneratorConstants.LOCALS, String.valueOf(localsSize));
+        String methodStackLocals = new String();
+        return methodStackLocals.concat(methodStack).concat("\n").concat(methodLocals);
+    }
+
     /**
      * @return The method's header, like: .method public <method_signature>\n?\n\treturn\n.end method
      */
     private String generateMethodHeader(JMMMethodDescriptor method) {
         String methodSignature = this.generateMethodSignature(method);
-        String methodHeader = subst(CodeGeneratorConstants.METHOD, methodSignature);
+        String methodStackLocals = this.generateMethodStackLocals(method);
+        String methodHeader = subst(CodeGeneratorConstants.METHOD, methodSignature, methodStackLocals);
         return methodHeader;
     }
 
@@ -186,7 +208,6 @@ public class CodeGenerator {
      */
     private String generateStore(DAGVariable variable) {
         VariableDescriptor variableDescriptor = variable.getVariable();
-        System.out.println("--------> " + variable.getVariable().getName());
         Integer variableIndex = this.variablesIndexes.get(variableDescriptor);
         if(variableIndex == null) { // class field
             return "";
@@ -302,13 +323,23 @@ public class CodeGenerator {
         return methodBody;
     }
 
+    private String generateMethodReturn(DAGExpression returnExpression) {
+        return this.generateExpression(returnExpression);
+    }
+
+    private String generateMethod(JMMMethodDescriptor method) {
+        this.generateParamDeclaration(method);
+        this.generateMethodVarDeclaration(method);
+        String methodHeader = this.generateMethodHeader(method);
+        String methodBody = this.generateMethodBody(method);
+        String methodReturn = this.generateMethodReturn(methodBodies.get(method).getReturnExpression());
+        String methodStructure = subst(methodHeader, methodBody.concat(methodReturn));
+        return methodStructure;
+    }
+
     private void generateMethods() {
         for (JMMMethodDescriptor method : methodBodies.keySet()) {
-            String methodHeader = this.generateMethodHeader(method);
-            this.generateParamDeclaration(method);
-            this.generateMethodVarDeclaration(method);
-            String methodBody = this.generateMethodBody(method);
-            String methodStructure = subst(methodHeader, methodBody);
+            String methodStructure = this.generateMethod(method);
             writer.write(methodStructure + "\n\n");
 
             this.numberLocals = 0;

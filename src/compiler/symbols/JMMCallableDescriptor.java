@@ -40,6 +40,10 @@ public abstract class JMMCallableDescriptor extends CallableDescriptor implement
     }
   }
 
+  public ParameterDescriptor[] getParameters() {
+    return parameters.clone();
+  }
+
   @Override
   public JMMClassDescriptor getParentClass() {
     return (JMMClassDescriptor) classDescriptor;
@@ -62,11 +66,6 @@ public abstract class JMMCallableDescriptor extends CallableDescriptor implement
     for (ParameterDescriptor param : parameters)
       if (param.getName().equals(name)) return param;
     return null;
-  }
-
-  @Override
-  public ParameterDescriptor[] getParameters() {
-    return this.parameters;
   }
 
   @Override

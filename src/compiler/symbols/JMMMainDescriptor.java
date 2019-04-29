@@ -72,11 +72,6 @@ public class JMMMainDescriptor
   }
 
   @Override
-  public ParameterDescriptor[] getParameters() {
-    return null;
-  }
-
-  @Override
   public TypeDescriptor getParameterType(String name) {
     return null;
   }
