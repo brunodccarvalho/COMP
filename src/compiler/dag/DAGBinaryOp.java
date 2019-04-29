@@ -6,11 +6,22 @@ import java.util.Objects;
 
 import compiler.symbols.PrimitiveDescriptor;
 
+/**
+ * A DAGNode base class for binary operations. It holds a binary operator instance, and two
+ * DAGExpressions for the left hand side and right hand side expressions.
+ *
+ * DAGBinaryOp may be reused within the same containing expression.
+ */
 public class DAGBinaryOp extends DAGExpression {
   protected final BinaryOperator op;
   protected final DAGExpression lhs;
   protected final DAGExpression rhs;
 
+  /**
+   * @param op The binary operator
+   * @param lhs The DAGExpression for the left hand side.
+   * @param rhs The DAGExpression for the right hand side.
+   */
   DAGBinaryOp(BinaryOperator op, DAGExpression lhs, DAGExpression rhs) {
     assert op != null && lhs != null && rhs != null;
     this.op = op;
@@ -18,26 +29,44 @@ public class DAGBinaryOp extends DAGExpression {
     this.rhs = rhs;
   }
 
+  /**
+   * @return The binary operator.
+   */
   public BinaryOperator getOperator() {
     return op;
   }
 
+  /**
+   * @return The left hand side DAGExpression.
+   */
   public DAGExpression getLhs() {
     return lhs;
   }
 
+  /**
+   * @return The right hand side DAGExpression.
+   */
   public DAGExpression getRhs() {
     return rhs;
   }
 
+  /**
+   * @return true if the operation is an arithmetic one (sum, sub, mul or div)
+   */
   public boolean isArithmetic() {
     return op == SUM || op == SUB || op == MUL || op == DIV;
   }
 
+  /**
+   * @return true if the operation is a comparison (less than only)
+   */
   public boolean isComparison() {
     return op == LT;
   }
 
+  /**
+   * @return The type of each of the binary operation's operands.
+   */
   public PrimitiveDescriptor getOperandType() {
     return op.getOperandType();
   }

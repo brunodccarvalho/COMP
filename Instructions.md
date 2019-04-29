@@ -503,6 +503,9 @@ Support required by JMM:
         getstatic         <field-spec> <descriptor>
         putfield          <field-spec> <descriptor>
         putstatic         <field-spec> <descriptor>
+        invokenonvirtual  <method-spec>
+        invokestatic      <method-spec>
+        invokevirtual     <method-spec>
 
     6. Arrays
         newarray          <array-type>
@@ -537,6 +540,8 @@ Support required by JMM:
 
     <constant> is an integer, float, or quoted string.
 
+    <array-type> is int.
+
     <var-num> refers to a local variable index.
 
     <class> is a class name, qualified with '/', e.g:
@@ -553,6 +558,10 @@ Support required by JMM:
 
     <descriptor> is the Java type descriptor of the field.
       Ljava/io/PrintStream
+
+    <method-desc> is composed of three parts, a classname,
+    a methodname and a method descriptor, e.g:
+      foo/bar/baz/class/classMethod(II)V
 
 ## Uses of Jasmin Instructions by each DAG node
 
@@ -603,3 +612,359 @@ Support required by JMM:
 
     DAGBracketAssignment:
       [7] iastore
+
+### Simplified implementation suggestion
+
+If a non-terminal DAGExpression has more than one parent, it should store its result in a local variable of
+the JVM the first time that it is calculated. Instead of recalculating its value on the stack after the first
+calculation, the saved value is loaded instead.
+
+This does not apply to non-equals classes (DAGNew and DAGCall) and does not apply to constants.
+It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
+
+    x = not eXpression
+    r = Reusable
+    c = Constant
+    n = Not reusable
+
+    x DAGAssignment
+    r DAGBinaryOp
+    c DAGBooleanConstant
+    r DAGBracket
+    x DAGBracketAssignment
+    c DAGIntegerConstant
+    r DAGLength
+    n DAGMethodCall
+    n DAGNewClass
+    n DAGNewIntArray
+    r DAGNot
+    n DAGStaticCall
+    c DAGVariable
+
+    DAGBinaryOp: (DAGExpression lhs) Operator (DAGExpression rhs)
+        generate lhs operand
+                                      ...
+                                  --> ..., lhs
+        generate rhs operand
+                                      ..., lhs
+                                  --> ..., lhs, rhs
+        apply operation
+          if add, sub, mul, div:
+                        iadd, isub, imul, idiv
+          if less:
+                        if_icmpge A
+                        iconst_1
+                        goto      B
+                    A:  iconst_0
+                    B:  ...
+                                      ..., lhs, rhs
+                                  --> ..., result
+          if and (must implement shortcircuiting):
+
+    DAGAnd:
+        generate lhs operand
+                                      ...
+                                  --> ..., lhs
+        if false, evaluate to 0 immediately:
+                        ifeq     A
+        else generate rhs operand
+                                      ..., lhs
+                                  --> ..., lhs, rhs
+        if false, evaluate to 0, else evaluate to 1:
+                        ifeq     A
+                        iconst_1
+                        goto     B
+                    A:  iconst_0
+                    B:  ...
+
+    DAGLength: (DAGExpression ar) .length
+        generate arrayref ar:
+                                      ...
+                                  --> ..., arrayref
+        apply arraylength:
+                        arraylength
+                                      ..., arrayref
+                                  --> ..., length
+
+    DAGNot: NOT (DAGExpression b)
+        generate boolean expression b:
+                                      ...
+                                  --> ..., boolean
+        invert the boolean:
+                        ifne      A
+                        iconst_1
+                        goto      B
+                    A:  iconst_0
+                    B:  ...
+
+    DAGBracket: (DAGExpression ar) [DAGExpression index]
+        generate arrayref ar:
+                                      ...
+                                  --> ..., arrayref
+        generate index:
+                                      ..., arrayref
+                                  --> ..., arrayref, index
+        fetch int:
+                        iaload
+                                      ..., arrayref, index
+                                  --> ..., int
+
+    * DAGNewClass:
+        apply new:
+                        new ClassName
+                                      ...
+                                  --> ..., objectref
+                        dup
+                                      ..., objectref
+                                  --> ..., objectref, objectref
+        call constructor:
+                        invokespecial <constructor descriptors>
+                                      ..., objectref, objectref
+                                  --> ..., objectref
+
+    * DAGNewIntArray: new int[DAGExpression count]
+        generate count expression:
+                                      ...
+                                  --> ..., count
+        apply new int array:
+                        newarray int
+                                      ..., count
+                                  --> ..., arrayref
+
+    * DAGIntegerConstant:
+        for -1, 0, 1, 2, 3, 4, 5:
+                        iconst_<n>
+        else for -128, ..., 127:
+                        bipush <constant>
+        else for -32768, ..., 32767:
+                        sipush <constant>
+        else:
+                        ldc    <constant>
+
+    * DAGBooleanConstant:
+        for true:
+                        iconst_1
+        for false:
+                        iconst_0
+
+    DAGAssignment: DAGVariable var = (DAGExpression value)
+        if variable is Member:
+          push 'this' onto the stack:
+                        aload_0
+                                      ...
+                                  --> ..., this=objectref
+        generate expression value:
+                                      ...[, objectref]
+                                  --> ...[, objectref], value
+        if variable is Member:
+          assign to member field:
+                        putfield ClassName/fieldName fieldType
+                                      ..., objectref, value
+                                  --> ...
+        if variable is Local or Parameter:
+          assign to local variable n:
+            if 0,1,2,3:
+                        istore_<n>
+                      or
+                        astore_<n>
+            else:
+                        istore n
+                      or
+                        astore n
+                                      ..., value
+                                  --> ...
+
+    DAGBracketAssignment: DAGVariable[DAGExpression index] = (DAGExpression value)
+        load variable:
+                                      ...
+                                  --> ..., arrayref
+        generate index expression:
+                                      ..., arrayref
+                                  --> ..., arrayref, index
+        generate value expression:
+                                      ..., arrayref, index
+                                  --> ..., arrayref, index, int
+        store value in arrayref[index]:
+                        iastore
+                                      ..., arrayref, index, int
+                                  --> ...
+
+    DAGMethodCall: (DAGExpression obj).method(DAGExpression arg1, DAGExpression arg2, ...)
+        generate object expression:
+                                      ...
+                                  --> ..., objectref
+        generate arg1 expression:
+                                      ..., objectref
+                                  --> ..., objectref, arg1
+        generate arg2 expression:
+                                      ..., objectref, arg1
+                                  --> ..., objectref, arg1, arg2
+                                  ...
+                                  --> ..., objectref, arg1, arg2, ...
+        call method:
+                        invokevirtual ClassName/methodName(MethodDescriptor).
+
+    DAGStaticCall: ClassName.method(DAGExpression arg1, DAGExpression arg2, ...)
+        generate arg1 expression:
+                                      ..., objectref
+                                  --> ..., objectref, arg1
+        generate arg2 expression:
+                                      ..., objectref, arg1
+                                  --> ..., objectref, arg1, arg2
+                                  ...
+                                  --> ..., objectref, arg1, arg2, ...
+        call method:
+                        invokestatic ClassName/methodName(MethodDescriptor).
+
+    DAGVariable:
+        if variable is Local or Parameter:
+          if 0,1,2,3:
+                        iload_<n>
+                        aload_<n>
+          else:
+                        iload n
+                        aload n
+        if variable is Member:
+                        aload_0
+                        getfield Classname/fieldName fieldType
+        if variable is This:
+                        aload_0
+
+#### Javap
+
+    DAGAdd:
+          $lhs
+          $rhs
+          iadd
+        - istore
+
+    DAGSub:
+          $lhs
+          $rhs
+          isub
+        - istore
+
+    DAGMul:
+          $lhs
+          $rhs
+          imul
+        - istore
+
+    DAGDiv:
+          $lhs
+          $rhs
+          idiv
+        - istore
+
+    DAGLess:
+          $lhs
+          $rhs
+          if_icmpge   A
+          iconst_1
+          goto        B
+      A:  iconst_0
+      B:> istore
+
+    DAGAnd:
+          $lhs
+          ifeq        A
+          $rhs
+          ifeq        A
+          iconst_1
+          goto        B
+      A:  iconst_0
+      B:> istore
+
+    DAGLength:
+          $loadarray
+          arraylength
+        > istore
+
+    DAGNot:
+          $loadboolean
+          ifne        A
+          iconst_1
+          goto        B
+      A:  iconst_0
+      B:> istore
+
+    DAGBracket:
+          $loadarray
+          $loadindex
+          iaload
+        > istore
+
+    DAGNewClass:
+          new <class>
+          dup
+          invokespecial <init>:()V
+        > astore
+
+    DAGNewIntArray:
+          $loadcount
+          newarray
+        > astore
+
+    DAGIntegerConstant:
+          iconst_<n>
+        or
+          bipush <constant>
+        or
+          sipush <constant>
+        or
+          ldc    <constant>
+
+    DAGBooleanConstant:
+          iconst_0
+        or
+          iconst_1
+
+    DAGAssignmentMember:
+          aload_0    # this
+          $loadvalue
+          putfield  <member>
+
+    DAGAssignmentLocal:
+          $loadvalue
+        > store
+
+    DAGBracketAssignmentMember:
+          aload_0    # this
+          getfield  <member>
+          $loadindex
+          $loadvalue
+          iastore
+
+    DAGBracketAssignmentLocal:
+          $loadarray
+          $loadindex
+          $loadvalue
+          iastore
+
+    DAGMethodCall:
+          $loadobjectref        # possibly aload_0
+          $loadarg1
+          $loadarg2
+          ...
+          invokevirtual <method>
+
+    DAGStaticCall:
+          $loadarg1
+          $loadarg2
+          ...
+          invokestatic <class> <method>
+
+    DAGMethodCall, returning:
+          $loadobjectref        # possibly aload_0
+          $loadarg1
+          $loadarg2
+          ...
+          invokevirtual <method>
+        > *store
+
+    DAGStaticCall, returning:
+          $loadarg1
+          $loadarg2
+          ...
+          invokestatic <class> <method>
+        > *store

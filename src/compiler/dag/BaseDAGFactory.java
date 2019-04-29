@@ -4,9 +4,20 @@ import compiler.modules.CompilerModule;
 import compiler.symbols.FunctionLocals;
 import jjt.SimpleNode;
 
+/**
+ * Base class of DAG factories. Exposes a build() function which takes a SimpleNode, holds the
+ * function's FunctionLocals instance, and extends CompilerModule for error propagation.
+ *
+ * There are three factories: ExpressionFactory, AssignmentFactory, and ControlFlowFactory.
+ */
 public abstract class BaseDAGFactory extends CompilerModule {
   protected final FunctionLocals locals;
 
+  /**
+   * Construct a new factory based on this symbol table.
+   *
+   * @param locals the function's symbol table.
+   */
   protected BaseDAGFactory(FunctionLocals locals) {
     assert locals != null;
     this.locals = locals;

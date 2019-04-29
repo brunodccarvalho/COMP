@@ -7,11 +7,7 @@ import static compiler.symbols.TypeDescriptor.typematch;
 import java.util.HashMap;
 
 import compiler.FunctionSignature;
-import compiler.symbols.ClassDescriptor;
-import compiler.symbols.FunctionLocals;
-import compiler.symbols.ThisDescriptor;
-import compiler.symbols.TypeDescriptor;
-import compiler.symbols.VariableDescriptor;
+import compiler.symbols.*;
 
 import jjt.SimpleNode;
 
@@ -150,9 +146,13 @@ public class ExpressionFactory extends BaseDAGFactory {
       System.err.println(varName + " cannot be resolved to a variable");
       status(MAJOR_ERRORS);
       return new DAGVariable();
+    } else if (var instanceof LocalDescriptor) {
+      return new DAGLocal((LocalDescriptor) var);
+    } else if (var instanceof ParameterDescriptor) {
+      return new DAGParameter((ParameterDescriptor) var);
+    } else {
+      return new DAGMember((MemberDescriptor) var);
     }
-
-    return new DAGVariable(var);
   }
 
   /**
