@@ -53,7 +53,7 @@ class JavapExample {
   }
 
   void DAGAssignmentLocal(int value) {
-    int $ = value;
+    int local = value;
   }
 
   int[] memberArray;
@@ -67,8 +67,8 @@ class JavapExample {
   }
 
   void DAGBracketAssignmentLocal(int index, int value) {
-    int[] $ = getIntArray();
-    $[index] = value;
+    int[] local = getIntArray();
+    local[index] = value;
   }
 
   void methodF(int arg1, boolean arg2, int arg3) {}

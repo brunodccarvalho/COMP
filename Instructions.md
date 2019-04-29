@@ -621,20 +621,24 @@ calculation, the saved value is loaded instead.
 This does not apply to non-equals classes (DAGNew and DAGCall) and does not apply to constants.
 It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
 
+    x = not eXpression
+    r = Reusable
+    c = Constant
+    n = Not reusable
+
     x DAGAssignment
-    x DAGBinaryOp
-    x DAGBooleanConstant
-    x DAGBracket
+    r DAGBinaryOp
+    c DAGBooleanConstant
+    r DAGBracket
     x DAGBracketAssignment
-    x DAGIntegerConstant
-    x DAGLength
-    x DAGMethodCall
-    x DAGNewClass
-    x DAGNewIntArray
-    x DAGNot
-    x DAGStaticCall
-    x DAGThis
-    x DAGVariable
+    c DAGIntegerConstant
+    r DAGLength
+    n DAGMethodCall
+    n DAGNewClass
+    n DAGNewIntArray
+    r DAGNot
+    n DAGStaticCall
+    c DAGVariable
 
     DAGBinaryOp: (DAGExpression lhs) Operator (DAGExpression rhs)
         generate lhs operand
