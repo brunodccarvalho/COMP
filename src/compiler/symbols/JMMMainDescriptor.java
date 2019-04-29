@@ -108,12 +108,4 @@ public class JMMMainDescriptor
     JMMMainDescriptor other = (JMMMainDescriptor) obj;
     return Objects.equals(paramName, other.paramName);
   }
-
-  @Override
-  public ParameterDescriptor[] getParameters()
-  {
-    //TODO?
-    return null;
-  }
-
 }

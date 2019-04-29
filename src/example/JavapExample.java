@@ -1,3 +1,5 @@
+package example;
+
 class JavapExample {
   static int[] getIntArray() {
     return null;
@@ -75,11 +77,27 @@ class JavapExample {
 
   static void staticF(int arg1, boolean arg2, int arg3) {}
 
+  int methodI(int arg1, boolean arg2, int arg3) {
+    return 0;
+  }
+
+  static int staticI(int arg1, boolean arg2, int arg3) {
+    return 0;
+  }
+
   void DAGMethodCall() {
     methodF(10, true, 50);
   }
 
   void DAGStaticCall() {
     staticF(10, true, 50);
+  }
+
+  void DAGMethodCallInt() {
+    int local = methodI(10, true, 50);
+  }
+
+  void DAGStaticCallInt() {
+    int local = staticI(10, true, 50);
   }
 }

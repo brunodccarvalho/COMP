@@ -15,6 +15,6 @@ final class Compiler {
     // Parse option arguments...
 
     String source = args[args.length - 1];
-    ClassCompiler unit = new ClassCompiler(new File(source));
+    new ClassCompiler(new File(source));
   }
 }

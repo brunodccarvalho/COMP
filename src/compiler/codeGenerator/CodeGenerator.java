@@ -34,6 +34,7 @@ import java.io.IOException;
  *  - test function invocation
  */
 
+// clang-format off
 /**
  * Code generator for a single class Expects: - The class symbol table outputs:
  * - The .j (JVM code) file corresponding to the given class
@@ -254,7 +255,7 @@ public class CodeGenerator {
         else if((integerConstantValue >= 0) && (integerConstantValue <= 5)) {
             integerPushBody = subst(CodeGeneratorConstants.PUSHCONST, String.valueOf(integerConstantValue));
         }
-        else 
+        else
             integerPushBody = subst(CodeGeneratorConstants.PUSHINT, String.valueOf(integerConstantValue));
         return integerPushBody + "\n";
     }
@@ -267,7 +268,7 @@ public class CodeGenerator {
         }
         return parameterPush;
     }
-    
+
     private String generateMethodCall(DAGCall methodCall) {
         String methodCallBody = new String();
         String methodSignature = this.generateMethodSignature(methodCall) + "\n";
@@ -276,7 +277,7 @@ public class CodeGenerator {
         methodCallBody = methodCallBody.concat(parameterPush).concat(invoke);
         return methodCallBody;
     }
-    
+
     private String generateExpression(DAGExpression expression) {
         String expressionBody = new String();
         if(expression instanceof DAGBinaryOp) {
