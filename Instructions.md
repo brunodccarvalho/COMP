@@ -649,9 +649,33 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
                                       ..., lhs
                                   --> ..., lhs, rhs
         apply operation
-                        iadd, isub, imul, idiv, iand
+          if add, sub, mul, div:
+                        iadd, isub, imul, idiv
+          if less:
+                        if_icmpge A
+                        iconst_1
+                        goto      B
+                    A:  iconst_0
+                    B:  ...
                                       ..., lhs, rhs
                                   --> ..., result
+          if and (must implement shortcircuiting):
+
+    DAGAnd:
+        generate lhs operand
+                                      ...
+                                  --> ..., lhs
+        if false, evaluate to 0 immediately:
+                        ifeq     A
+        else generate rhs operand
+                                      ..., lhs
+                                  --> ..., lhs, rhs
+        if false, evaluate to 0, else evaluate to 1:
+                        ifeq     A
+                        iconst_1
+                        goto     B
+                    A:  iconst_0
+                    B:  ...
 
     DAGLength: (DAGExpression ar) .length
         generate arrayref ar:
@@ -793,15 +817,154 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
                         invokestatic ClassName/methodName(MethodDescriptor).
 
     DAGVariable:
-          if variable is Local or Parameter:
-            if 0,1,2,3:
+        if variable is Local or Parameter:
+          if 0,1,2,3:
                         iload_<n>
                         aload_<n>
-            else:
+          else:
                         iload n
                         aload n
-          if variable is Member:
+        if variable is Member:
                         aload_0
                         getfield Classname/fieldName fieldType
-          if variable is This:
+        if variable is This:
                         aload_0
+
+#### Javap
+
+    DAGAdd:
+          $lhs
+          $rhs
+          iadd
+        - istore
+
+    DAGSub:
+          $lhs
+          $rhs
+          isub
+        - istore
+
+    DAGMul:
+          $lhs
+          $rhs
+          imul
+        - istore
+
+    DAGDiv:
+          $lhs
+          $rhs
+          idiv
+        - istore
+
+    DAGLess:
+          $lhs
+          $rhs
+          if_icmpge   A
+          iconst_1
+          goto        B
+      A:  iconst_0
+      B:> istore
+
+    DAGAnd:
+          $lhs
+          ifeq        A
+          $rhs
+          ifeq        A
+          iconst_1
+          goto        B
+      A:  iconst_0
+      B:> istore
+
+    DAGLength:
+          $loadarray
+          arraylength
+        > istore
+
+    DAGNot:
+          $loadboolean
+          ifne        A
+          iconst_1
+          goto        B
+      A:  iconst_0
+      B:> istore
+
+    DAGBracket:
+          $loadarray
+          $loadindex
+          iaload
+        > istore
+
+    DAGNewClass:
+          new <class>
+          dup
+          invokespecial <init>:()V
+        > astore
+
+    DAGNewIntArray:
+          $loadcount
+          newarray
+        > astore
+
+    DAGIntegerConstant:
+          iconst_<n>
+        or
+          bipush <constant>
+        or
+          sipush <constant>
+        or
+          ldc    <constant>
+
+    DAGBooleanConstant:
+          iconst_0
+        or
+          iconst_1
+
+    DAGAssignmentMember:
+          aload_0    # this
+          $loadvalue
+          putfield  <member>
+
+    DAGAssignmentLocal:
+          $loadvalue
+        > store
+
+    DAGBracketAssignmentMember:
+          aload_0    # this
+          getfield  <member>
+          $loadindex
+          $loadvalue
+          iastore
+
+    DAGBracketAssignmentLocal:
+          $loadarray
+          $loadindex
+          $loadvalue
+          iastore
+
+    DAGMethodCall:
+          $loadobjectref        # possibly aload_0
+          $loadarg1
+          $loadarg2
+          ...
+          invokevirtual <method>
+
+    DAGStaticCall:
+          $loadarg1
+          $loadarg2
+          ...
+          invokestatic <class> <method>
+
+    DAGMethodCall, returning:
+          $loadobjectref        # possibly aload_0
+          $loadarg1
+          $loadarg2
+          ...
+          invokevirtual <method>
+        > *store
+
+    DAGStaticCall, returning:
+          $loadarg1
+          $loadarg2
+          ...
+          invokestatic <class> <method>
+        > *store

@@ -5,8 +5,28 @@ class JavapExample {
     return null;
   }
 
-  void DAGBinaryOp(int lhs, int rhs) {
+  void DAGAdd(int lhs, int rhs) {
     int $ = lhs + rhs;
+  }
+
+  void DAGSub(int lhs, int rhs) {
+    int $ = lhs - rhs;
+  }
+
+  void DAGMul(int lhs, int rhs) {
+    int $ = lhs * rhs;
+  }
+
+  void DAGDiv(int lhs, int rhs) {
+    int $ = lhs / rhs;
+  }
+
+  void DAGLess(int lhs, int rhs) {
+    boolean $ = lhs < rhs;
+  }
+
+  void DAGAnd(boolean lhs, boolean rhs) {
+    boolean $ = lhs && rhs;
   }
 
   void DAGLength(int[] array) {
