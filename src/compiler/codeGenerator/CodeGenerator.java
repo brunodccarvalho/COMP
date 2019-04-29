@@ -265,7 +265,7 @@ public class CodeGenerator {
             regexLoad = CodeGeneratorConstants.LOADADDRESS;
         return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
     }
-    
+
     private String generateOperator(BinaryOperator operator) {
         return CodeGeneratorConstants.binaryOperators.get(operator.toString()) + "\n";
     }
@@ -414,17 +414,30 @@ public class CodeGenerator {
         codeGenerator.generateMethods();
         codeGenerator.flush();
         codeGenerator.close();
-
     }
+
+    private static int dagLessLabelCounter = 0;
 
     // Extra methods
     private String generateLessOperator(DAGBinaryOp dag) {
         assert dag.isComparison();
         DAGExpression lhs = dag.getLhs();
         DAGExpression rhs = dag.getRhs();
-        String lhsCode = generateExpression(lhs);
-        String rhsCode = generateExpression(rhs);
-        return null;
+
+        String labelFalse = Integer.toString(++dagLessLabelCounter) + "\n";
+        String labelTrue = Integer.toString(++dagLessLabelCounter) + "\n";
+
+        String lhsCode = generateExpression(lhs); // does this have newline?
+        String rhsCode = generateExpression(rhs); // does this have newline?
+
+        // these don't have newline:
+        String ifCode = subst(CodeGeneratorConstants.IF_ICMPGE, labelFalse);
+        String gotoCode = subst(CodeGeneratorConstants.GOTO, labelTrue);
+        String trueConst = CodeGeneratorConstants.ICONST_1 + "\n";
+        String falseConst = CodeGeneratorConstants.ICONST_0 + "\n";
+
+        return lhsCode + rhsCode + ifCode + trueConst + gotoCode +
+               labelFalse + falseConst + labelTrue;
     }
 
 }

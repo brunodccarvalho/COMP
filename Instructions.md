@@ -830,7 +830,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
         if variable is This:
                         aload_0
 
-#### Javap
+#### codeGenerator implementation
 
     generateOperator()
     DAGAdd:

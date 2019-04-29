@@ -1,11 +1,15 @@
 package compiler.dag;
 
 import static jjt.jmmTreeConstants.*;
+
 import static compiler.symbols.PrimitiveDescriptor.*;
 import static compiler.symbols.TypeDescriptor.typematch;
 
 import compiler.modules.DiagnosticsHandler;
 import compiler.symbols.FunctionLocals;
+import compiler.symbols.LocalDescriptor;
+import compiler.symbols.MemberDescriptor;
+import compiler.symbols.ParameterDescriptor;
 import compiler.symbols.VariableDescriptor;
 import jjt.SimpleNode;
 
@@ -61,7 +65,7 @@ public class AssignmentFactory extends BaseDAGFactory {
 
     // Error: Type mismatch: Expected type T, but expression has type E.
     if (!typematch(var.getType(), expression.getType())) {
-      DiagnosticsHandler.typeMismatch(assignmentNode, var.getType(),expression.getType());
+      DiagnosticsHandler.typeMismatch(assignmentNode, var.getType(), expression.getType());
       status(MAJOR_ERRORS);
     }
 
@@ -95,7 +99,8 @@ public class AssignmentFactory extends BaseDAGFactory {
 
     // ERROR: Type mismatch in the index expression.
     if (!typematch(intDescriptor, indexExpression.getType())) {
-      DiagnosticsHandler.typeMismatch(indexExpressionNode, intDescriptor, assignedExpression.getType());
+      DiagnosticsHandler.typeMismatch(indexExpressionNode, intDescriptor,
+                                      assignedExpression.getType());
       status(MAJOR_ERRORS);
     }
 
@@ -119,8 +124,12 @@ public class AssignmentFactory extends BaseDAGFactory {
       DiagnosticsHandler.unresolvedVarName(node, varName);
       status(MAJOR_ERRORS);
       return new DAGVariable();
+    } else if (var instanceof LocalDescriptor) {
+      return new DAGLocal((LocalDescriptor) var);
+    } else if (var instanceof ParameterDescriptor) {
+      return new DAGParameter((ParameterDescriptor) var);
+    } else {
+      return new DAGMember((MemberDescriptor) var);
     }
-
-    return new DAGVariable(var);
   }
 }
