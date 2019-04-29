@@ -2,6 +2,7 @@ package compiler.codeGenerator;
 
 import java.util.HashMap;
 
+// clang-format off
 public final class CodeGeneratorConstants {
 
     public static String DEFAULTSUPER = "java/lang/Object";
@@ -86,6 +87,8 @@ public final class CodeGeneratorConstants {
      * 1: number to push to the stack - should be one of: 0,1,2,3,4,5 or m1 (-1)
      */
     public static String PUSHCONST = "\ticonst_?";
+    public static String ICONST_0 = "\ticonst_0";  // false constant
+    public static String ICONST_1 = "\ticonst_1";  // true constant
     /**
      * 1: number to push to the stack
      */
@@ -100,4 +103,53 @@ public final class CodeGeneratorConstants {
      * 3: type of variable
      */
     public static String GETFIELD = "\taload 0\n\tgetfield ?/? ?";
+
+    /**
+     * 1: name of label
+     */
+    public static String LABEL = "?:";
+
+    /**
+     * 1: constant to push
+     */
+    public static String BIPUSH = "\tbipush ?";
+    public static String SIPUSH = "\tsipush ?";
+    public static String LDC = "\tldc ?";
+
+    /**
+     * 1: jump label
+     */
+    public static String IF_ICMPEQ = "\tif_icmpeq ?";
+    public static String IF_ICMPNE = "\tif_icmpne ?";
+    public static String IF_ICMPLT = "\tif_icmplt ?";
+    public static String IF_ICMPGT = "\tif_icmpgt ?";
+    public static String IF_ICMPLE = "\tif_icmple ?";
+    public static String IF_ICMPGE = "\tif_icmpge ?";
+
+    /**
+     * 1: jump label
+     */
+    public static String IFEQ = "\tifeq ?";
+    public static String IFNE = "\tifne ?";
+    public static String IFLT = "\tiflt ?";
+    public static String IFGT = "\tifgt ?";
+    public static String IFLE = "\tifle ?";
+    public static String IFGE = "\tifge ?";
+
+    /**
+     * 1: jump label
+     */
+    public static String GOTO = "\tgoto ?";
+
+    /**
+     * 1: class name path
+     * 2: call variable name
+     * 3: type of variable
+     */
+    public static String PUTFIELD = "\taload 0\n\tswap\n\tputfield ?/? ?";
+    /**
+     * Main
+     */
+    public static String MAIN = ".method public static main([Ljava/lang/String;)V";
+
 }
