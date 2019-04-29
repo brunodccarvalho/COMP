@@ -832,30 +832,35 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
 
 #### Javap
 
+    generateOperator()
     DAGAdd:
           $lhs
           $rhs
           iadd
         - istore
 
+    generateOperator()
     DAGSub:
           $lhs
           $rhs
           isub
         - istore
 
+    generateOperator()
     DAGMul:
           $lhs
           $rhs
           imul
         - istore
 
+    generateOperator()
     DAGDiv:
           $lhs
           $rhs
           idiv
         - istore
 
+    - Incorrect
     DAGLess:
           $lhs
           $rhs
@@ -865,6 +870,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
       A:  iconst_0
       B:> istore
 
+    - Incorrect
     DAGAnd:
           $lhs
           ifeq        A
@@ -875,11 +881,13 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
       A:  iconst_0
       B:> istore
 
+    - Not implemented
     DAGLength:
           $loadarray
           arraylength
         > istore
 
+    - Not implemented
     DAGNot:
           $loadboolean
           ifne        A
@@ -888,23 +896,27 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
       A:  iconst_0
       B:> istore
 
+    - Not implemented
     DAGBracket:
           $loadarray
           $loadindex
           iaload
         > istore
 
+    - Not implemented
     DAGNewClass:
           new <class>
           dup
           invokespecial <init>:()V
         > astore
 
+    - Not implemented
     DAGNewIntArray:
           $loadcount
           newarray
         > astore
 
+    - Incorrect: must consider iconst, bipush, sipush and ldc.
     DAGIntegerConstant:
           iconst_<n>
         or
@@ -914,10 +926,14 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
         or
           ldc    <constant>
 
+    - Not implemented
     DAGBooleanConstant:
           iconst_0
         or
           iconst_1
+
+    ***** DAGAssignment (generateStore, generateAssignment)
+    - No distinction between variable types
 
     DAGAssignmentMember:
           aload_0    # this
@@ -941,6 +957,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           $loadvalue
           iastore
 
+    generateMethodCall()
     DAGMethodCall:
           $loadobjectref        # possibly aload_0
           $loadarg1
@@ -968,3 +985,23 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           ...
           invokestatic <class> <method>
         > *store
+
+    ***** DAGVariable (generateLoad, generateMemberLoad)
+
+    generateLoad()
+    DAGLocal, DAGParameter:
+          aload_n
+        or
+          iload_n
+        or
+          aload <index>
+        or
+          iload <index>
+
+    DAGThis:
+          aload_0
+
+    * generateMemberLoad()
+    DAGMember:
+          aload_0
+          getfield <member descriptor>

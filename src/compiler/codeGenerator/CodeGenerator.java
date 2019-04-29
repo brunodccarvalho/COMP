@@ -29,12 +29,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * TODO: 
+ * TODO:
  *  - generate main method (invokespecial)
  *  - load/store fields
  *  - test function invocation
  */
-
+// clang-format off
 /**
  * Code generator for a single class Expects: - The class symbol table outputs:
  * - The .j (JVM code) file corresponding to the given class
@@ -264,7 +264,7 @@ public class CodeGenerator {
         else if((integerConstantValue >= 0) && (integerConstantValue <= 5)) {
             integerPushBody = subst(CodeGeneratorConstants.PUSHCONST, String.valueOf(integerConstantValue));
         }
-        else 
+        else
             integerPushBody = subst(CodeGeneratorConstants.PUSHINT, String.valueOf(integerConstantValue));
         return integerPushBody + "\n";
     }
@@ -277,7 +277,7 @@ public class CodeGenerator {
         }
         return parameterPush;
     }
-    
+
     private String generateMethodCall(DAGCall methodCall) {
         String methodCallBody = new String();
         String methodSignature = this.generateMethodSignature(methodCall) + "\n";
@@ -286,7 +286,7 @@ public class CodeGenerator {
         methodCallBody = methodCallBody.concat(parameterPush).concat(invoke);
         return methodCallBody;
     }
-    
+
     private String generateExpression(DAGExpression expression) {
         String expressionBody = new String();
         System.out.println(expression.getClass() + " " +expression);
@@ -392,6 +392,14 @@ public class CodeGenerator {
 
     }
 
-
+    // Extra methods
+    private String generateLessOperator(DAGBinaryOp dag) {
+        assert dag.isComparison();
+        DAGExpression lhs = dag.getLhs();
+        DAGExpression rhs = dag.getRhs();
+        String lhsCode = generateExpression(lhs);
+        String rhsCode = generateExpression(rhs);
+        return null;
+    }
 
 }
