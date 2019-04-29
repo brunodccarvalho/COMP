@@ -398,7 +398,7 @@ public class ExpressionFactory extends BaseDAGFactory {
                          + " matches the signature " + methodName + signature);
       status(MAJOR_ERRORS);
     } else {
-      TypeDescriptor returnType = classDescriptor.getReturnType(methodName, signature);
+      TypeDescriptor returnType = classDescriptor.getReturnTypeStatic(methodName, signature);
       return new DAGStaticCall(classDescriptor, methodName, signature, returnType, arguments);
     }
 
