@@ -130,11 +130,18 @@ public class CodeGenerator {
         writer.write(CodeGeneratorConstants.DEFAULTINITIALIZER + "\n\n");
     }
 
-    private void generateMain() {
-        if(!this.classDescriptor.hasMain()) return;
-        JMMMainDescriptor main= this.classDescriptor.getMain();
-
-        //TODO
+    private void generateMain(MethodBody mainBody) {
+        String body = "";
+        if(mainBody!=null)
+        {
+            DAGNode[] mainNode=mainBody.getStatements();
+            body=generateMethodBodyAux(mainNode);
+        }
+        int localsSize = 99;
+        String methodStack = subst(CodeGeneratorConstants.STACK, String.valueOf(localsSize));
+        String methodLocals = subst(CodeGeneratorConstants.LOCALS, String.valueOf(localsSize));
+        String mainBodyRegex= subst(CodeGeneratorConstants.MAIN,methodStack,methodLocals,body);
+        writer.write(mainBodyRegex+"\n");
     }
 
     private String generateMethodSignature(String methodClass, String methodName, String methodDescriptor, String returnType) {
@@ -374,11 +381,9 @@ public class CodeGenerator {
 
     }
 
-    private String generateMethodBody(JMMMethodDescriptor method) {
+    private String generateMethodBodyAux(DAGNode[] statements)
+    {
         String methodBody = new String();
-        MethodBody body = methodBodies.get(method);
-        this.generateMethodVarDeclaration(method);
-        DAGNode[] statements = body.getStatements();
         for (DAGNode statement : statements) {
             if(statement instanceof DAGAssignment) {
                 String assignmentBody = this.generateAssignment((DAGAssignment)statement);
@@ -390,6 +395,14 @@ public class CodeGenerator {
             }
         }
         return methodBody;
+
+    }
+
+    private String generateMethodBody(JMMMethodDescriptor method) {
+        MethodBody body = methodBodies.get(method);
+        this.generateMethodVarDeclaration(method);
+        DAGNode[] statements = body.getStatements();
+        return generateMethodBodyAux(statements);
     }
 
     private String generateMethodReturn(DAGExpression returnExpression) {
@@ -432,7 +445,7 @@ public class CodeGenerator {
         this.writer.close();
     }
 
-    public static void generateCode(JMMClassDescriptor classDescriptor, HashMap<JMMMethodDescriptor, MethodBody> methodBodies, SymbolsTable symbolsTable) {
+    public static void generateCode(JMMClassDescriptor classDescriptor, HashMap<JMMMethodDescriptor, MethodBody> methodBodies, SymbolsTable symbolsTable,MethodBody mainBody) {
         CodeGenerator codeGenerator = new CodeGenerator(classDescriptor, methodBodies, symbolsTable);
 
         // generate class header
@@ -444,11 +457,11 @@ public class CodeGenerator {
         // generate constructors
         codeGenerator.generateConstructors();
 
-        // generate main
-        codeGenerator.generateMain();
-
         // generate methods
         codeGenerator.generateMethods();
+
+        codeGenerator.generateMain(mainBody);
+
         codeGenerator.flush();
         codeGenerator.close();
     }
