@@ -12,7 +12,7 @@ import compiler.symbols.FunctionLocals;
 import compiler.symbols.JMMClassDescriptor;
 import compiler.symbols.JMMMethodDescriptor;
 
-import compiler.DiagnosticsHandler;
+import compiler.modules.DiagnosticsHandler;
 import compiler.codeGenerator.CodeGenerator;
 import compiler.dag.DAGNode;
 import jjt.ParseException;
@@ -91,7 +91,7 @@ public final class ClassCompiler extends CompilerModule {
     }
 
     // Generate Code
-    CodeGenerator.generateCode(this.jmmClass, methodBodies, symbolsTable);
+    // CodeGenerator.generateCode(this.jmmClass, methodBodies, symbolsTable);
 
     // Do main() too..
 

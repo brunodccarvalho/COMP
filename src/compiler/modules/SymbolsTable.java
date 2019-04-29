@@ -5,7 +5,7 @@ import static jjt.jmmTreeConstants.*;
 import java.util.HashMap;
 
 import compiler.FunctionSignature;
-import compiler.DiagnosticsHandler;
+import compiler.modules.DiagnosticsHandler;
 import compiler.symbols.*;
 import jjt.SimpleNode;
 
@@ -103,8 +103,7 @@ public class SymbolsTable extends CompilerModule {
 
     // ERROR: Repeated class member variable.
     if (jmmClass.resolve(identifier) != null) {
-      System.err.println("Error: class variable " + identifier + " is already defined");
-      DiagnosticsHandler.self.errorLine(nameNode.jjtGetFirstToken());
+      DiagnosticsHandler.varAlreadyDefined(nameNode,identifier);
       status(MINOR_ERRORS);
       return;
     }
@@ -172,16 +171,14 @@ public class SymbolsTable extends CompilerModule {
 
     // Error: Repeated methods - Two methods with the same name and signature.
     if (jmmClass.hasMethod(name, signature)) {
-      System.err.println("Error: method " + name + signature + " is already defined");
-      DiagnosticsHandler.self.errorLine(methodNameNode.jjtGetFirstToken());
+      DiagnosticsHandler.methodAlreadyDefined(methodNameNode,name,signature);
       status(MINOR_ERRORS);
       return;
     }
 
     // Error: Repeated parameter names -- Two parameters have the same name.
     if (!JMMCallableDescriptor.validateParameterNames(paramNames)) {
-      System.err.println("Error: method " + name + signature + " has conflicting parameter names");
-      DiagnosticsHandler.self.errorLine(methodNameNode.jjtGetFirstToken());
+      DiagnosticsHandler.conflictingParams(methodNameNode, name, signature);
       status(MINOR_ERRORS);
       return;
     }
@@ -207,8 +204,7 @@ public class SymbolsTable extends CompilerModule {
 
     // Error: Repeated methods - Two methods with the same name and signature.
     if (jmmClass.hasMain()) {
-      System.err.println("Error: main method is already defined");
-      DiagnosticsHandler.self.errorLine(mainNode.jjtGetFirstToken());
+      DiagnosticsHandler.mainMethodDefined(mainNode);
       status(MINOR_ERRORS);
       return;
     }
@@ -248,16 +244,14 @@ public class SymbolsTable extends CompilerModule {
 
       // Error: Redefinition of identifier -- same identifier is used twice locally.
       if (locals.hasVariable(name)) {
-        System.err.println("Error: " + name + " is already locally defined in " + method);
-        DiagnosticsHandler.self.errorLine(nameNode.jjtGetFirstToken());
+        DiagnosticsHandler.localAlreadyDefined(nameNode, name, method);
         status(MINOR_ERRORS);
         continue;
       }
 
       // Error: Redefinition of parameter -- same identifier is a function parameter.
       if (method.hasParameter(name)) {
-        System.err.println("Error: locally defined " + name + " is a parameter of " + method);
-        DiagnosticsHandler.self.errorLine(nameNode.jjtGetFirstToken());
+        DiagnosticsHandler.paramAlreadyDefined(nameNode, name, method);
         status(MINOR_ERRORS);
         continue;
       }
@@ -279,8 +273,7 @@ public class SymbolsTable extends CompilerModule {
           TypeDescriptor rightType = getOrCreateTypeFromNode(rightNode);
 
           if (leftType != rightType) {
-            System.err.println("Error: incompatible types");
-            DiagnosticsHandler.self.errorLine(leftNode.jjtGetFirstToken());
+            DiagnosticsHandler.typeMismatch(statement, leftType, rightType);
             status(MINOR_ERRORS);
             continue;
           }

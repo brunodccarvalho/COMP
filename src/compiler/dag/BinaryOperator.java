@@ -5,6 +5,9 @@ import static jjt.jmmTreeConstants.*;
 import compiler.symbols.PrimitiveDescriptor;
 import jjt.SimpleNode;
 
+/**
+ * Binary operator auxiliary for DAGBinaryOp.
+ */
 public enum BinaryOperator {
   SUM("+"),
   SUB("-"),
@@ -19,6 +22,11 @@ public enum BinaryOperator {
     this.str = s;
   }
 
+  /**
+   * Get the resulting type of the operation: typeof(Expression Op Expression)
+   *
+   * @return the descriptor of the resulting type.
+   */
   public PrimitiveDescriptor getExpressionType() {
     switch (this) {
     case SUM:
@@ -36,6 +44,11 @@ public enum BinaryOperator {
     return null;
   }
 
+  /**
+   * Get the type of each operand: typeof(Expression) Op Expression
+   *
+   * @return the descriptor of the operand type.
+   */
   public PrimitiveDescriptor getOperandType() {
     switch (this) {
     case SUM:
@@ -53,6 +66,9 @@ public enum BinaryOperator {
     return null;
   }
 
+  /**
+   * Get binary operator for this SimpleNode.
+   */
   public static BinaryOperator from(SimpleNode node) {
     switch (node.getId()) {
     case JJTAND:
