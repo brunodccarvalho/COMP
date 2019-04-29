@@ -55,6 +55,13 @@ public class FunctionLocals extends Descriptor {
   }
 
   /**
+   * @return A map of variable names to local variable descriptors
+   */
+  public HashMap<String, LocalDescriptor> getVariables() {
+    return this.variables;
+  }
+
+  /**
    * Adds a new local variable to the table.
    *
    * @param var The new variable descriptor
