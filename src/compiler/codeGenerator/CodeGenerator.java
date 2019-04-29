@@ -7,6 +7,7 @@ import compiler.dag.DAGBinaryOp;
 import compiler.dag.DAGCall;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
+import compiler.dag.DAGLocal;
 import compiler.dag.DAGMember;
 import compiler.dag.DAGNode;
 import compiler.dag.DAGVariable;
@@ -69,7 +70,7 @@ public class CodeGenerator {
     private String getMethodDescriptor(TypeDescriptor[] typeDescriptors) {
         String methodDescriptor = new String();
         for(TypeDescriptor typeDescriptor: typeDescriptors) {
-            String jvmType = subst(CodeGeneratorConstants.METHODDESCRIPTOR, getType(typeDescriptor)) + " ";
+            String jvmType = subst(CodeGeneratorConstants.METHODDESCRIPTOR, getType(typeDescriptor)); //TODO verificar o tipo para por ";" no fim caso seja L
             methodDescriptor = methodDescriptor.concat(jvmType);
         }
         return methodDescriptor;
@@ -156,7 +157,7 @@ public class CodeGenerator {
     }
 
     private String generateMethodStackLocals(JMMMethodDescriptor method) {
-        int localsSize = this.numberLocals + this.numberParam + this.numberTemp;
+        int localsSize = 99;
         String methodStack = subst(CodeGeneratorConstants.STACK, String.valueOf(localsSize));
         String methodLocals = subst(CodeGeneratorConstants.LOCALS, String.valueOf(localsSize));
         String methodStackLocals = new String();
@@ -227,8 +228,8 @@ public class CodeGenerator {
         return assignmentBody;
     }
 
-    private String generateLoad(DAGVariable variable) {
-        VariableDescriptor variableDescriptor = variable.getVariable();
+    private String generateLoad(DAGLocal variable) {
+        LocalDescriptor variableDescriptor = variable.getVariable();
         Integer variableIndex = this.variablesIndexes.get(variableDescriptor);
         if(variableIndex == null) { // class field
             return "";
@@ -304,8 +305,8 @@ public class CodeGenerator {
             String member = generateMemberLoad((DAGMember)expression);
             expressionBody = expressionBody.concat(member);
         }
-        else if(expression instanceof DAGVariable) {
-            String loadBody = generateLoad((DAGVariable)expression);
+        else if(expression instanceof DAGLocal) {
+            String loadBody = generateLoad((DAGLocal)expression);
             expressionBody = expressionBody.concat(loadBody);
         }
         else if(expression instanceof DAGIntegerConstant) {

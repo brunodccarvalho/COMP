@@ -55,7 +55,7 @@ public final class CodeGeneratorConstants {
     /**
      * 1: type descritor of the method's parameters
      */
-    public static String METHODDESCRIPTOR = "?;";
+    public static String METHODDESCRIPTOR = "?";
     /**
      * 1: name of the method
      * 2: descriptor of the method
