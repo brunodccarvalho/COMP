@@ -18,14 +18,6 @@ class Example {
     return inited;
   }
 
-  public File getFile(File f) {
-    int i;
-    boolean j;
-    i = j;
-    j = i;
-    return f;
-  }
-
   public int increment(int add) {
     counter = counter + add;
     return add;

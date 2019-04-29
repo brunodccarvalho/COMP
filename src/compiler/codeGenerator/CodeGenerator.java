@@ -7,8 +7,10 @@ import compiler.dag.DAGBinaryOp;
 import compiler.dag.DAGCall;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
+import compiler.dag.DAGLocal;
 import compiler.dag.DAGMember;
 import compiler.dag.DAGNode;
+import compiler.dag.DAGParameter;
 import compiler.dag.DAGVariable;
 import compiler.symbols.JMMClassDescriptor;
 import compiler.symbols.JMMMethodDescriptor;
@@ -69,7 +71,7 @@ public class CodeGenerator {
     private String getMethodDescriptor(TypeDescriptor[] typeDescriptors) {
         String methodDescriptor = new String();
         for(TypeDescriptor typeDescriptor: typeDescriptors) {
-            String jvmType = subst(CodeGeneratorConstants.METHODDESCRIPTOR, getType(typeDescriptor)) + " ";
+            String jvmType = subst(CodeGeneratorConstants.METHODDESCRIPTOR, getType(typeDescriptor)); //TODO verificar o tipo para por ";" no fim caso seja L
             methodDescriptor = methodDescriptor.concat(jvmType);
         }
         return methodDescriptor;
@@ -156,7 +158,7 @@ public class CodeGenerator {
     }
 
     private String generateMethodStackLocals(JMMMethodDescriptor method) {
-        int localsSize = this.numberLocals + this.numberParam + this.numberTemp;
+        int localsSize = 99;
         String methodStack = subst(CodeGeneratorConstants.STACK, String.valueOf(localsSize));
         String methodLocals = subst(CodeGeneratorConstants.LOCALS, String.valueOf(localsSize));
         String methodStackLocals = new String();
@@ -214,7 +216,7 @@ public class CodeGenerator {
         String regexStore = CodeGeneratorConstants.store.get(variableType);
         if(regexStore == null)
             regexStore = CodeGeneratorConstants.STOREADDRESS;
-        return subst(regexStore, String.valueOf(variableIndex)) + "\n";
+        return subst(regexStore, String.valueOf(variableIndex+1)) + "\n";
     }
 
     private String generateAssignment(DAGAssignment assignment) {
@@ -227,8 +229,8 @@ public class CodeGenerator {
         return assignmentBody;
     }
 
-    private String generateLoad(DAGVariable variable) {
-        VariableDescriptor variableDescriptor = variable.getVariable();
+    private String generateLoad(DAGLocal variable) {
+        LocalDescriptor variableDescriptor = variable.getVariable();
         Integer variableIndex = this.variablesIndexes.get(variableDescriptor);
         if(variableIndex == null) { // class field
             return "";
@@ -237,7 +239,7 @@ public class CodeGenerator {
         String regexLoad = CodeGeneratorConstants.load.get(variableType);
         if(regexLoad == null)
             regexLoad = CodeGeneratorConstants.LOADADDRESS;
-        return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
+        return subst(regexLoad, String.valueOf(variableIndex+1)) + "\n";
     }
 
     private String generateMemberLoad(DAGMember member) {
@@ -251,6 +253,19 @@ public class CodeGenerator {
         return subst(CodeGeneratorConstants.GETFIELD, className,memberName,memberType) + "\n";
     }
 
+    private String generateLoadParameter(DAGParameter member) {
+        VariableDescriptor variableDescriptor = member.getVariable();
+        Integer variableIndex = member.getIndex();
+        if(variableIndex == null) { // class field
+            return "";
+        }
+        String variableType = variableDescriptor.getType().toString();
+        String regexLoad = CodeGeneratorConstants.load.get(variableType);
+        if(regexLoad == null)
+            regexLoad = CodeGeneratorConstants.LOADADDRESS;
+        return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
+    }
+    
     private String generateOperator(BinaryOperator operator) {
         return CodeGeneratorConstants.binaryOperators.get(operator.toString()) + "\n";
     }
@@ -304,9 +319,14 @@ public class CodeGenerator {
             String member = generateMemberLoad((DAGMember)expression);
             expressionBody = expressionBody.concat(member);
         }
-        else if(expression instanceof DAGVariable) {
-            String loadBody = generateLoad((DAGVariable)expression);
+        else if(expression instanceof DAGLocal) {
+            String loadBody = generateLoad((DAGLocal)expression);
             expressionBody = expressionBody.concat(loadBody);
+        }
+        else if(expression instanceof DAGParameter)
+        {
+            String member = generateLoadParameter((DAGParameter)expression);
+            expressionBody = expressionBody.concat(member);
         }
         else if(expression instanceof DAGIntegerConstant) {
             String integerLoadBody = generateIntegerPush((DAGIntegerConstant)expression);
@@ -339,7 +359,12 @@ public class CodeGenerator {
     }
 
     private String generateMethodReturn(DAGExpression returnExpression) {
-        return this.generateExpression(returnExpression);
+        TypeDescriptor returnType= returnExpression.getType();
+        String type=returnType.getName();
+        String returnRegex=CodeGeneratorConstants.returnTypes.get(type);
+        if(returnRegex==null)
+            returnRegex="?\n\tareturn";
+        return subst(returnRegex,this.generateExpression(returnExpression));
     }
 
     private String generateMethod(JMMMethodDescriptor method) {
