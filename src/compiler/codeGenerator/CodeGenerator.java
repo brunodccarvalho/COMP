@@ -304,7 +304,7 @@ public class CodeGenerator {
         String regexLoad = CodeGeneratorConstants.load.get(variableType);
         if(regexLoad == null)
             regexLoad = CodeGeneratorConstants.LOADADDRESS;
-        return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
+        return subst(regexLoad, String.valueOf(variableIndex+1)) + "\n";
     }
 
     private String generateOperator(BinaryOperator operator) {
