@@ -125,7 +125,7 @@ Parse the function statements in depth-first order.
             c DAGIntegerConstant    [int]
             c DAGBooleanConstant    [boolean]
             c DAGVariable           [type(variable)]
-                c DAGThis           [type(this)]
+                c DAGThis           [type(this class)]
             ad DAGNew               [~varies]
                 c DAGNewIntArray    [int[]]
                 c DAGNewClass       [type(class)]
