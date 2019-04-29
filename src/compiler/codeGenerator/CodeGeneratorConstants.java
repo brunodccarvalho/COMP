@@ -11,11 +11,13 @@ public final class CodeGeneratorConstants {
     public static HashMap<String, String> store;
     public static HashMap<String, String> load;
     public static HashMap<String, String> binaryOperators;
+    public static HashMap<String, String> returnTypes;
     static {
         types = new HashMap<>();
         store = new HashMap<>();
         binaryOperators = new HashMap<>();
         load = new HashMap<>();
+        returnTypes = new HashMap<>();
         types.put("int", "I");
         types.put("boolean", "Z");
         types.put("int[]", "[I");
@@ -30,6 +32,10 @@ public final class CodeGeneratorConstants {
         binaryOperators.put("&&", "\tiand");
         load.put("int", "\tiload ?");
         load.put("boolean", "\tiload ?");
+        returnTypes.put("int", "?\n\tireturn");
+        returnTypes.put("boolean", "?\n\tireturn");
+        returnTypes.put("int[]", "?\n\tareturn");
+        returnTypes.put("void", "?\n\treturn");
     }
 
     /**
@@ -51,7 +57,7 @@ public final class CodeGeneratorConstants {
     /**
      * 1: class descriptor
      */
-    public static String CLASSTYPE = "L?";
+    public static String CLASSTYPE = "L?;";
     /**
      * 1: type descritor of the method's parameters
      */
@@ -67,7 +73,7 @@ public final class CodeGeneratorConstants {
      * 2: method stack and locals array size
      * 3: method body
      */
-    public static String METHOD = ".method public ?\n?\n?\n\treturn\n.end method";
+    public static String METHOD = ".method public ?\n?\n?\n.end method";
     /**
      * 1: index of the variable
      */
