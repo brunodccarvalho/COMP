@@ -32,10 +32,10 @@ public final class CodeGeneratorConstants {
         binaryOperators.put("&&", "\tiand");
         load.put("int", "\tiload ?");
         load.put("boolean", "\tiload ?");
-        returnTypes.put("int", "?\n\tireturn");
-        returnTypes.put("boolean", "?\n\tireturn");
-        returnTypes.put("int[]", "?\n\tareturn");
-        returnTypes.put("void", "?\n\treturn");
+        returnTypes.put("int", "?\tireturn");
+        returnTypes.put("boolean", "?\tireturn");
+        returnTypes.put("int[]", "?\tareturn");
+        returnTypes.put("void", "?\treturn");
     }
 
     /**
