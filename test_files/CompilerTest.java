@@ -22,7 +22,4 @@ class Example {
     counter = counter + add;
     return add;
   }
-  public static void main(String[] args) {
-    io.println(new Example().getCounter());
-  }
 }

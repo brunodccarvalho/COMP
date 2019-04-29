@@ -80,7 +80,7 @@ public final class ClassCompiler extends CompilerModule {
     // Construct MethodBody for main method.
     FunctionLocals mainLocals = symbolsTable.mainLocals;
     SimpleNode mainNode = symbolsTable.mainNode;
-    MethodBody mainBody;
+    MethodBody mainBody = null;
 
     if (mainNode != null) {
       mainBody = new MethodBody(mainLocals, mainNode);
@@ -102,7 +102,7 @@ public final class ClassCompiler extends CompilerModule {
     }
 
     // Generate Code
-    CodeGenerator.generateCode(this.jmmClass, methodBodies, symbolsTable);
+    CodeGenerator.generateCode(this.jmmClass, methodBodies, symbolsTable,mainBody);
 
     // Do main() too..
 

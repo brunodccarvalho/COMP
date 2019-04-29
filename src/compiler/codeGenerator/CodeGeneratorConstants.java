@@ -33,10 +33,10 @@ public final class CodeGeneratorConstants {
         binaryOperators.put("&&", "\tiand");
         load.put("int", "\tiload ?");
         load.put("boolean", "\tiload ?");
-        returnTypes.put("int", "?\n\tireturn");
-        returnTypes.put("boolean", "?\n\tireturn");
-        returnTypes.put("int[]", "?\n\tareturn");
-        returnTypes.put("void", "?\n\treturn");
+        returnTypes.put("int", "?\tireturn");
+        returnTypes.put("boolean", "?\tireturn");
+        returnTypes.put("int[]", "?\tareturn");
+        returnTypes.put("void", "?\treturn");
     }
 
     /**
@@ -64,11 +64,18 @@ public final class CodeGeneratorConstants {
      */
     public static String METHODDESCRIPTOR = "?";
     /**
+     * 1: name of the class to which the method belongs
+     * 2: name of the method
+     * 3: descriptor of the method
+     * 4: return type
+     */
+    public static String METHODSIGNATURE = "?/?(?)?";
+    /**
      * 1: name of the method
      * 2: descriptor of the method
      * 3: return type
      */
-    public static String METHODSIGNATURE = "?(?)?";
+    public static String METHODSIGNATURENOCLASS = "?(?)?";
     /**
      * 1: method signature
      * 2: method stack and locals array size
@@ -150,6 +157,6 @@ public final class CodeGeneratorConstants {
     /**
      * Main
      */
-    public static String MAIN = ".method public static main([Ljava/lang/String;)V";
-
+    public static String MAIN = ".method public static main([Ljava/lang/String;)V\n?\n?\n?\n\treturn\n.end method";
+    
 }
