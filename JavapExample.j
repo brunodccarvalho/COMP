@@ -1,6 +1,6 @@
 Classfile /home/bruno/mieic/comp/COMP/JavapExample.class
-  Last modified May 7, 2019; size 3378 bytes
-  MD5 checksum f077857e79fe1f5480bfff7845599664
+  Last modified May 7, 2019; size 3596 bytes
+  MD5 checksum 1ab982335240840ab2b5d3be13a288ff
   Compiled from "JavapExample.java"
 class JavapExample
   minor version: 0
@@ -8,106 +8,112 @@ class JavapExample
   flags: (0x0020) ACC_SUPER
   this_class: #2                          // JavapExample
   super_class: #15                        // java/lang/Object
-  interfaces: 0, fields: 7, methods: 40, attributes: 1
+  interfaces: 0, fields: 7, methods: 43, attributes: 1
 Constant pool:
-   #1 = Methodref          #15.#87        // java/lang/Object."<init>":()V
-   #2 = Class              #88            // JavapExample
-   #3 = Methodref          #2.#87         // JavapExample."<init>":()V
-   #4 = Integer            -1000000
-   #5 = Integer            2000000
-   #6 = Fieldref           #2.#89         // JavapExample.member:I
-   #7 = Fieldref           #2.#90         // JavapExample.memberArray:[I
-   #8 = Methodref          #2.#91         // JavapExample.getIntArray:()[I
-   #9 = Methodref          #2.#92         // JavapExample.methodF:(IZI)V
-  #10 = Methodref          #2.#93         // JavapExample.staticF:(IZI)V
-  #11 = Methodref          #2.#94         // JavapExample.methodI:(IZI)I
-  #12 = Methodref          #2.#95         // JavapExample.staticI:(IZI)I
-  #13 = Methodref          #2.#96         // JavapExample.NOP_boolean:()Z
-  #14 = Methodref          #2.#97         // JavapExample.NOP_int:()I
-  #15 = Class              #98            // java/lang/Object
-  #16 = Utf8               member
-  #17 = Utf8               I
-  #18 = Utf8               memberArray
-  #19 = Utf8               [I
-  #20 = Utf8               while_boolean_b
-  #21 = Utf8               Z
-  #22 = Utf8               while_less_a
-  #23 = Utf8               while_less_b
-  #24 = Utf8               while_and_a
-  #25 = Utf8               while_and_b
-  #26 = Utf8               <init>
-  #27 = Utf8               ()V
-  #28 = Utf8               Code
-  #29 = Utf8               LineNumberTable
-  #30 = Utf8               getIntArray
-  #31 = Utf8               ()[I
-  #32 = Utf8               NOP_boolean
-  #33 = Utf8               ()Z
-  #34 = Utf8               NOP_int
-  #35 = Utf8               ()I
-  #36 = Utf8               DAGAdd
-  #37 = Utf8               (II)V
-  #38 = Utf8               DAGSub
-  #39 = Utf8               DAGMul
-  #40 = Utf8               DAGDiv
-  #41 = Utf8               DAGLess
-  #42 = Utf8               StackMapTable
-  #43 = Utf8               DAGAnd
-  #44 = Utf8               (ZZ)V
-  #45 = Utf8               DAGLength
-  #46 = Utf8               ([I)V
-  #47 = Utf8               DAGNot
-  #48 = Utf8               (Z)V
-  #49 = Utf8               DAGBracket
-  #50 = Utf8               ([II)V
-  #51 = Utf8               DAGNewClass
-  #52 = Utf8               DAGNewIntArray
-  #53 = Utf8               (I)V
-  #54 = Utf8               DAGIntegerConstant
-  #55 = Utf8               DAGBooleanConstant
-  #56 = Utf8               DAGAssignmentMember
-  #57 = Utf8               DAGAssignmentParameter
-  #58 = Utf8               DAGAssignmentLocal
-  #59 = Utf8               DAGBracketAssignmentMember
-  #60 = Utf8               DAGBracketAssignmentParameter
-  #61 = Utf8               ([III)V
-  #62 = Utf8               DAGBracketAssignmentLocal
-  #63 = Utf8               methodF
-  #64 = Utf8               (IZI)V
-  #65 = Utf8               staticF
-  #66 = Utf8               methodI
-  #67 = Utf8               (IZI)I
-  #68 = Utf8               staticI
-  #69 = Utf8               DAGMethodCall
-  #70 = Utf8               DAGStaticCall
-  #71 = Utf8               DAGMethodCallInt
-  #72 = Utf8               DAGStaticCallInt
-  #73 = Utf8               IfElseStatementBoolean
-  #74 = Utf8               (Z)I
-  #75 = Utf8               IfElseStatementLess
-  #76 = Utf8               (II)I
-  #77 = Utf8               IfElseStatementAnd
-  #78 = Utf8               (ZZ)I
-  #79 = Utf8               WhileStatementBoolean
-  #80 = Utf8               WhileStatementLess
-  #81 = Utf8               WhileStatementAnd
-  #82 = Utf8               ReturnVoid
-  #83 = Utf8               ReturnInt
-  #84 = Utf8               ReturnReference
-  #85 = Utf8               SourceFile
-  #86 = Utf8               JavapExample.java
-  #87 = NameAndType        #26:#27        // "<init>":()V
-  #88 = Utf8               JavapExample
-  #89 = NameAndType        #16:#17        // member:I
-  #90 = NameAndType        #18:#19        // memberArray:[I
-  #91 = NameAndType        #30:#31        // getIntArray:()[I
-  #92 = NameAndType        #63:#64        // methodF:(IZI)V
-  #93 = NameAndType        #65:#64        // staticF:(IZI)V
-  #94 = NameAndType        #66:#67        // methodI:(IZI)I
-  #95 = NameAndType        #68:#67        // staticI:(IZI)I
-  #96 = NameAndType        #32:#33        // NOP_boolean:()Z
-  #97 = NameAndType        #34:#35        // NOP_int:()I
-  #98 = Utf8               java/lang/Object
+    #1 = Methodref          #15.#93       // java/lang/Object."<init>":()V
+    #2 = Class              #94           // JavapExample
+    #3 = Methodref          #2.#93        // JavapExample."<init>":()V
+    #4 = Integer            -1000000
+    #5 = Integer            2000000
+    #6 = Fieldref           #2.#95        // JavapExample.member:I
+    #7 = Fieldref           #2.#96        // JavapExample.memberArray:[I
+    #8 = Methodref          #2.#97        // JavapExample.getIntArray:()[I
+    #9 = Methodref          #2.#98        // JavapExample.methodF:(IZI)V
+   #10 = Methodref          #2.#99        // JavapExample.staticF:(IZI)V
+   #11 = Methodref          #2.#100       // JavapExample.methodI:(IZI)I
+   #12 = Methodref          #2.#101       // JavapExample.staticI:(IZI)I
+   #13 = Methodref          #2.#102       // JavapExample.NOP_boolean:()Z
+   #14 = Methodref          #2.#103       // JavapExample.NOP_int:()I
+   #15 = Class              #104          // java/lang/Object
+   #16 = Utf8               member
+   #17 = Utf8               I
+   #18 = Utf8               memberArray
+   #19 = Utf8               [I
+   #20 = Utf8               while_boolean_b
+   #21 = Utf8               Z
+   #22 = Utf8               while_less_a
+   #23 = Utf8               while_less_b
+   #24 = Utf8               while_and_a
+   #25 = Utf8               while_and_b
+   #26 = Utf8               <init>
+   #27 = Utf8               ()V
+   #28 = Utf8               Code
+   #29 = Utf8               LineNumberTable
+   #30 = Utf8               getIntArray
+   #31 = Utf8               ()[I
+   #32 = Utf8               NOP_boolean
+   #33 = Utf8               ()Z
+   #34 = Utf8               NOP_int
+   #35 = Utf8               ()I
+   #36 = Utf8               DAGAdd
+   #37 = Utf8               (II)V
+   #38 = Utf8               DAGSub
+   #39 = Utf8               DAGMul
+   #40 = Utf8               DAGDiv
+   #41 = Utf8               DAGLess
+   #42 = Utf8               StackMapTable
+   #43 = Utf8               DAGAnd
+   #44 = Utf8               (ZZ)V
+   #45 = Utf8               DAGLength
+   #46 = Utf8               ([I)V
+   #47 = Utf8               DAGNot
+   #48 = Utf8               (Z)V
+   #49 = Utf8               DAGBracket
+   #50 = Utf8               ([II)V
+   #51 = Utf8               DAGNewClass
+   #52 = Utf8               DAGNewIntArray
+   #53 = Utf8               (I)V
+   #54 = Utf8               DAGIntegerConstant
+   #55 = Utf8               DAGBooleanConstant
+   #56 = Utf8               DAGAssignmentMember
+   #57 = Utf8               DAGAssignmentParameter
+   #58 = Utf8               DAGAssignmentLocal
+   #59 = Utf8               DAGBracketAssignmentMember
+   #60 = Utf8               DAGBracketAssignmentParameter
+   #61 = Utf8               ([III)V
+   #62 = Utf8               DAGBracketAssignmentLocal
+   #63 = Utf8               methodF
+   #64 = Utf8               (IZI)V
+   #65 = Utf8               staticF
+   #66 = Utf8               methodI
+   #67 = Utf8               (IZI)I
+   #68 = Utf8               staticI
+   #69 = Utf8               DAGMethodCall
+   #70 = Utf8               DAGStaticCall
+   #71 = Utf8               DAGMethodCallInt
+   #72 = Utf8               DAGStaticCallInt
+   #73 = Utf8               IfElseStatementBoolean
+   #74 = Utf8               (Z)I
+   #75 = Utf8               IfElseStatementLess
+   #76 = Utf8               (II)I
+   #77 = Utf8               IfElseStatementAnd
+   #78 = Utf8               (ZZ)I
+   #79 = Utf8               WhileStatementBoolean
+   #80 = Utf8               WhileStatementLess
+   #81 = Utf8               WhileStatementAnd
+   #82 = Utf8               ReturnVoid
+   #83 = Utf8               ReturnInt
+   #84 = Utf8               ReturnReference
+   #85 = Utf8               assignmentBoolean
+   #86 = Utf8               (Z)Z
+   #87 = Utf8               assignmentInt
+   #88 = Utf8               (I)I
+   #89 = Utf8               assignmentIntArray
+   #90 = Utf8               ([I)[I
+   #91 = Utf8               SourceFile
+   #92 = Utf8               JavapExample.java
+   #93 = NameAndType        #26:#27       // "<init>":()V
+   #94 = Utf8               JavapExample
+   #95 = NameAndType        #16:#17       // member:I
+   #96 = NameAndType        #18:#19       // memberArray:[I
+   #97 = NameAndType        #30:#31       // getIntArray:()[I
+   #98 = NameAndType        #63:#64       // methodF:(IZI)V
+   #99 = NameAndType        #65:#64       // staticF:(IZI)V
+  #100 = NameAndType        #66:#67       // methodI:(IZI)I
+  #101 = NameAndType        #68:#67       // staticI:(IZI)I
+  #102 = NameAndType        #32:#33       // NOP_boolean:()Z
+  #103 = NameAndType        #34:#35       // NOP_int:()I
+  #104 = Utf8               java/lang/Object
 {
   int member;
     descriptor: I
@@ -779,5 +785,44 @@ Constant pool:
          3: areturn
       LineNumberTable:
         line 214: 0
+
+  boolean assignmentBoolean(boolean);
+    descriptor: (Z)Z
+    flags: (0x0000)
+    Code:
+      stack=1, locals=3, args_size=2
+         0: iload_1
+         1: istore_2
+         2: iload_2
+         3: ireturn
+      LineNumberTable:
+        line 218: 0
+        line 219: 2
+
+  int assignmentInt(int);
+    descriptor: (I)I
+    flags: (0x0000)
+    Code:
+      stack=1, locals=3, args_size=2
+         0: iload_1
+         1: istore_2
+         2: iload_2
+         3: ireturn
+      LineNumberTable:
+        line 223: 0
+        line 224: 2
+
+  int[] assignmentIntArray(int[]);
+    descriptor: ([I)[I
+    flags: (0x0000)
+    Code:
+      stack=1, locals=3, args_size=2
+         0: aload_1
+         1: astore_2
+         2: aload_2
+         3: areturn
+      LineNumberTable:
+        line 228: 0
+        line 229: 2
 }
 SourceFile: "JavapExample.java"

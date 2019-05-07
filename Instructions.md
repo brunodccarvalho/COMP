@@ -1001,6 +1001,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           goto        B           # only necessary if $truebranch does not return
       A:  $falsebranch...
       B:  ... CONTINUE
+      # NOTA: DAGLess é um caso especial com $truebranch = iconst_1 e $falsebranch = iconst_0
 
     IfElseStatement> 3/3
       Condition is BinaryOperation And (&&):
@@ -1012,6 +1013,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           goto        B           # only necessary if $truebranch does not return
       A:  $falsebranch...
       B:  ... CONTINUE
+      # NOTA: DAGAnd é um caso especial com $truebranch = iconst_1 e $falsebranch = iconst_0
 
     WhileStatement> 1/3
       Condition of boolean type (variable load, function call, etc):
