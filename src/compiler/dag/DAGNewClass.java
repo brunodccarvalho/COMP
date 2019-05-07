@@ -12,6 +12,9 @@ public class DAGNewClass extends DAGNew {
     this.classDescriptor = classDescriptor;
   }
 
+  /**
+   * @return The class being constructed with this new call.
+   */
   public ClassDescriptor getClassDescriptor() {
     return classDescriptor;
   }

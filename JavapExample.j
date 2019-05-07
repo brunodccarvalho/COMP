@@ -1,6 +1,6 @@
 Classfile /home/bruno/mieic/comp/COMP/JavapExample.class
-  Last modified May 7, 2019; size 3596 bytes
-  MD5 checksum 1ab982335240840ab2b5d3be13a288ff
+  Last modified May 7, 2019; size 3671 bytes
+  MD5 checksum 9a6ccaf9eee58a9756fc977461dc881d
   Compiled from "JavapExample.java"
 class JavapExample
   minor version: 0
@@ -8,23 +8,23 @@ class JavapExample
   flags: (0x0020) ACC_SUPER
   this_class: #2                          // JavapExample
   super_class: #15                        // java/lang/Object
-  interfaces: 0, fields: 7, methods: 43, attributes: 1
+  interfaces: 0, fields: 7, methods: 44, attributes: 1
 Constant pool:
-    #1 = Methodref          #15.#93       // java/lang/Object."<init>":()V
-    #2 = Class              #94           // JavapExample
-    #3 = Methodref          #2.#93        // JavapExample."<init>":()V
+    #1 = Methodref          #15.#94       // java/lang/Object."<init>":()V
+    #2 = Class              #95           // JavapExample
+    #3 = Methodref          #2.#94        // JavapExample."<init>":()V
     #4 = Integer            -1000000
     #5 = Integer            2000000
-    #6 = Fieldref           #2.#95        // JavapExample.member:I
-    #7 = Fieldref           #2.#96        // JavapExample.memberArray:[I
-    #8 = Methodref          #2.#97        // JavapExample.getIntArray:()[I
-    #9 = Methodref          #2.#98        // JavapExample.methodF:(IZI)V
-   #10 = Methodref          #2.#99        // JavapExample.staticF:(IZI)V
-   #11 = Methodref          #2.#100       // JavapExample.methodI:(IZI)I
-   #12 = Methodref          #2.#101       // JavapExample.staticI:(IZI)I
-   #13 = Methodref          #2.#102       // JavapExample.NOP_boolean:()Z
-   #14 = Methodref          #2.#103       // JavapExample.NOP_int:()I
-   #15 = Class              #104          // java/lang/Object
+    #6 = Fieldref           #2.#96        // JavapExample.member:I
+    #7 = Fieldref           #2.#97        // JavapExample.memberArray:[I
+    #8 = Methodref          #2.#98        // JavapExample.getIntArray:()[I
+    #9 = Methodref          #2.#99        // JavapExample.methodF:(IZI)V
+   #10 = Methodref          #2.#100       // JavapExample.staticF:(IZI)V
+   #11 = Methodref          #2.#101       // JavapExample.methodI:(IZI)I
+   #12 = Methodref          #2.#102       // JavapExample.staticI:(IZI)I
+   #13 = Methodref          #2.#103       // JavapExample.NOP_boolean:()Z
+   #14 = Methodref          #2.#104       // JavapExample.NOP_int:()I
+   #15 = Class              #105          // java/lang/Object
    #16 = Utf8               member
    #17 = Utf8               I
    #18 = Utf8               memberArray
@@ -100,20 +100,21 @@ Constant pool:
    #88 = Utf8               (I)I
    #89 = Utf8               assignmentIntArray
    #90 = Utf8               ([I)[I
-   #91 = Utf8               SourceFile
-   #92 = Utf8               JavapExample.java
-   #93 = NameAndType        #26:#27       // "<init>":()V
-   #94 = Utf8               JavapExample
-   #95 = NameAndType        #16:#17       // member:I
-   #96 = NameAndType        #18:#19       // memberArray:[I
-   #97 = NameAndType        #30:#31       // getIntArray:()[I
-   #98 = NameAndType        #63:#64       // methodF:(IZI)V
-   #99 = NameAndType        #65:#64       // staticF:(IZI)V
-  #100 = NameAndType        #66:#67       // methodI:(IZI)I
-  #101 = NameAndType        #68:#67       // staticI:(IZI)I
-  #102 = NameAndType        #32:#33       // NOP_boolean:()Z
-  #103 = NameAndType        #34:#35       // NOP_int:()I
-  #104 = Utf8               java/lang/Object
+   #91 = Utf8               commonSubexpressionInt
+   #92 = Utf8               SourceFile
+   #93 = Utf8               JavapExample.java
+   #94 = NameAndType        #26:#27       // "<init>":()V
+   #95 = Utf8               JavapExample
+   #96 = NameAndType        #16:#17       // member:I
+   #97 = NameAndType        #18:#19       // memberArray:[I
+   #98 = NameAndType        #30:#31       // getIntArray:()[I
+   #99 = NameAndType        #63:#64       // methodF:(IZI)V
+  #100 = NameAndType        #65:#64       // staticF:(IZI)V
+  #101 = NameAndType        #66:#67       // methodI:(IZI)I
+  #102 = NameAndType        #68:#67       // staticI:(IZI)I
+  #103 = NameAndType        #32:#33       // NOP_boolean:()Z
+  #104 = NameAndType        #34:#35       // NOP_int:()I
+  #105 = Utf8               java/lang/Object
 {
   int member;
     descriptor: I
@@ -824,5 +825,25 @@ Constant pool:
       LineNumberTable:
         line 228: 0
         line 229: 2
+
+  int commonSubexpressionInt(int, int);
+    descriptor: (II)I
+    flags: (0x0000)
+    Code:
+      stack=3, locals=3, args_size=3
+         0: iload_1
+         1: iload_2
+         2: imul
+         3: iconst_1
+         4: iadd
+         5: iload_1
+         6: iload_2
+         7: imul
+         8: iconst_1
+         9: iadd
+        10: iadd
+        11: ireturn
+      LineNumberTable:
+        line 233: 0
 }
 SourceFile: "JavapExample.java"

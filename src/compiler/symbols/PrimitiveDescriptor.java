@@ -5,7 +5,8 @@ import static compiler.symbols.PrimitiveDescriptor.Type.INT;
 import static compiler.symbols.PrimitiveDescriptor.Type.INTARRAY;
 
 /**
- * Up for refactoring any day.
+ * Up for refactoring any day. Consider a design with a class for int and boolean,
+ * and also a class for array. This would be more appropriate if the language was more complete.
  */
 public class PrimitiveDescriptor extends TypeDescriptor {
   public enum Type {
@@ -59,5 +60,21 @@ public class PrimitiveDescriptor extends TypeDescriptor {
   @Override
   public boolean isArray() {
     return primitive == Type.INTARRAY;
+  }
+
+  @Override
+  public String getBytecodeString() {
+    switch (primitive) {
+    case INT:
+      return "I";
+    case INTARRAY:
+      return "[I";
+    case BOOLEAN:
+      return "Z";
+    }
+
+    // We should never arrive here
+    assert false;
+    return null;
   }
 }

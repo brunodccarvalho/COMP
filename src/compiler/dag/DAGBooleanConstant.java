@@ -11,6 +11,9 @@ public class DAGBooleanConstant extends DAGExpression {
     this.constant = constant;
   }
 
+  /**
+   * @return The value of the boolean constant, true or false.
+   */
   public boolean getValue() {
     return constant;
   }

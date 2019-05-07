@@ -121,6 +121,11 @@ public abstract class TypeDescriptor extends Descriptor {
    */
   public abstract boolean isArray();
 
+  /**
+   * @return The JVM descriptor string for this type.
+   */
+  public abstract String getBytecodeString();
+
   @Override
   public String toString() {
     return name;

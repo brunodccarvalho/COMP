@@ -11,6 +11,9 @@ public class DAGIntegerConstant extends DAGExpression {
     this.constant = constant;
   }
 
+  /**
+   * @return The integer value of the integer constant.
+   */
   public int getValue() {
     return constant;
   }

@@ -21,6 +21,9 @@ public class DAGMethodCall extends DAGCall {
     this.expression = expression;
   }
 
+  /**
+   * @return The object (expression) on which this method is being called.
+   */
   public DAGExpression getObjectExpression() {
     return expression;
   }

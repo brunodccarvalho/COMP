@@ -17,7 +17,8 @@ public class DAGAssignment extends DAGNode {
   protected final DAGVariable assignVariable;
   protected final DAGExpression assignedExpression;
 
-  public DAGAssignment(DAGVariable assignVariable, DAGExpression assignedExpression) {
+  DAGAssignment(DAGVariable assignVariable, DAGExpression assignedExpression) {
+    assert assignVariable != null && assignedExpression != null;
     this.assignVariable = assignVariable;
     this.assignedExpression = assignedExpression;
   }

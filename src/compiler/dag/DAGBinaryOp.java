@@ -17,11 +17,6 @@ public class DAGBinaryOp extends DAGExpression {
   protected final DAGExpression lhs;
   protected final DAGExpression rhs;
 
-  /**
-   * @param op The binary operator
-   * @param lhs The DAGExpression for the left hand side.
-   * @param rhs The DAGExpression for the right hand side.
-   */
   DAGBinaryOp(BinaryOperator op, DAGExpression lhs, DAGExpression rhs) {
     assert op != null && lhs != null && rhs != null;
     this.op = op;

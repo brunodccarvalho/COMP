@@ -19,4 +19,9 @@ public class VoidDescriptor extends TypeDescriptor {
   public boolean isArray() {
     return false;
   }
+
+  @Override
+  public String getBytecodeString() {
+    return "V";
+  }
 }

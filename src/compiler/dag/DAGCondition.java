@@ -4,32 +4,33 @@ import java.util.Objects;
 
 import compiler.symbols.PrimitiveDescriptor;
 
-public class DAGLength extends DAGExpression {
-  protected final DAGExpression expression;
+/**
+ * Not used. To be taken into consideration.
+ */
+public class DAGCondition extends DAGExpression {
+  protected final DAGExpression condition;
 
-  DAGLength(DAGExpression expression) {
-    assert expression != null;
-    this.expression = expression;
+  DAGCondition(DAGExpression condition) {
+    assert condition != null;
+    this.condition = condition;
   }
 
-  /**
-   * @return The (array type) expression whose length is being queried.
-   */
   public DAGExpression getExpression() {
-    return expression;
+    return condition;
   }
 
   @Override
   public PrimitiveDescriptor getType() {
-    return PrimitiveDescriptor.intDescriptor;
+    return PrimitiveDescriptor.booleanDescriptor;
   }
 
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+
   @Override
   public String toString() {
-    return expression + ".length";
+    return condition.toString();
   }
 
   /* (non-Javadoc)
@@ -37,7 +38,7 @@ public class DAGLength extends DAGExpression {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(expression);
+    return Objects.hash(condition);
   }
 
   /* (non-Javadoc)
@@ -47,8 +48,8 @@ public class DAGLength extends DAGExpression {
   public boolean equals(Object obj) {
     if (this == obj) return true;
     if (obj == null) return false;
-    if (!(obj instanceof DAGLength)) return false;
-    DAGLength other = (DAGLength) obj;
-    return Objects.equals(expression, other.expression);
+    if (!(obj instanceof DAGCondition)) return false;
+    DAGCondition other = (DAGCondition) obj;
+    return Objects.equals(condition, other.condition);
   }
 }

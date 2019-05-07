@@ -13,6 +13,9 @@ public class DAGThis extends DAGVariable implements LocalVariable {
     return (ThisDescriptor) var;
   }
 
+  /**
+   * @return The index of this variable in the local variables table.
+   */
   public int getIndex() {
     return 0;
   }

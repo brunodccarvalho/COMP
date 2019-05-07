@@ -40,6 +40,11 @@ public abstract class ClassDescriptor extends TypeDescriptor {
     return false;
   }
 
+  @Override
+  public String getBytecodeString() {
+    return "L" + getName() + ";";
+  }
+
   /**
    * @param name A method's name
    * @return true if this class has at least one member method identified by name.

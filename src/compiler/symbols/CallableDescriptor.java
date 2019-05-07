@@ -11,7 +11,7 @@ public abstract class CallableDescriptor extends BaseFunctionDescriptor implemen
   protected CallableDescriptor(String name, ClassDescriptor parent, TypeDescriptor returnType,
                                FunctionSignature signature) {
     super(name, parent);
-    assert returnType != null && signature != null;
+    assert signature != null;
     this.returnType = returnType;
     this.signature = signature;
   }

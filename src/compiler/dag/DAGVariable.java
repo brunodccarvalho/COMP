@@ -13,15 +13,19 @@ public class DAGVariable extends DAGExpression {
     this.var = var;
   }
 
-  // Dummy variable.
+  // Dummy variable constructor.
   DAGVariable() {
     this.var = null;
   }
 
-  public boolean isDummy() {
+  // Internal method for ExpressionFactory and AssignmentFactory.
+  boolean isDummy() {
     return var == null;
   }
 
+  /**
+   * @return The VariableDescriptor instance in the SymbolsTable for this variable.
+   */
   public VariableDescriptor getVariable() {
     assert var != null;
     return var;

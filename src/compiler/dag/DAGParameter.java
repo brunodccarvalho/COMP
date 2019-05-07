@@ -12,6 +12,7 @@ public class DAGParameter extends DAGVariable implements LocalVariable {
     return (ParameterDescriptor) var;
   }
 
+  @Override
   public int getIndex() {
     int parameterIndex = getVariable().getIndex();
     if (getVariable().getFunction().isStatic()) {

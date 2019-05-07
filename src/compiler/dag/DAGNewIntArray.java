@@ -12,6 +12,9 @@ public class DAGNewIntArray extends DAGNew {
     this.indexExpression = indexExpression;
   }
 
+  /**
+   * @return The expression for the index of the new array object.
+   */
   public DAGExpression getIndexExpression() {
     return indexExpression;
   }

@@ -57,6 +57,8 @@ public class AssignmentFactory extends BaseDAGFactory {
    * @return A new DAGAssignment, holding the variable and the expression.
    */
   private DAGAssignment buildAssignment(SimpleNode assignmentNode) {
+    assert assignmentNode.is(JJTASSIGNMENT);
+
     SimpleNode variableNode = assignmentNode.jjtGetChild(0);
     assert variableNode.is(JJTIDENTIFIER);
 
@@ -79,6 +81,8 @@ public class AssignmentFactory extends BaseDAGFactory {
    * @return A new DAGBracketAssignment, holding the variable and the expression.
    */
   private DAGBracketAssignment buildBracketAssignment(SimpleNode assignmentNode) {
+    assert assignmentNode.is(JJTASSIGNMENT);
+
     SimpleNode bracketsNode = assignmentNode.jjtGetChild(0);
     SimpleNode assignedExpressionNode = assignmentNode.jjtGetChild(1);
     assert bracketsNode.is(JJTBRACKET);

@@ -5,12 +5,15 @@ import java.util.Objects;
 public class DAGBracketAssignment extends DAGAssignment {
   protected final DAGExpression indexExpression;
 
-  public DAGBracketAssignment(DAGVariable assignVariable, DAGExpression assignedExpression,
-                              DAGExpression indexExpression) {
+  DAGBracketAssignment(DAGVariable assignVariable, DAGExpression assignedExpression,
+                       DAGExpression indexExpression) {
     super(assignVariable, assignedExpression);
     this.indexExpression = indexExpression;
   }
 
+  /**
+   * @return The expression for the index of the assigned array variable.
+   */
   public DAGExpression getIndexExpression() {
     return this.indexExpression;
   }
@@ -18,7 +21,6 @@ public class DAGBracketAssignment extends DAGAssignment {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
-
   @Override
   public String toString() {
     return assignVariable + "[" + indexExpression + "] = " + assignedExpression;
