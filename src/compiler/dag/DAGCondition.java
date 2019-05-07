@@ -8,7 +8,7 @@ import compiler.symbols.PrimitiveDescriptor;
  * Not used. To be taken into consideration.
  */
 public class DAGCondition extends DAGExpression {
-  protected final DAGExpression condition;
+  final DAGExpression condition;
 
   DAGCondition(DAGExpression condition) {
     assert condition != null;

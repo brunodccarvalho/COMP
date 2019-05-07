@@ -5,8 +5,8 @@ import java.util.Objects;
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGBracket extends DAGExpression {
-  protected final DAGExpression arrayExpression;
-  protected final DAGExpression indexExpression;
+  final DAGExpression arrayExpression;
+  final DAGExpression indexExpression;
 
   DAGBracket(DAGExpression array, DAGExpression index) {
     assert array != null && index != null;

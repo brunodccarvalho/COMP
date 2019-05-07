@@ -3,7 +3,7 @@ package compiler.dag;
 import compiler.symbols.LocalDescriptor;
 
 public class DAGLocal extends DAGVariable implements LocalVariable {
-  protected int localTableIndex = -1;
+  int localTableIndex = -1;
 
   DAGLocal(LocalDescriptor var) {
     super(var);

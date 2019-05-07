@@ -3,7 +3,7 @@ package compiler.dag;
 import compiler.symbols.TypeDescriptor;
 
 public class DAGReturnExpression extends DAGReturn {
-  protected final DAGExpression returnExpression;
+  final DAGExpression returnExpression;
 
   DAGReturnExpression(DAGExpression returnExpression) {
     assert returnExpression != null;

@@ -5,7 +5,7 @@ import java.util.Objects;
 import compiler.symbols.ClassDescriptor;
 
 public class DAGNewClass extends DAGNew {
-  protected final ClassDescriptor classDescriptor;
+  final ClassDescriptor classDescriptor;
 
   DAGNewClass(ClassDescriptor classDescriptor) {
     assert classDescriptor != null;

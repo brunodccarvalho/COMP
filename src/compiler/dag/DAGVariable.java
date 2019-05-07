@@ -6,7 +6,7 @@ import compiler.symbols.TypeDescriptor;
 import compiler.symbols.VariableDescriptor;
 
 public class DAGVariable extends DAGExpression {
-  protected final VariableDescriptor var;
+  final VariableDescriptor var;
 
   DAGVariable(VariableDescriptor var) {
     assert var != null;

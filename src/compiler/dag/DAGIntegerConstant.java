@@ -5,7 +5,7 @@ import java.util.Objects;
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGIntegerConstant extends DAGExpression {
-  protected final int constant;
+  final int constant;
 
   DAGIntegerConstant(int constant) {
     this.constant = constant;

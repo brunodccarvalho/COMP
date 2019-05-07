@@ -3,7 +3,7 @@ package compiler.dag;
 import compiler.symbols.MemberDescriptor;
 
 public class DAGMember extends DAGVariable {
-  protected int localTableIndex;
+  int localTableIndex;
 
   DAGMember(MemberDescriptor var) {
     super(var);

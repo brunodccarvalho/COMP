@@ -3,7 +3,7 @@ package compiler.dag;
 import java.util.Objects;
 
 public class DAGBracketAssignment extends DAGAssignment {
-  protected final DAGExpression indexExpression;
+  final DAGExpression indexExpression;
 
   DAGBracketAssignment(DAGVariable assignVariable, DAGExpression assignedExpression,
                        DAGExpression indexExpression) {

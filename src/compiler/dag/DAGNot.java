@@ -5,7 +5,7 @@ import java.util.Objects;
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGNot extends DAGExpression {
-  protected final DAGExpression expression;
+  final DAGExpression expression;
 
   DAGNot(DAGExpression expression) {
     assert expression != null;

@@ -5,7 +5,7 @@ import java.util.Objects;
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGNewIntArray extends DAGNew {
-  protected final DAGExpression indexExpression;
+  final DAGExpression indexExpression;
 
   DAGNewIntArray(DAGExpression indexExpression) {
     assert indexExpression != null;

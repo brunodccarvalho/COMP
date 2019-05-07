@@ -3,7 +3,7 @@ package compiler.dag;
 import java.util.Objects;
 
 public abstract class DAGBranch extends DAGNode {
-  protected final DAGExpression condition;
+  final DAGExpression condition;
 
   DAGBranch(DAGExpression condition) {
     assert condition != null;

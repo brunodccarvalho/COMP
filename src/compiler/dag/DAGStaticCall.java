@@ -5,7 +5,7 @@ import compiler.symbols.ClassDescriptor;
 import compiler.symbols.TypeDescriptor;
 
 public class DAGStaticCall extends DAGCall {
-  protected final ClassDescriptor classDescriptor;
+  final ClassDescriptor classDescriptor;
 
   DAGStaticCall(ClassDescriptor classDescriptor, String methodName, FunctionSignature signature,
                 DAGExpression[] arguments) {

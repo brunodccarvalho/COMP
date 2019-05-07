@@ -21,7 +21,7 @@ import jjt.SimpleNode;
  * Two assignments are always different.
  */
 public class AssignmentFactory extends BaseDAGFactory {
-  protected final ExpressionFactory factory;
+  private final ExpressionFactory factory;
 
   public AssignmentFactory(FunctionLocals locals) {
     super(locals);

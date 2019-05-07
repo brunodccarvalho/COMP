@@ -14,8 +14,8 @@ import compiler.symbols.TypeDescriptor;
  * Hence the type of the variable is the type of the assignment.
  */
 public class DAGAssignment extends DAGNode {
-  protected final DAGVariable assignVariable;
-  protected final DAGExpression assignedExpression;
+  final DAGVariable assignVariable;
+  final DAGExpression assignedExpression;
 
   DAGAssignment(DAGVariable assignVariable, DAGExpression assignedExpression) {
     assert assignVariable != null && assignedExpression != null;

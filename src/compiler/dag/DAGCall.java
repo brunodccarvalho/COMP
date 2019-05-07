@@ -8,10 +8,10 @@ import compiler.symbols.ClassDescriptor;
 import compiler.symbols.TypeDescriptor;
 
 public abstract class DAGCall extends DAGExpression {
-  protected final String methodName;
-  protected final FunctionSignature signature;
-  protected final TypeDescriptor returnType;
-  protected final DAGExpression[] arguments;
+  final String methodName;
+  final FunctionSignature signature;
+  final TypeDescriptor returnType;
+  final DAGExpression[] arguments;
 
   DAGCall(String methodName, FunctionSignature signature, DAGExpression[] arguments) {
     assert methodName != null && signature != null && arguments != null;

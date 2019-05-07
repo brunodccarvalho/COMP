@@ -5,7 +5,7 @@ import java.util.Objects;
 import compiler.symbols.PrimitiveDescriptor;
 
 public class DAGLength extends DAGExpression {
-  protected final DAGExpression expression;
+  final DAGExpression expression;
 
   DAGLength(DAGExpression expression) {
     assert expression != null;

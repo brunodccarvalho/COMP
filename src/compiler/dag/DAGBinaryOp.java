@@ -13,9 +13,9 @@ import compiler.symbols.PrimitiveDescriptor;
  * DAGBinaryOp may be reused within the same containing expression.
  */
 public class DAGBinaryOp extends DAGExpression {
-  protected final BinaryOperator op;
-  protected final DAGExpression lhs;
-  protected final DAGExpression rhs;
+  final BinaryOperator op;
+  final DAGExpression lhs;
+  final DAGExpression rhs;
 
   DAGBinaryOp(BinaryOperator op, DAGExpression lhs, DAGExpression rhs) {
     assert op != null && lhs != null && rhs != null;

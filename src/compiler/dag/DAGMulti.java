@@ -3,7 +3,7 @@ package compiler.dag;
 import java.util.Arrays;
 
 public class DAGMulti extends DAGNode {
-  protected final DAGNode[] body;
+  final DAGNode[] body;
 
   DAGMulti(DAGNode[] body) {
     assert body != null;

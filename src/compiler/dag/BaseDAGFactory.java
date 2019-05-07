@@ -11,14 +11,14 @@ import jjt.SimpleNode;
  * There are three factories: ExpressionFactory, AssignmentFactory, and ControlFlowFactory.
  */
 public abstract class BaseDAGFactory extends CompilerModule {
-  protected final FunctionLocals locals;
+  final FunctionLocals locals;
 
   /**
    * Construct a new factory based on this symbol table.
    *
    * @param locals the function's symbol table.
    */
-  protected BaseDAGFactory(FunctionLocals locals) {
+  BaseDAGFactory(FunctionLocals locals) {
     assert locals != null;
     this.locals = locals;
   }
