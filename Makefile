@@ -9,6 +9,9 @@ COMPILER := compiler
 # Test file (in folder test_files)
 TEST_FILE := code_generator/Dog.java
 
+# Jasmin file (to see how javac writes bytecode).
+JASMIN_FILE := JavapExample.java
+
 # Flags
 JJTREE_DEBUG :=
 JJTREE_FLAGS := -track_tokens -force_la_check
@@ -63,3 +66,8 @@ test:
 
 parser-test:
 	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) jjt.jmm test_files/$(TEST_FILE) || true
+
+jasmin:
+	@javac $(JASMIN_FILE)
+	@javap -verbose -cp . -s $(JASMIN_FILE:.java=) > $(JASMIN_FILE:.java=.j)
+	@rm $(JASMIN_FILE:.java=.class)

@@ -613,7 +613,7 @@ Support required by JMM:
     DAGBracketAssignment:
       [7] iastore
 
-### Simplified implementation suggestion
+## Simplified implementation suggestion
 
 If a non-terminal DAGExpression has more than one parent, it should store its result in a local variable of
 the JVM the first time that it is calculated. Instead of recalculating its value on the stack after the first
@@ -830,166 +830,169 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
         if variable is This:
                         aload_0
 
-#### codeGenerator implementation
+## Javac Implementation of JVM
 
-    generateOperator()
+    Notation:
+          $EXPRESSION_A...    Recursion: EXPRESSION_A is a child of the current node.
+        ? EXPRESSION_B       EXPRESSION_B isn't always present, only if result is to be cached.
+      L:  EXPRESSION_C       L is a label, used to jump to EXPRESSION_C.
+
+
+
     DAGAdd:
-          $lhs
-          $rhs
+          $lhs...
+          $rhs...
           iadd
-        - istore
+        ? istore                  Store result of lhs + rhs
 
-    generateOperator()
     DAGSub:
-          $lhs
-          $rhs
+          $lhs...
+          $rhs...
           isub
-        - istore
+        ? istore                  Store result of lhs - rhs
 
-    generateOperator()
     DAGMul:
-          $lhs
-          $rhs
+          $lhs...
+          $rhs...
           imul
-        - istore
+        ? istore                  Store result of lhs * rhs
 
-    generateOperator()
     DAGDiv:
-          $lhs
-          $rhs
+          $lhs...
+          $rhs...
           idiv
-        - istore
+        ? istore                  Store result of lhs / rhs
 
-    - Incorrect
     DAGLess:
-          $lhs
-          $rhs
+          $lhs...
+          $rhs...
           if_icmpge   A
           iconst_1
           goto        B
       A:  iconst_0
-      B:> istore
+      B:? istore                  Store result of lhs < rhs
 
-    - Incorrect
     DAGAnd:
-          $lhs
+          $lhs...
           ifeq        A
-          $rhs
+          $rhs...
           ifeq        A
           iconst_1
           goto        B
       A:  iconst_0
-      B:> istore
+      B:? istore                  Store result of lhs && rhs
 
-    - Not implemented
     DAGLength:
-          $loadarray
+          $loadarray...
           arraylength
-        > istore
+        ? istore                  Store result of loadarray.length
 
-    - Not implemented
     DAGNot:
-          $loadboolean
+          $loadboolean...
           ifne        A
           iconst_1
           goto        B
       A:  iconst_0
-      B:> istore
+      B:? istore                  Store result of !loadboolean
 
-    - Not implemented
     DAGBracket:
-          $loadarray
-          $loadindex
+          $loadarray...
+          $loadindex...
           iaload
-        > istore
+        ? istore                  Store result of loadarray[loadindex]
 
-    - Not implemented
     DAGNewClass:
           new <class>
           dup
           invokespecial <init>:()V
-        > astore
+        ? astore                  Store result of new Class()
 
-    - Not implemented
     DAGNewIntArray:
-          $loadcount
+          $loadcount...
           newarray
-        > astore
+        ? astore                  Store result of new int[loadcount]
 
-    - Incorrect: must consider iconst, bipush, sipush and ldc.
     DAGIntegerConstant:
-          iconst_<n>
+          iconst_<n>              # for -1, 0, 1, 2, 3, 4, 5
         or
-          bipush <constant>
+          bipush <constant>       # else for -128, ..., 127
         or
-          sipush <constant>
+          sipush <constant>       # else for -32768, ..., 32767
         or
-          ldc    <constant>
+          ldc    <constant>       # else
 
-    - Not implemented
     DAGBooleanConstant:
-          iconst_0
+          iconst_0                # false
         or
-          iconst_1
+          iconst_1                # true
 
-    ***** DAGAssignment (generateStore, generateAssignment)
+    ***** DAGAssignment (stores)
     - No distinction between variable types
 
-    DAGAssignmentMember:
-          aload_0    # this
-          $loadvalue
+    DAGAssignment> 1/2
+      DAGAssignmentToMember:
+          aload_0                 # load this
+          $loadvalue...
           putfield  <member>
 
-    DAGAssignmentLocal:
-          $loadvalue
-        > store
+    DAGAssignment> 2/2
+      DAGAssignmentToLocalOrParameter:
+          $loadvalue...
+          [i|a]store VAR          # store appropriate type
 
-    DAGBracketAssignmentMember:
-          aload_0    # this
+    DAGBracket> 1/2
+      DAGBracketAssignmentToMember:
+          aload_0                 # load this
           getfield  <member>
-          $loadindex
-          $loadvalue
-          iastore
+          $loadindex...
+          $loadvalue...
+          iastore VAR             # store int in int array
 
-    DAGBracketAssignmentLocal:
-          $loadarray
-          $loadindex
-          $loadvalue
-          iastore
+    DAGBracket> 2/2
+      DAGBracketAssignmentToLocalOrParameter:
+          $loadarray...
+          $loadindex...
+          $loadvalue...
+          iastore VAR             # store int in int array
 
-    generateMethodCall()
-    DAGMethodCall:
-          $loadobjectref        # possibly aload_0
-          $loadarg1
-          $loadarg2
+    ***** DAGCall
+
+    DAGCall> 1/4
+      DAGMethodCall --> void:
+          $loadobjectref...       # possibly aload_0
+          $loadarg1...
+          $loadarg2...
           ...
           invokevirtual <method>
 
-    DAGStaticCall:
-          $loadarg1
-          $loadarg2
+    DAGCall> 2/4
+      DAGStaticCall --> void:
+          $loadarg1...
+          $loadarg2...
           ...
           invokestatic <class> <method>
 
-    DAGMethodCall, returning:
-          $loadobjectref        # possibly aload_0
-          $loadarg1
-          $loadarg2
+    DAGCall> 3/4
+      DAGMethodCall --> non void:
+          $loadobjectref...       # possibly aload_0
+          $loadarg1...
+          $loadarg2...
           ...
           invokevirtual <method>
-        > *store
+        > [ia]store
 
-    DAGStaticCall, returning:
-          $loadarg1
-          $loadarg2
+    DAGCall> 4/4
+      DAGStaticCall --> non void:
+          $loadarg1...
+          $loadarg2...
           ...
           invokestatic <class> <method>
-        > *store
+        > [ia]store
 
-    ***** DAGVariable (generateLoad, generateMemberLoad)
+    ***** DAGVariable (reads)
 
-    generateLoad()
-    DAGLocal, DAGParameter:
+    DAGVariable> 1/3
+      DAGLocal, DAGParameter:
           aload_n
         or
           iload_n
@@ -998,10 +1001,86 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
         or
           iload <index>
 
-    DAGThis:
+    DAGVariable> 2/3
+      DAGThis:
           aload_0
 
-    * generateMemberLoad()
-    DAGMember:
+    DAGVariable> 3/3
+      DAGMember:
           aload_0
           getfield <member descriptor>
+
+    ***** Control Flow
+
+    IfElseStatement> 1/3
+      Condition of boolean type (variable load, function call, etc):
+          $conditionexpression...
+          ifeq        A
+          $truebranch...
+          goto        B           # only necessary if $truebranch does not return
+      A:  $falsebranch...
+      B:  ... CONTINUE
+
+    IfElseStatement> 2/3
+      Condition is BinaryOperation Less (<):
+          $lhs...
+          $rhs...
+          if_icmpge   A
+          $truebranch...
+          goto        B           # only necessary if $truebranch does not return
+      A:  $falsebranch...
+      B:  ... CONTINUE
+
+    IfElseStatement> 3/3
+      Condition is BinaryOperation And (&&):
+          $lhs...
+          ifeq        A
+          $rhs...
+          ifeq        A
+          $truebranch...
+          goto        B           # only necessary if $truebranch does not return
+      A:  $falsebranch...
+      B:  ... CONTINUE
+
+    WhileStatement> 1/3
+      Condition of boolean type (variable load, function call, etc):
+      A:  $conditionexpression...
+          ifeq        B
+          $body...
+          goto        A           # only necessary if $body does not return unconditionally
+      B:  ... CONTINUE
+
+    WhileStatement> 2/3
+      Condition is BinaryOperation Less (<):
+      A:  $lhs...
+          $rhs...
+          if_icmpge   B
+          $body...
+          goto        A           # only necessary if $body does not return unconditionally
+      B:  ... CONTINUE
+
+    WhileStatement> 3/3
+      Condition is BinaryOperation And (&&):
+      A:  $lhs...
+          ifeq        B
+          $rhs...
+          ifeq        B
+          $body...
+          goto        A           # only necessary if $body does not return unconditionally
+      B:  ... CONTINUE
+
+    ***** Return Statements
+
+    ReturnStatement> 1/3
+      Return is void:
+          return
+
+    ReturnStatement> 2/3
+      Return is int or boolean:
+          $returnexpression
+          ireturn
+
+    ReturnStatement> 3/3
+      Return is reference:
+          $returnexpression
+          areturn
