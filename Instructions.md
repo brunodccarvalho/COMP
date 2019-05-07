@@ -926,35 +926,6 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
         or
           iconst_1                # true
 
-    ***** DAGAssignment (stores)
-    - No distinction between variable types
-
-    DAGAssignment> 1/2
-      DAGAssignmentToMember:
-          aload_0                 # load this
-          $loadvalue...
-          putfield  <member>
-
-    DAGAssignment> 2/2
-      DAGAssignmentToLocalOrParameter:
-          $loadvalue...
-          [i|a]store VAR          # store appropriate type
-
-    DAGBracket> 1/2
-      DAGBracketAssignmentToMember:
-          aload_0                 # load this
-          getfield  <member>
-          $loadindex...
-          $loadvalue...
-          iastore VAR             # store int in int array
-
-    DAGBracket> 2/2
-      DAGBracketAssignmentToLocalOrParameter:
-          $loadarray...
-          $loadindex...
-          $loadvalue...
-          iastore VAR             # store int in int array
-
     ***** DAGCall
 
     DAGCall> 1/4
@@ -1068,6 +1039,39 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           $body...
           goto        A           # only necessary if $body does not return unconditionally
       B:  ... CONTINUE
+
+    ***** Assignment (stores)
+    - No distinction between variable types
+
+    Plain Assignment> 1/2
+      Plain AssignmentToMember:
+          aload_0                 # load this
+          $loadvalue...
+          putfield  <member>
+          ... CONTINUE
+
+    Plain Assignment> 2/2
+      Plain AssignmentToLocalOrParameter:
+          $loadvalue...
+          [i|a]store VAR          # store appropriate type
+          ... CONTINUE
+
+    Bracket Assignment> 1/2
+      Bracket AssignmentToMember:
+          aload_0                 # load this
+          getfield  <member>
+          $loadindex...
+          $loadvalue...
+          iastore VAR             # store int in int array
+          ... CONTINUE
+
+    Bracket Assignment> 2/2
+      Bracket AssignmentToLocalOrParameter:
+          $loadarray...
+          $loadindex...
+          $loadvalue...
+          iastore VAR             # store int in int array
+          ... CONTINUE
 
     ***** Return Statements
 
