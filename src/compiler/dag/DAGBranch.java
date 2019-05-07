@@ -2,7 +2,7 @@ package compiler.dag;
 
 import java.util.Objects;
 
-public abstract class DAGBranch extends DAGNode {
+abstract class DAGBranch extends DAGNode {
   final DAGExpression condition;
 
   DAGBranch(DAGExpression condition) {

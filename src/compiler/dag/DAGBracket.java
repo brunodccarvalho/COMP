@@ -58,11 +58,6 @@ public class DAGBracket extends DAGExpression {
    */
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (!(obj instanceof DAGBracket)) return false;
-    DAGBracket other = (DAGBracket) obj;
-    return Objects.equals(arrayExpression, other.arrayExpression)
-        && Objects.equals(indexExpression, other.indexExpression);
+    return obj instanceof DAGBracket && this == obj;
   }
 }

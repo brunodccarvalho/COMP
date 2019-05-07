@@ -8,11 +8,6 @@ public class DAGThis extends DAGVariable implements LocalVariable {
     super(thisVariable);
   }
 
-  @Override
-  public ThisDescriptor getVariable() {
-    return (ThisDescriptor) var;
-  }
-
   /**
    * @return The index of this variable in the local variables table.
    */
@@ -21,7 +16,17 @@ public class DAGThis extends DAGVariable implements LocalVariable {
   }
 
   @Override
+  public ThisDescriptor getVariable() {
+    return (ThisDescriptor) var;
+  }
+
+  @Override
   public JMMClassDescriptor getType() {
     return ((ThisDescriptor) var).getType();
+  }
+
+  @Override
+  public String toString() {
+    return "this";
   }
 }

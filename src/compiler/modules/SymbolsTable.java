@@ -23,8 +23,6 @@ public class SymbolsTable extends CompilerModule {
   FunctionLocals mainLocals;
 
   /**
-   * Construct an instance of this class for a class node.
-   *
    * The class node should point to a unique class name, or else this stage fails
    * immediately.
    */

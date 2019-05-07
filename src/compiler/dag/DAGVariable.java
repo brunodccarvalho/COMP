@@ -41,7 +41,7 @@ public class DAGVariable extends DAGExpression {
    */
   @Override
   public String toString() {
-    return var.getName();
+    return "{{" + var.getType() + " " + var.getName() + "}}";
   }
 
   /* (non-Javadoc)
