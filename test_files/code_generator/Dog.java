@@ -13,7 +13,6 @@ class Dog {
         return hoursSleep;
     }
 
-
     public boolean eat(int quantity, int mult) {
         availableFood = availableFood - mult * quantity;
         return (availableFood < 1); 
