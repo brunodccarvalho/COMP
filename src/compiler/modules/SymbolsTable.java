@@ -103,7 +103,7 @@ public class SymbolsTable extends CompilerModule {
 
     // ERROR: Repeated class member variable.
     if (jmmClass.resolve(identifier) != null) {
-      DiagnosticsHandler.varAlreadyDefined(nameNode,identifier);
+      DiagnosticsHandler.varAlreadyDefined(nameNode, identifier);
       status(MINOR_ERRORS);
       return;
     }
@@ -171,7 +171,7 @@ public class SymbolsTable extends CompilerModule {
 
     // Error: Repeated methods - Two methods with the same name and signature.
     if (jmmClass.hasMethod(name, signature)) {
-      DiagnosticsHandler.methodAlreadyDefined(methodNameNode,name,signature);
+      DiagnosticsHandler.methodAlreadyDefined(methodNameNode, name, signature);
       status(MINOR_ERRORS);
       return;
     }
@@ -215,15 +215,20 @@ public class SymbolsTable extends CompilerModule {
 
   private void readMethodLocals() {
     for (JMMMethodDescriptor method : methodNodesMap.keySet()) {
-      readOneMethodLocals(method);
+      FunctionLocals locals = readOneMethodLocals(method, methodNodesMap.get(method));
+      methodLocalsMap.put(method, locals);
+    }
+    if (jmmClass.hasMain()) {
+      this.mainLocals = readOneMethodLocals(jmmClass.getMain(), mainNode);
     }
   }
 
-  private void readOneMethodLocals(JMMMethodDescriptor method) {
-    SimpleNode methodNode = methodNodesMap.get(method);
-    assert method != null && methodNode != null && methodNode.is(JJTMETHODDECLARATION);
+  private FunctionLocals readOneMethodLocals(JMMFunction method, SimpleNode methodNode) {
+    assert method != null && methodNode != null
+        && (methodNode.is(JJTMETHODDECLARATION) || methodNode.is(JJTMAINDECLARATION));
 
-    SimpleNode methodBodyNode = methodNode.jjtGetChild(3);
+    int index = methodNode.is(JJTMAINDECLARATION) ? 1 : 3;
+    SimpleNode methodBodyNode = methodNode.jjtGetChild(index);
     assert methodBodyNode.is(JJTMETHODBODY);
 
     FunctionLocals locals = new FunctionLocals(method);
@@ -259,6 +264,7 @@ public class SymbolsTable extends CompilerModule {
       new LocalDescriptor(type, name, locals);
     }
 
+    /*
     for (; i < methodBodyNode.jjtGetNumChildren(); ++i) {
       SimpleNode statement = methodBodyNode.jjtGetChild(i);
       System.out.println("is statement");
@@ -280,8 +286,9 @@ public class SymbolsTable extends CompilerModule {
         }
       }
     }
+    */
 
-    methodLocalsMap.put(method, locals);
+    return locals;
   }
 
   @Override

@@ -13,6 +13,11 @@ public class DAGParameter extends DAGVariable implements LocalVariable {
   }
 
   public int getIndex() {
-    return getVariable().getIndex() + 1;
+    int parameterIndex = getVariable().getIndex();
+    if (getVariable().getFunction().isStatic()) {
+      return parameterIndex + 1;
+    } else {
+      return parameterIndex;
+    }
   }
 }

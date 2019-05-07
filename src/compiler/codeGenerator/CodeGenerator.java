@@ -261,7 +261,6 @@ public class CodeGenerator {
         DAGExpression variable = assignment.getVariable();
         DAGExpression expression = assignment.getExpression();
         String variableStore= new String();
-        System.out.println(variable.getClass() + " " +variable);
         if(variable instanceof DAGMember)
             variableStore = this.generateStoreMember((DAGMember)variable);
         else 
@@ -305,7 +304,7 @@ public class CodeGenerator {
         String regexLoad = CodeGeneratorConstants.load.get(variableType);
         if(regexLoad == null)
             regexLoad = CodeGeneratorConstants.LOADADDRESS;
-        return subst(regexLoad, String.valueOf(variableIndex)) + "\n";
+        return subst(regexLoad, String.valueOf(variableIndex+1)) + "\n";
     }
 
     private String generateOperator(BinaryOperator operator) {
@@ -337,9 +336,12 @@ public class CodeGenerator {
 
     private String generateMethodCall(DAGCall methodCall) {
         String methodCallBody = new String();
+        Integer variableIndex = this.variablesIndexes.get(methodCall.getCallClass().getName());
+        if(variableIndex==null)
+            variableIndex= new Integer(0);
         String methodSignature = this.generateMethodSignature(methodCall) + "\n";
         String parameterPush = this.generateParameterPush(methodCall.getArguments());
-        String invoke = this.subst(CodeGeneratorConstants.INVOKEVIRTUAL, methodSignature);
+        String invoke = this.subst(CodeGeneratorConstants.INVOKEVIRTUAL, Integer.toString(variableIndex),methodSignature);
         methodCallBody = methodCallBody.concat(parameterPush).concat(invoke);
         return methodCallBody;
     }

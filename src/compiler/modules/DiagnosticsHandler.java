@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import compiler.FunctionSignature;
 import compiler.symbols.TypeDescriptor;
+import compiler.symbols.JMMFunction;
 import compiler.symbols.JMMMethodDescriptor;
 import jjt.SimpleNode;
 import jjt.Token;
@@ -99,7 +100,7 @@ public class DiagnosticsHandler {
     self.errorPointer(errorLine, errorCol);
   }
 
-  public static void localAlreadyDefined(SimpleNode node, String varName, JMMMethodDescriptor method){
+  public static void localAlreadyDefined(SimpleNode node, String varName, JMMFunction method){
     int errorLine = node.jjtGetFirstToken().beginLine;
     int errorCol = node.jjtGetFirstToken().beginColumn;
     System.err.println(self.file.getName() + ":" + errorLine + ": Error: " 
@@ -107,7 +108,7 @@ public class DiagnosticsHandler {
     self.errorPointer(errorLine, errorCol);
   }
 
-  public static void paramAlreadyDefined(SimpleNode node, String varName, JMMMethodDescriptor method){
+  public static void paramAlreadyDefined(SimpleNode node, String varName, JMMFunction method){
     int errorLine = node.jjtGetFirstToken().beginLine;
     int errorCol = node.jjtGetFirstToken().beginColumn;
     System.err.println(self.file.getName() + ":" + errorLine + ": Error: locally defined " 
