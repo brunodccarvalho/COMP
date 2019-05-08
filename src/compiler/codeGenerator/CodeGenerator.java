@@ -471,6 +471,10 @@ public class CodeGenerator {
         GenerateMethods methods = new GenerateMethods();
         codeGenerator.write(methods.toString() + "\n");
 
+        Main main = new Main(mainBody);
+        codeGenerator.write(main.toString() + "\n");
+
+
 
         /*
         // generate class header
