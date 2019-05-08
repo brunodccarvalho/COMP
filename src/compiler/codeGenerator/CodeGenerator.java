@@ -120,7 +120,7 @@ public class CodeGenerator {
 
     private static int dagLessLabelCounter = 0;
 
-
+/*
     // Extra methods
     private String generateLessOperator(DAGBinaryOp dag) {
         assert dag.isComparison();
@@ -141,6 +141,6 @@ public class CodeGenerator {
 
         return lhsCode + rhsCode + ifCode + trueConst + gotoCode +
                labelFalse + falseConst + labelTrue;
-    }
+    }*/
 
 }
