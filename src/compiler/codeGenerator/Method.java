@@ -20,6 +20,8 @@ public class Method extends BaseByteCode {
     private MethodParam generateParamDeclaration;
     private MethodVarDeclaration generateMethodVarDeclaration;
     private MethodHeader methodHeader;
+    private GenerateMethodBody methodBody;
+    private MethodReturn methodReturn;
 
     Method (JMMMethodDescriptor method) {
         this.numberLocals = 0;
@@ -29,9 +31,9 @@ public class Method extends BaseByteCode {
         this.generateParamDeclaration = new MethodParam(this,method);
         this.generateMethodVarDeclaration = new MethodVarDeclaration(this,method);
         this.methodHeader = new MethodHeader(this,method);
-        /*String methodBody = this.generateMethodBody(method);
-        String methodReturn = this.generateMethodReturn(methodBodies.get(method).getReturnExpression());
-        String methodStructure = subst(methodHeader, methodBody.concat(methodReturn));
+        this.methodBody = new GenerateMethodBody(this,method);
+        this.methodReturn = new MethodReturn(this,CodeGenerator.singleton.methodBodies.get(method).getReturnExpression());
+        /*String methodStructure = subst(methodHeader, methodBody.concat(methodReturn));
         return methodStructure;*/
 
     }

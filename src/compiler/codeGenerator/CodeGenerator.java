@@ -50,7 +50,7 @@ public class CodeGenerator {
     private int numberTemp;
     private int numberParam;
     SymbolsTable symbolsTable;
-    private HashMap<Descriptor, Integer> variablesIndexes;
+    HashMap<Descriptor, Integer> variablesIndexes;
     private PrintWriter writer; // .j file
 
     public static CodeGenerator singleton;
