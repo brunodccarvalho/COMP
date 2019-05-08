@@ -20,6 +20,7 @@ public class GenerateMethodBody extends BaseByteCode {
     GenerateMethodBody (Method belongs,JMMMethodDescriptor method)
     {
         this.belongs=belongs;
+        this.statements = new ArrayList<BaseStatement>();
         MethodBody body = CodeGenerator.singleton.methodBodies.get(method);
         MethodVarDeclaration varDecl = new MethodVarDeclaration(this.belongs,method);
         DAGNode[] nodes = body.getStatements();

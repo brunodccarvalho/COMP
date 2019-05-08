@@ -21,6 +21,6 @@ public class ClassHeader extends BaseByteCode {
     @Override
     public String toString()
     {
-        return this.subst(this.className, this.regexReplace);
+        return this.subst(this.regexReplace,this.className);
     }
 }

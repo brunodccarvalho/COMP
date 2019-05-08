@@ -27,21 +27,19 @@ public class Method extends BaseByteCode {
         this.numberLocals = 0;
         this.numberParam = 0;
         this.numberTemp = 0;
-        this.variablesIndexes.clear();
+        this.variablesIndexes = new HashMap<Descriptor, Integer>();
         this.generateParamDeclaration = new MethodParam(this,method);
         this.generateMethodVarDeclaration = new MethodVarDeclaration(this,method);
         this.methodHeader = new MethodHeader(this,method);
         this.methodBody = new GenerateMethodBody(this,method);
         this.methodReturn = new MethodReturn(this,CodeGenerator.singleton.methodBodies.get(method).getReturnExpression());
-        /*String methodStructure = subst(methodHeader, methodBody.concat(methodReturn));
-        return methodStructure;*/
-
     }
 
     @Override
     public String toString()
     {
-        return "";
+        String methodStructure = subst(methodHeader.toString(), methodBody.toString().concat(methodReturn.toString()));
+        return methodStructure;
     }
 
 }

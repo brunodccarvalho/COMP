@@ -448,12 +448,31 @@ public class CodeGenerator {
     private void close() {
         this.writer.close();
     }
+    
+    public void write(String text)
+    {
+        this.writer.write(text);
+    }
 
     public static void generateCode(JMMClassDescriptor classDescriptor, HashMap<JMMMethodDescriptor, MethodBody> methodBodies, SymbolsTable symbolsTable,MethodBody mainBody) {
         CodeGenerator codeGenerator = new CodeGenerator(classDescriptor, methodBodies, symbolsTable);
 
         CodeGenerator.singleton=codeGenerator;
 
+        ClassHeader classHeader = new ClassHeader();
+        codeGenerator.write(classHeader.toString() +"\n");
+
+        SuperHeader superHeader = new SuperHeader();
+        codeGenerator.write(superHeader.toString() + "\n");
+
+        Constructors constructors = new Constructors();
+        codeGenerator.write(constructors.toString() + "\n");
+
+        GenerateMethods methods = new GenerateMethods();
+        codeGenerator.write(methods.toString() + "\n");
+
+
+        /*
         // generate class header
         codeGenerator.generateClassHeader();
 
@@ -466,13 +485,14 @@ public class CodeGenerator {
         // generate methods
         codeGenerator.generateMethods();
 
-        codeGenerator.generateMain(mainBody);
+        codeGenerator.generateMain(mainBody);*/
 
         codeGenerator.flush();
         codeGenerator.close();
     }
 
     private static int dagLessLabelCounter = 0;
+
 
     // Extra methods
     private String generateLessOperator(DAGBinaryOp dag) {

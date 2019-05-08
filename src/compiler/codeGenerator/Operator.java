@@ -10,6 +10,7 @@ public class Operator extends BaseByteCode {
     
     public static HashMap<String, String> binaryOperators;
     static{
+        binaryOperators = new HashMap<>();
         binaryOperators.put("+", "\tiadd");
         binaryOperators.put("-", "\tisub");
         binaryOperators.put("*", "\timul");
