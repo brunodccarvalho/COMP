@@ -1,6 +1,6 @@
 package compiler.symbols;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 public abstract class JavaMethodDescriptor
     extends JavaCallableDescriptor implements MethodFunction {

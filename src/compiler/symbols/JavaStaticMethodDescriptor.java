@@ -1,6 +1,6 @@
 package compiler.symbols;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 public abstract class JavaStaticMethodDescriptor
     extends JavaCallableDescriptor implements StaticFunction {

@@ -3,7 +3,7 @@ package compiler.dag;
 import java.util.Arrays;
 import java.util.Objects;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 import compiler.symbols.ClassDescriptor;
 import compiler.symbols.TypeDescriptor;
 

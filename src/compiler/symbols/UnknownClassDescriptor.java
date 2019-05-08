@@ -1,6 +1,6 @@
 package compiler.symbols;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 /**
  * The descriptor for a generic Java class, whose contents are unknown.

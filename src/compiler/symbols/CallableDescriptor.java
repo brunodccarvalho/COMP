@@ -2,7 +2,7 @@ package compiler.symbols;
 
 import java.util.Objects;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 public abstract class CallableDescriptor extends BaseFunctionDescriptor implements Callable {
   protected final TypeDescriptor returnType;

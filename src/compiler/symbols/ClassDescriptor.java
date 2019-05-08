@@ -1,6 +1,6 @@
 package compiler.symbols;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 /**
  * The base class of any Java class descriptor. This class has a non fully

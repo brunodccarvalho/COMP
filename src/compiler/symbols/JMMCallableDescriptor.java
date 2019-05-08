@@ -2,7 +2,7 @@ package compiler.symbols;
 
 import java.util.HashSet;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 public abstract class JMMCallableDescriptor extends CallableDescriptor implements JMMFunction {
   protected final ParameterDescriptor[] parameters;

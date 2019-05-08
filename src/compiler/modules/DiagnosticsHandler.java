@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 import compiler.symbols.TypeDescriptor;
 import compiler.symbols.JMMFunction;
 import jjt.SimpleNode;

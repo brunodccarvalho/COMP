@@ -1,4 +1,4 @@
-package compiler;
+package compiler.symbols;
 
 import java.util.Arrays;
 
@@ -41,7 +41,7 @@ public class FunctionSignature {
   }
 
   public TypeDescriptor[] getParameterTypes() {
-    return parameterTypes;
+    return parameterTypes.clone();
   }
 
   public boolean isComplete() {

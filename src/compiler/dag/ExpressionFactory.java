@@ -6,7 +6,7 @@ import static compiler.symbols.TypeDescriptor.typematch;
 
 import java.util.HashMap;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 import compiler.exceptions.InternalCompilerError;
 import compiler.modules.CompilationStatus;
 import compiler.symbols.*;

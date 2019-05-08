@@ -21,17 +21,6 @@ final class Compiler {
     }
 
     String source = args[args.length - 1];
-
-    try {
-      ClassCompiler compiler = new ClassCompiler(new File(source));
-
-      compiler.parse().exitOnError(Codes.MAJOR_ERRORS);
-      compiler.buildSymbolTables().exitOnError(Codes.MAJOR_ERRORS);
-      compiler.buildInternalRepresentations().exitOnError(Codes.MINOR_ERRORS);
-      compiler.deduceSignatures().exitOnError(Codes.MINOR_ERRORS);
-      compiler.buildCodeRepresentations();
-    } catch (CompilationException e) {
-      System.err.println(e.getMessage());
-    }
+    new ClassCompiler(new File(source)).compile();
   }
 }

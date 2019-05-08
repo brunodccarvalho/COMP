@@ -1,6 +1,6 @@
 package compiler.symbols;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 public class JMMStaticMethodDescriptor extends JMMCallableDescriptor implements StaticFunction {
   public JMMStaticMethodDescriptor(String name, JMMClassDescriptor parent,

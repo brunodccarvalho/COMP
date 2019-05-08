@@ -3,7 +3,7 @@ package compiler.symbols;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 /**
  * Represents a class being parsed by this compiler: it must obey the rules of

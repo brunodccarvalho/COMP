@@ -28,11 +28,34 @@ public final class ClassCompiler extends CompilationStatus {
     }
   }
 
+  public ClassCompiler compile() {
+    try {
+      parse();
+      if (onErrorLevel(Codes.MAJOR_ERRORS)) return this;
+
+      buildSymbolTables();
+      if (onErrorLevel(Codes.MAJOR_ERRORS)) return this;
+
+      buildInternalRepresentations();
+      if (onErrorLevel(Codes.MINOR_ERRORS)) return this;
+
+      deduceSignatures();
+      if (onErrorLevel(Codes.MINOR_ERRORS)) return this;
+
+      buildCodeRepresentations();
+      writeToFile();
+    } catch (CompilationException e) {
+      System.err.println(e.getMessage());
+      update(Codes.FATAL);
+    }
+    return this;
+  }
+
   /**
    * 1. Parse source file with JJT's generated parser.
    * * Parser.
    */
-  public ClassCompiler parse() {
+  private void parse() {
     try {
       SimpleNode rootNode = jmm.parseClass(sourcefile);
       assert rootNode.is(JJTPROGRAM);
@@ -41,7 +64,6 @@ public final class ClassCompiler extends CompilationStatus {
       assert classNode.is(JJTCLASSDECLARATION);
 
       data.classNode = classNode;
-      return this;
     } catch (FileNotFoundException e) {
       throw new CompilationException(e);
     } catch (ParseException e) {
@@ -53,27 +75,24 @@ public final class ClassCompiler extends CompilationStatus {
    * 2. Build all symbol tables.
    * * Compiler proper.
    */
-  public ClassCompiler buildSymbolTables() {
+  private void buildSymbolTables() {
     new SymbolsTableBuilder(data).read(this).dump();
-    return this;
   }
 
   /**
    * 3. Build the internal representation of each method.
    * * Compiler proper.
    */
-  public ClassCompiler buildInternalRepresentations() {
+  private void buildInternalRepresentations() {
     new DAGBuilder(data).buildMethods(this).dump();
-    return this;
   }
 
   /**
    * 4. Deduce unknown function signatures.
    * * Compiler proper.
    */
-  public ClassCompiler deduceSignatures() {
+  private void deduceSignatures() {
     // ...
-    return this;
   }
 
   /**
@@ -81,19 +100,26 @@ public final class ClassCompiler extends CompilationStatus {
    * ... or something. Rename this...
    * * Assembler
    */
-  public ClassCompiler buildCodeRepresentations() {
+  private void buildCodeRepresentations() {
     // ...
-    return this;
+  }
+
+  /**
+   * 6. Write everything to output file.
+   */
+  private void writeToFile() {
+    // ...
   }
 
   /**
    * Exit if the error code is too high.
    */
-  public ClassCompiler exitOnError(int level) {
+  private boolean onErrorLevel(int level) {
     if (status() >= level) {
-      System.err.println("Compilation error(s) found, exiting.");
-      System.exit(status());
+      System.err.println("Compilation error(s) found.");
+      return true;
+    } else {
+      return false;
     }
-    return this;
   }
 }

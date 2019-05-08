@@ -1,6 +1,6 @@
 package compiler.symbols;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 public abstract class JavaCallableDescriptor extends CallableDescriptor implements JavaFunction {
   protected JavaCallableDescriptor(String name, ClassDescriptor parent, TypeDescriptor returnType,

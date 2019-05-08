@@ -2,7 +2,6 @@ package compiler.modules;
 
 import static jjt.jmmTreeConstants.*;
 
-import compiler.FunctionSignature;
 import compiler.exceptions.CompilationException;
 import compiler.symbols.*;
 import jjt.SimpleNode;

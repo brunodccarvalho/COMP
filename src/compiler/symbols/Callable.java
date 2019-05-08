@@ -1,7 +1,5 @@
 package compiler.symbols;
 
-import compiler.FunctionSignature;
-
 public interface Callable extends Function {
   /**
    * @param index A parameter position
