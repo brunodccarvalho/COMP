@@ -1,5 +1,7 @@
 package compiler.codeGenerator;
 
+import compiler.symbols.TypeDescriptor;
+
 import java.util.HashMap;
 
 // clang-format off
@@ -37,6 +39,15 @@ public final class CodeGeneratorConstants {
         returnTypes.put("boolean", "?\tireturn");
         returnTypes.put("int[]", "?\tareturn");
         returnTypes.put("void", "?\treturn");
+    }
+
+    /**
+     * @return A JVM type descriptor. One of: I, Z, [I, or L<class_name>
+     */
+    public static String getType(TypeDescriptor typeDescriptor) {
+        String typeName = typeDescriptor.getName();
+        String jvmType = CodeGeneratorConstants.types.get(typeName);
+        return (jvmType != null) ? jvmType : BaseByteCode.subst(CodeGeneratorConstants.CLASSTYPE, typeName);
     }
 
     /**

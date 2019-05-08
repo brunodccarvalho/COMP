@@ -44,14 +44,16 @@ import java.io.IOException;
  */
 public class CodeGenerator {
 
-    private JMMClassDescriptor classDescriptor;
+    JMMClassDescriptor classDescriptor;
     HashMap<JMMMethodDescriptor, MethodBody> methodBodies;
     private int numberLocals;
     private int numberTemp;
     private int numberParam;
-    private SymbolsTable symbolsTable;
+    SymbolsTable symbolsTable;
     private HashMap<Descriptor, Integer> variablesIndexes;
     private PrintWriter writer; // .j file
+
+    public static CodeGenerator singleton;
 
     private static String subst(String regex, String... substitutes) {
         for(String substitute: substitutes) {
@@ -449,6 +451,8 @@ public class CodeGenerator {
 
     public static void generateCode(JMMClassDescriptor classDescriptor, HashMap<JMMMethodDescriptor, MethodBody> methodBodies, SymbolsTable symbolsTable,MethodBody mainBody) {
         CodeGenerator codeGenerator = new CodeGenerator(classDescriptor, methodBodies, symbolsTable);
+
+        CodeGenerator.singleton=codeGenerator;
 
         // generate class header
         codeGenerator.generateClassHeader();
