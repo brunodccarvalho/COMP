@@ -6,29 +6,19 @@ import static jjt.jmmTreeConstants.JJTPROGRAM;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
 
-import compiler.symbols.FunctionLocals;
-import compiler.symbols.JMMClassDescriptor;
-import compiler.symbols.JMMMethodDescriptor;
-
-import compiler.modules.DiagnosticsHandler;
-import compiler.codeGenerator.CodeGenerator;
-import compiler.dag.DAGNode;
 import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
 
-// Still trying to figure out the best way of doing things here.
-// I suppose a java class dedicated to parsing one JMM class is a good design.
-// I would also presume a non-throwing constructor is good form here; log the result of the
-// compilation to a set of variables that may be consulted somewhere else.
-
 public final class ClassCompiler extends CompilerModule {
-  private SimpleNode classNode;
-  private JMMClassDescriptor jmmClass;
+  private final File sourcefile;
+  private final CompilationData data;
 
   public ClassCompiler(File sourcefile) {
+    this.sourcefile = sourcefile;
+    this.data = new CompilationData(sourcefile);
+
     try {
       DiagnosticsHandler.self = new DiagnosticsHandler(sourcefile);
     } catch (IOException e) {
@@ -36,81 +26,40 @@ public final class ClassCompiler extends CompilerModule {
       status(FATAL);
       return;
     }
-
-    // Parse source file
-    try {
-      SimpleNode rootNode = jmm.parseClass(sourcefile);
-      assert rootNode.is(JJTPROGRAM);
-
-      this.classNode = rootNode.jjtGetChild(0);
-      assert this.classNode.is(JJTCLASSDECLARATION);
-    } catch (FileNotFoundException e) {
-      System.err.println("Input source " + sourcefile.getPath() + " cannot be used ...");
-      status(FATAL);
-      return;
-    } catch (ParseException e) {
-      System.err.println("Parsing error found - aborting compilation.");
-      status(FATAL);
-      return;
-    }
-
-    // Construct all Symbols Tables; this does stages 1 and 2.
-    SymbolsTable symbolsTable = new SymbolsTable(this.classNode);
-    if (status(symbolsTable.status()) >= MAJOR_ERRORS) return;
-
-    this.jmmClass = symbolsTable.jmmClass;
-    symbolsTable.dump();
-
-    HashMap<JMMMethodDescriptor, MethodBody> methodBodies = new HashMap<>();
-
-    // Construct the MethodBody for each member method.
-    for (JMMMethodDescriptor method : symbolsTable.methodLocalsMap.keySet()) {
-      FunctionLocals locals = symbolsTable.methodLocalsMap.get(method);
-      SimpleNode methodNode = symbolsTable.methodNodesMap.get(method);
-      assert locals != null && methodNode != null;
-
-      MethodBody body = new MethodBody(locals, methodNode);
-      status(body.status());
-
-      methodBodies.put(method, body);
-
-      if (status() >= FATAL) return;
-    }
-
-    // Construct MethodBody for main method.
-    FunctionLocals mainLocals = symbolsTable.mainLocals;
-    SimpleNode mainNode = symbolsTable.mainNode;
-    MethodBody mainBody = null;
-
-    if (mainNode != null) {
-      mainBody = new MethodBody(mainLocals, mainNode);
-      status(mainBody.status());
-      if (status() >= FATAL) return;
-    }
-
-    // Dump MethodBody...
-    System.out.println("\n\n=== CLASS " + jmmClass.getName() + " DAG LINES ===");
-
-    for (JMMMethodDescriptor method : methodBodies.keySet()) {
-      MethodBody body = methodBodies.get(method);
-      System.out.println(">>> Statements for " + method);
-
-      for (DAGNode statement : body.statements) {
-        System.out.println("    " + statement);
-      }
-      System.out.println("   return " + body.returnExpression);
-    }
-
-    // Generate Code
-    CodeGenerator.generateCode(this.jmmClass, methodBodies, symbolsTable,mainBody);
-
-    // Do main() too..
-
-    // Now that there is more compiler pipeline logic code, we should consider
-    // restructuring MethodBody/SymbolsTable/ClassCompiler (moving around code)
   }
 
-  public JMMClassDescriptor getJMMClassDescriptor() {
-    return this.jmmClass;
+  // Parse source file
+  public ClassCompiler parse() throws FileNotFoundException, ParseException {
+    System.out.println(" ***** PARSE");
+    SimpleNode rootNode = jmm.parseClass(sourcefile);
+    assert rootNode.is(JJTPROGRAM);
+
+    SimpleNode classNode = rootNode.jjtGetChild(0);
+    assert classNode.is(JJTCLASSDECLARATION);
+
+    data.classNode = classNode;
+
+    return this;
+  }
+
+  // Construct all Symbols Tables; this does stages 1 and 2 of the compiler proper.
+  public ClassCompiler buildSymbolTables() throws CompilationException {
+    System.out.println(" ***** SYMBOLS");
+    SymbolsTableBuilder builder = new SymbolsTableBuilder(data);
+    builder.readClassHeader();
+    builder.readClassMemberVariables();
+    builder.readClassMethodDeclarations();
+    builder.readMethodLocals();
+    builder.dump();
+    return this;
+  }
+
+  // Build the DAGs for each method
+  public ClassCompiler buildInternalRepresentations() throws CompilationException {
+    System.out.println(" ***** DAGs");
+    MethodBodyBuilder builder = new MethodBodyBuilder(data);
+    builder.buildMethods();
+    builder.dump();
+    return this;
   }
 }

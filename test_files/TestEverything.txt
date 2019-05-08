@@ -41,9 +41,6 @@ class TestEverything extends Something {
   }
 
   public int testPrecedence() {
-    n = (a + !b) * c + d / !!e && f + g < h + i / (j + !l);
-    n = a.length[0].call() + b.get() * c.what(a, b + c.length);
-
     return 0;
   }
 

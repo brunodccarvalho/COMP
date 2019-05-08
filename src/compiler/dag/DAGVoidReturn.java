@@ -14,6 +14,6 @@ public class DAGVoidReturn extends DAGReturn {
    */
   @Override
   public String toString() {
-    return "return;\n";
+    return "return";
   }
 }

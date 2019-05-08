@@ -76,7 +76,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
     // ... common post-build
 
-    System.err.println(node);
+    System.err.println("COULD NOT BUILD " + node);
 
     // We should never arrive here
     assert false;
@@ -437,26 +437,29 @@ public class ExpressionFactory extends BaseDAGFactory {
 
     FunctionSignature signature = new FunctionSignature(types);
 
+    TypeDescriptor objectType = object.getType();
+
     // * Write the most generic error possible.
     // ERROR: Object expression is not of class type.
-    if (!object.getType().isClass()) {
+    if (objectType != null && !objectType.isClass()) {
       System.err.println("Object is not of class type");
       status(MAJOR_ERRORS);
     } else {
-      ClassDescriptor objectClass = (ClassDescriptor) object.getType();
+      ClassDescriptor objectClass = (ClassDescriptor) objectType;
 
       // ERROR: The method M is undefined for type T.
-      if (!objectClass.hasMethod(methodName)) {
+      if (objectClass != null && !objectClass.hasMethod(methodName)) {
         System.err.println("Method " + methodName + " is undefined for type " + objectClass);
         status(MAJOR_ERRORS);
       }
       // ERROR: No method M for type T matches the signature S.
-      else if (!objectClass.hasMethod(methodName, signature)) {
+      else if (objectClass != null && !objectClass.hasMethod(methodName, signature)) {
         System.err.println("No method " + methodName + " for type " + objectClass
                            + " matches the signature " + methodName + signature);
         status(MAJOR_ERRORS);
       } else {
-        TypeDescriptor returnType = objectClass.getReturnType(methodName, signature);
+        TypeDescriptor returnType = null;
+        if (objectClass != null) returnType = objectClass.getReturnType(methodName, signature);
         return new DAGMethodCall(object, methodName, signature, returnType, arguments);
       }
     }

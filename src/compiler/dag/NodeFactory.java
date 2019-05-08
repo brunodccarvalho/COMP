@@ -42,7 +42,7 @@ public class NodeFactory extends BaseDAGFactory {
       SimpleNode statementNode = methodBodyNode.jjtGetChild(i);
       assert !statementNode.is(JJTVARIABLEDECLARATION);
 
-      nodes[i] = build(statementNode);
+      nodes[i - M] = build(statementNode);
     }
 
     if (returnNode == null) {

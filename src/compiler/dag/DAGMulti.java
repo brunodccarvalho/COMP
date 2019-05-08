@@ -45,7 +45,9 @@ public class DAGMulti extends DAGNode {
   public String toString() {
     StringBuilder builder = new StringBuilder();
     builder.append("{\n");
-    for (DAGNode node : body) builder.append("  ").append(node.toString());
+    for (DAGNode node : body) {
+      builder.append("  ").append(node.toString()).append('\n');
+    }
     builder.append("}");
     return builder.toString();
   }

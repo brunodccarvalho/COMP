@@ -28,6 +28,6 @@ public class DAGReturnExpression extends DAGReturn {
 
   @Override
   public String toString() {
-    return "return " + returnExpression + ";\n";
+    return "return " + returnExpression;
   }
 }

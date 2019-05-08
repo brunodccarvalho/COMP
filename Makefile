@@ -7,7 +7,7 @@ JJT := jjt
 COMPILER := compiler
 
 # Test file (in folder test_files)
-TEST_FILE := code_generator/Dog.java
+TEST_FILE := TestEverything.txt
 
 # Jasmin file (to see how javac writes bytecode).
 JASMIN_FILE := JavapExample.java

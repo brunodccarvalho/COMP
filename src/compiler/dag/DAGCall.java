@@ -86,7 +86,7 @@ public abstract class DAGCall extends DAGExpression {
   @Override
   public String toString() {
     StringBuilder string = new StringBuilder();
-    string.append(methodName).append('(');
+    string.append('.').append(methodName).append('(');
     if (arguments.length > 0) {
       string.append(arguments[0]);
       for (int i = 1; i < arguments.length; ++i) {

@@ -41,7 +41,12 @@ public class DAGVariable extends DAGExpression {
    */
   @Override
   public String toString() {
-    return "{{" + var.getType() + " " + var.getName() + "}}";
+    if (isDummy())
+      return "{?}";
+    else if (var.getType() == null)
+      return "{? " + var.getName() + "}";
+    else
+      return "{" + var.getType() + " " + var.getName() + "}";
   }
 
   /* (non-Javadoc)
