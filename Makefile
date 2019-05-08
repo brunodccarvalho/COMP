@@ -71,3 +71,6 @@ jasmin:
 	@javac $(JASMIN_FILE)
 	@javap -verbose -cp . -s $(JASMIN_FILE:.java=) > $(JASMIN_FILE:.java=.j)
 	@rm $(JASMIN_FILE:.java=.class)
+ jvm:
+	@java -jar jasmin.jar bin/codeGenerator/Dog.j
+	@java Dog
