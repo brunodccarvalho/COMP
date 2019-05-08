@@ -6,7 +6,7 @@ import compiler.symbols.JMMMethodDescriptor;
 /**
  * MethodSignature
  */
-public class MethodSignature extends BaseByteCode {
+public class MethodSignature extends JVMInst {
 
     /**
      * 1: name of the class to which the method belongs 2: name of the method 3:

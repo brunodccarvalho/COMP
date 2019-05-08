@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Method
  */
-public class Method extends BaseByteCode {
+public class Method extends JVMInst {
 
     
     protected int numberLocals;

@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * MethodReturn
  */
-public class MethodReturn extends BaseByteCode {
+public class MethodReturn extends JVMInst {
 
     public static HashMap<String, String> returnTypes;
     static {

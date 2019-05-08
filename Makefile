@@ -7,7 +7,7 @@ JJT := jjt
 COMPILER := compiler
 
 # Test file (in folder test_files)
-TEST_FILE := TestEverything.txt
+TEST_FILE := Dog.java
 
 # Jasmin file (to see how javac writes bytecode).
 JASMIN_FILE := JavapExample.java
@@ -71,6 +71,6 @@ jasmin:
 	@javac $(JASMIN_FILE)
 	@javap -verbose -cp . -s $(JASMIN_FILE:.java=) > $(JASMIN_FILE:.java=.j)
 	@rm $(JASMIN_FILE:.java=.class)
- jvm:
+jvm:
 	@java -jar jasmin.jar bin/codeGenerator/Dog.j
 	@java Dog

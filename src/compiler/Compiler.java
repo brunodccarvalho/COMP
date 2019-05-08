@@ -28,6 +28,7 @@ final class Compiler {
       compiler.parse();
       compiler.buildSymbolTables();
       compiler.buildInternalRepresentations();
+      compiler.generateCode();
     } catch (ParseException e) {
       System.err.println(e.getMessage());
     } catch (FileNotFoundException e) {

@@ -4,7 +4,7 @@ import compiler.dag.DAGIntegerConstant;
 /**
  * IntegerPush
  */
-public class IntegerPush extends BaseByteCode{
+public class IntegerPush extends JVMInst {
     /**
      * 1: number to push to the stack - should be one of: 0,1,2,3,4,5 or m1 (-1)
      */

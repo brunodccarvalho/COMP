@@ -10,14 +10,15 @@ import compiler.symbols.JMMFunction;
 import jjt.SimpleNode;
 
 public class CompilationData {
-  SimpleNode classNode;
-  JMMClassDescriptor jmmClass;
-  final HashMap<JMMFunction, SimpleNode> nodesMap = new HashMap<>();
-  final HashMap<JMMFunction, FunctionLocals> localsMap = new HashMap<>();
-  final HashMap<JMMFunction, DAGMulti> bodiesMap = new HashMap<>();
-  final File sourcefile;
+  
+  public SimpleNode classNode;
+  public JMMClassDescriptor jmmClass;
+  public final HashMap<JMMFunction, SimpleNode> nodesMap = new HashMap<>();
+  public final HashMap<JMMFunction, FunctionLocals> localsMap = new HashMap<>();
+  public final HashMap<JMMFunction, DAGMulti> bodiesMap = new HashMap<>();
+  public final File sourcefile;
 
-  CompilationData(File sourcefile) {
+  public CompilationData(File sourcefile) {
     this.sourcefile = sourcefile;
   }
 }

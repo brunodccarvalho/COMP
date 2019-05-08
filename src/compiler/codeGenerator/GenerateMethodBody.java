@@ -3,7 +3,6 @@ package compiler.codeGenerator;
 import compiler.dag.DAGAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGNode;
-import compiler.modules.MethodBody;
 import compiler.symbols.JMMMethodDescriptor;
 
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import java.util.ArrayList;
 /**
  * MethodBody
  */
-public class GenerateMethodBody extends BaseByteCode {
+public class GenerateMethodBody {
 
     private Method belongs;
 

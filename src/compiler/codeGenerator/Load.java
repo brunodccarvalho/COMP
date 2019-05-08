@@ -7,7 +7,7 @@ import java.util.HashMap;
 /**
  * Load
  */
-public class Load extends BaseByteCode {
+public class Load extends JVMInst {
 
     public static HashMap<String, String> load;
     static{

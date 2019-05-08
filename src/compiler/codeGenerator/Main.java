@@ -3,14 +3,13 @@ package compiler.codeGenerator;
 import compiler.dag.DAGAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGNode;
-import compiler.modules.MethodBody;
 
 import java.util.ArrayList;
 
 /**
  * Main
  */
-public class Main extends BaseByteCode {
+public class Main extends JVMInst {
 
     private ArrayList<BaseStatement> statements;
     private int localsSize;

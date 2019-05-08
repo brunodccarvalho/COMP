@@ -4,7 +4,7 @@ import compiler.symbols.JMMMethodDescriptor;
 /**
  * MethodHeader
  */
-public class MethodHeader extends BaseByteCode {
+public class MethodHeader extends JVMInst {
     /**
      * 1: method signature
      * 2: method stack and locals array size

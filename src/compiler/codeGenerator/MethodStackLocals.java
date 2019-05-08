@@ -4,7 +4,7 @@ package compiler.codeGenerator;
 /**
  * MethodStackLocals
  */
-public class MethodStackLocals extends BaseByteCode {
+public class MethodStackLocals extends JVMInst {
     
     /**
      * 1: Locals array size

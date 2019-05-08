@@ -4,23 +4,21 @@ package compiler.codeGenerator;
  * ClassHeader
  * 
  */
-public class ClassHeader extends BaseByteCode {
+public class ClassHeader extends JVMInst {
     
     /**
      * 1: name of the class
      */
     public static String CLASSNAME = ".class public ?";
+    private String className;
 
-    String className;
-
-    ClassHeader() {
-        this.regexReplace=ClassHeader.CLASSNAME;
-        this.className=CodeGenerator.singleton.classDescriptor.getClassName();
+    public ClassHeader(String className) {
+        this.className = className;
     }
 
     @Override
     public String toString()
     {
-        return this.subst(this.regexReplace,this.className);
+        return JVMInst.subst(ClassHeader.CLASSNAME, className);
     }
 }

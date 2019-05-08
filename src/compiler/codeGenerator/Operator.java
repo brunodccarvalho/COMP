@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * Operator
  */
-public class Operator extends BaseByteCode {
+public class Operator {
     
     public static HashMap<String, String> binaryOperators;
     static{

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import compiler.modules.CodeGenerator;
 import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
@@ -60,6 +61,14 @@ public final class ClassCompiler extends CompilerModule {
     MethodBodyBuilder builder = new MethodBodyBuilder(data);
     builder.buildMethods();
     builder.dump();
+    return this;
+  }
+
+  // Generate JVM code
+  public ClassCompiler generateCode() throws CompilationException {
+    System.out.println(" ***** Code Generation");
+    CodeGenerator codeGenerator = new CodeGenerator(data);
+    codeGenerator.generateCode();
     return this;
   }
 }

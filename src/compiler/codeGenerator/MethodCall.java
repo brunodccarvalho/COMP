@@ -5,7 +5,7 @@ import compiler.dag.DAGCall;
 /**
  * MethodCall
  */
-public class MethodCall extends BaseByteCode {
+public class MethodCall extends JVMInst {
 
     private Integer variableIndex;
     private MethodSignature methodSignature;

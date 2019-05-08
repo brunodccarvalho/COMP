@@ -5,7 +5,7 @@ import compiler.symbols.MemberDescriptor;
 /**
  * StoreMember
  */
-public class StoreMember extends BaseByteCode {
+public class StoreMember extends JVMInst {
     
     /**
      * 1: class descriptor
