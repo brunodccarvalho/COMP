@@ -7,6 +7,8 @@ import static compiler.symbols.TypeDescriptor.typematch;
 import java.util.HashMap;
 
 import compiler.FunctionSignature;
+import compiler.exceptions.InternalCompilerError;
+import compiler.modules.CompilationStatus;
 import compiler.symbols.*;
 
 import jjt.SimpleNode;
@@ -20,15 +22,23 @@ import jjt.SimpleNode;
  */
 public class ExpressionFactory extends BaseDAGFactory {
   /**
-   * Set of DAG expressions already constructed.
+   * Set of DAG expressions already constructed, for common subexpression elimination.
    */
   private HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
 
   /**
    * @param locals The table of locals variables.
    */
-  public ExpressionFactory(FunctionLocals locals) {
+  ExpressionFactory(FunctionLocals locals) {
     super(locals);
+  }
+
+  @Override
+  public DAGExpression build(SimpleNode node, CompilationStatus tracker) {
+    assert tracker != null;
+    DAGExpression built = build(node);
+    tracker.update(status());
+    return built;
   }
 
   /**
@@ -74,13 +84,7 @@ public class ExpressionFactory extends BaseDAGFactory {
       return reuse(buildCall(node));
     }
 
-    // ... common post-build
-
-    System.err.println("COULD NOT BUILD " + node);
-
-    // We should never arrive here
-    assert false;
-    return null;
+    throw new InternalCompilerError();
   }
 
   private DAGExpression reuse(DAGExpression dagNode) {
@@ -110,7 +114,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: Integer literal constant value is not representable.
     catch (NumberFormatException e) {
       System.err.println("The literal " + intString + " of type int is out of range");
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
       return new DAGIntegerConstant(1);
     }
   }
@@ -144,7 +148,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: varName cannot be resolved to a variable.
     if (var == null) {
       System.err.println(varName + " cannot be resolved to a variable");
-      status(MAJOR_ERRORS);
+      update(Codes.MAJOR_ERRORS);
       return new DAGVariable();
     } else if (var instanceof LocalDescriptor) {
       return new DAGLocal((LocalDescriptor) var);
@@ -169,7 +173,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: Cannot use this in a static context.
     if (thisVar == null) {
       System.err.println("Cannot use this in a static context");
-      status(MAJOR_ERRORS);
+      update(Codes.MAJOR_ERRORS);
       return null;
     }
 
@@ -191,7 +195,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: Type mismatch: expected int, but found X.
     if (!typematch(expression.getType(), intDescriptor)) {
       System.err.println("Type mismatch: expected int type, but found " + expression.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGNewIntArray(expression);
@@ -230,7 +234,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: Type mismatch: expected int[], but found X.
     if (!typematch(expression.getType(), intArrayDescriptor)) {
       System.err.println("Type mismatch: expected int[] type, but found " + expression.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGLength(expression);
@@ -251,7 +255,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: Type mismatch: expected boolean, but found X.
     if (!typematch(expression.getType(), booleanDescriptor)) {
       System.err.println("Type mismatch: expected boolean type, but found " + expression.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGNot(expression);
@@ -278,14 +282,14 @@ public class ExpressionFactory extends BaseDAGFactory {
     if (!typematch(lhs.getType(), op.getOperandType())) {
       System.err.println("Type mismatch: expected " + op.getOperandType() + " type, but found "
                          + lhs.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     // ERROR: Type mismatch in the rhs.
     if (!typematch(rhs.getType(), op.getOperandType())) {
       System.err.println("Type mismatch: expected " + op.getOperandType() + " type, but found "
                          + rhs.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGBinaryOp(op, lhs, rhs);
@@ -310,13 +314,13 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: Type mismatch in the array expression.
     if (!typematch(intArrayDescriptor, array.getType())) {
       System.err.println("Type mismatch: expected int[] type, but found " + array.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     // ERROR: Type mismatch in the index expression.
     if (!typematch(intDescriptor, index.getType())) {
       System.err.println("Type mismatch: expected int type, but found " + index.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGBracket(array, index);
@@ -390,13 +394,13 @@ public class ExpressionFactory extends BaseDAGFactory {
     if (!classDescriptor.hasStaticMethod(methodName)) {
       System.err.println("Static method " + methodName + " is undefined for class "
                          + classDescriptor);
-      status(MAJOR_ERRORS);
+      update(Codes.MAJOR_ERRORS);
     }
     // ERROR: No method M for type T matches the signature S.
     else if (!classDescriptor.hasStaticMethod(methodName, signature)) {
       System.err.println("No static method " + methodName + " for class " + classDescriptor
                          + " matches the signature " + methodName + signature);
-      status(MAJOR_ERRORS);
+      update(Codes.MAJOR_ERRORS);
     } else {
       TypeDescriptor returnType = classDescriptor.getReturnTypeStatic(methodName, signature);
       return new DAGStaticCall(classDescriptor, methodName, signature, returnType, arguments);
@@ -443,20 +447,20 @@ public class ExpressionFactory extends BaseDAGFactory {
     // ERROR: Object expression is not of class type.
     if (objectType != null && !objectType.isClass()) {
       System.err.println("Object is not of class type");
-      status(MAJOR_ERRORS);
+      update(Codes.MAJOR_ERRORS);
     } else {
       ClassDescriptor objectClass = (ClassDescriptor) objectType;
 
       // ERROR: The method M is undefined for type T.
       if (objectClass != null && !objectClass.hasMethod(methodName)) {
         System.err.println("Method " + methodName + " is undefined for type " + objectClass);
-        status(MAJOR_ERRORS);
+        update(Codes.MAJOR_ERRORS);
       }
       // ERROR: No method M for type T matches the signature S.
       else if (objectClass != null && !objectClass.hasMethod(methodName, signature)) {
         System.err.println("No method " + methodName + " for type " + objectClass
                            + " matches the signature " + methodName + signature);
-        status(MAJOR_ERRORS);
+        update(Codes.MAJOR_ERRORS);
       } else {
         TypeDescriptor returnType = null;
         if (objectClass != null) returnType = objectClass.getReturnType(methodName, signature);

@@ -1,6 +1,6 @@
 package compiler.dag;
 
-import compiler.modules.CompilerModule;
+import compiler.modules.CompilationStatus;
 import compiler.symbols.FunctionLocals;
 import jjt.SimpleNode;
 
@@ -10,7 +10,7 @@ import jjt.SimpleNode;
  *
  * There are three factories: ExpressionFactory, AssignmentFactory, and ControlFlowFactory.
  */
-public abstract class BaseDAGFactory extends CompilerModule {
+public abstract class BaseDAGFactory extends CompilationStatus {
   final FunctionLocals locals;
 
   /**
@@ -22,6 +22,12 @@ public abstract class BaseDAGFactory extends CompilerModule {
     assert locals != null;
     this.locals = locals;
   }
+
+  /**
+   * Update the status of tracker with the resulting status of build().
+   *
+   */
+  public abstract DAGNode build(SimpleNode node, CompilationStatus tracker);
 
   /**
    * Parse and analyze the AST node given and return the resulting DAGNode.

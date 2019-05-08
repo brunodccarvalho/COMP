@@ -21,4 +21,12 @@ public class DAGParameter extends DAGVariable implements LocalVariable {
       return parameterIndex;
     }
   }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "{parameter " + var.getType() + " " + var.getName() + "}";
+  }
 }

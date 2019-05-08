@@ -5,6 +5,7 @@ import static jjt.jmmTreeConstants.*;
 import static compiler.symbols.PrimitiveDescriptor.*;
 import static compiler.symbols.TypeDescriptor.typematch;
 
+import compiler.modules.CompilationStatus;
 import compiler.modules.DiagnosticsHandler;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.LocalDescriptor;
@@ -23,9 +24,17 @@ import jjt.SimpleNode;
 public class AssignmentFactory extends BaseDAGFactory {
   private final ExpressionFactory factory;
 
-  public AssignmentFactory(FunctionLocals locals) {
+  AssignmentFactory(FunctionLocals locals) {
     super(locals);
     this.factory = new ExpressionFactory(locals);
+  }
+
+  @Override
+  public DAGAssignment build(SimpleNode assignmentNode, CompilationStatus tracker) {
+    assert tracker != null;
+    DAGAssignment built = build(assignmentNode);
+    tracker.update(status());
+    return built;
   }
 
   /**
@@ -56,19 +65,19 @@ public class AssignmentFactory extends BaseDAGFactory {
    * @param assignmentNode A JJT node representing a variable assignment.
    * @return A new DAGAssignment, holding the variable and the expression.
    */
-  private DAGAssignment buildAssignment(SimpleNode assignmentNode) {
-    assert assignmentNode.is(JJTASSIGNMENT);
+  private DAGAssignment buildAssignment(SimpleNode node) {
+    assert node.is(JJTASSIGNMENT);
 
-    SimpleNode variableNode = assignmentNode.jjtGetChild(0);
+    SimpleNode variableNode = node.jjtGetChild(0);
     assert variableNode.is(JJTIDENTIFIER);
 
     DAGVariable var = this.buildVariable(variableNode);
-    DAGExpression expression = this.factory.build(assignmentNode.jjtGetChild(1));
+    DAGExpression expression = this.factory.build(node.jjtGetChild(1));
 
     // Error: Type mismatch: Expected type T, but expression has type E.
     if (!typematch(var.getType(), expression.getType())) {
-      DiagnosticsHandler.typeMismatch(assignmentNode, var.getType(), expression.getType());
-      status(MAJOR_ERRORS);
+      DiagnosticsHandler.typeMismatch(node, var.getType(), expression.getType());
+      update(Codes.MAJOR_ERRORS);
     }
 
     return new DAGAssignment(var, expression);
@@ -80,11 +89,11 @@ public class AssignmentFactory extends BaseDAGFactory {
    * @param assignmentNode A JJT node representing an array assignment.
    * @return A new DAGBracketAssignment, holding the variable and the expression.
    */
-  private DAGBracketAssignment buildBracketAssignment(SimpleNode assignmentNode) {
-    assert assignmentNode.is(JJTASSIGNMENT);
+  private DAGBracketAssignment buildBracketAssignment(SimpleNode node) {
+    assert node.is(JJTASSIGNMENT);
 
-    SimpleNode bracketsNode = assignmentNode.jjtGetChild(0);
-    SimpleNode assignedExpressionNode = assignmentNode.jjtGetChild(1);
+    SimpleNode bracketsNode = node.jjtGetChild(0);
+    SimpleNode assignedExpressionNode = node.jjtGetChild(1);
     assert bracketsNode.is(JJTBRACKET);
 
     SimpleNode variableNode = bracketsNode.jjtGetChild(0);
@@ -97,15 +106,15 @@ public class AssignmentFactory extends BaseDAGFactory {
 
     // ERROR: Type mismatch in the assigned expression.
     if (!typematch(intDescriptor, assignedExpression.getType())) {
-      DiagnosticsHandler.typeMismatch(assignmentNode, intDescriptor, assignedExpression.getType());
-      status(MAJOR_ERRORS);
+      DiagnosticsHandler.typeMismatch(node, intDescriptor, assignedExpression.getType());
+      update(Codes.MAJOR_ERRORS);
     }
 
     // ERROR: Type mismatch in the index expression.
     if (!typematch(intDescriptor, indexExpression.getType())) {
       DiagnosticsHandler.typeMismatch(indexExpressionNode, intDescriptor,
                                       assignedExpression.getType());
-      status(MAJOR_ERRORS);
+      update(Codes.MAJOR_ERRORS);
     }
 
     return new DAGBracketAssignment(var, assignedExpression, indexExpression);
@@ -126,7 +135,7 @@ public class AssignmentFactory extends BaseDAGFactory {
     // ERROR: varName cannot be resolved to a variable.
     if (var == null) {
       DiagnosticsHandler.unresolvedVarName(node, varName);
-      status(MAJOR_ERRORS);
+      update(Codes.MAJOR_ERRORS);
       return new DAGVariable();
     } else if (var instanceof LocalDescriptor) {
       return new DAGLocal((LocalDescriptor) var);

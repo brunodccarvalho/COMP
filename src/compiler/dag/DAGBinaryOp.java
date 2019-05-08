@@ -46,14 +46,21 @@ public class DAGBinaryOp extends DAGExpression {
   }
 
   /**
-   * @return true if the operation is an arithmetic one (sum, sub, mul or div)
+   * @return true if the operation is an arithmetic one (ints to int) (sum, sub, mul or div)
    */
   public boolean isArithmetic() {
     return op == SUM || op == SUB || op == MUL || op == DIV;
   }
 
   /**
-   * @return true if the operation is a comparison (less than only)
+   * @return true if the operation is a boolean operation (on booleans to boolean) (and)
+   */
+  public boolean isBoolean() {
+    return op == AND;
+  }
+
+  /**
+   * @return true if the operation is a comparison (ints to boolean) (less)
    */
   public boolean isComparison() {
     return op == LT;

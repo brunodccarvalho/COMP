@@ -34,4 +34,12 @@ public class DAGLocal extends DAGVariable implements LocalVariable {
   public boolean hasIndex() {
     return localTableIndex >= 0;
   }
+
+  /* (non-Javadoc)
+   * @see java.lang.Object#toString()
+   */
+  @Override
+  public String toString() {
+    return "{local " + var.getType() + " " + var.getName() + "}";
+  }
 }

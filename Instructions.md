@@ -833,37 +833,43 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
 ## Javac Implementation of JVM
 
     Notation:
-          $EXPRESSION_A...    Recursion: EXPRESSION_A is a child of the current node.
+          $EXPRESSION_A...   Recursion: EXPRESSION_A is a child of the current node. Its code should
+                             be placed in this exact position.
         ? EXPRESSION_B       EXPRESSION_B isn't always present, only if result is to be cached.
-      L:  EXPRESSION_C       L is a label, used to jump to EXPRESSION_C.
+                             Usual when evaluating expressions.
+      L:  EXPRESSION_C       L is a label, used to jump from elsewhere to EXPRESSION_C.
 
 
-
-    DAGAdd:
+    DAGBinaryOp> 1/6
+      Add:
           $lhs...
           $rhs...
           iadd
         ? istore                  Store result of lhs + rhs
 
-    DAGSub:
+    DAGBinaryOp> 2/6
+      Sub:
           $lhs...
           $rhs...
           isub
         ? istore                  Store result of lhs - rhs
 
-    DAGMul:
+    DAGBinaryOp> 3/6
+      Mul:
           $lhs...
           $rhs...
           imul
         ? istore                  Store result of lhs * rhs
 
-    DAGDiv:
+    DAGBinaryOp> 4/6
+      Div:
           $lhs...
           $rhs...
           idiv
         ? istore                  Store result of lhs / rhs
 
-    DAGLess:
+    DAGBinaryOp> 5/6
+      Less:
           $lhs...
           $rhs...
           if_icmpge   A
@@ -872,7 +878,8 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
       A:  iconst_0
       B:? istore                  Store result of lhs < rhs
 
-    DAGAnd:
+    DAGBinaryOp> 6/6
+      And:
           $lhs...
           ifeq        A
           $rhs...
@@ -950,7 +957,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           $loadarg2...
           ...
           invokevirtual <method>
-        > [ia]store
+        ? [ia]store               Store result of method call
 
     DAGCall> 4/4
       DAGStaticCall --> non void:
@@ -958,7 +965,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           $loadarg2...
           ...
           invokestatic <class> <method>
-        > [ia]store
+        ? [ia]store               Store result of static call
 
     ***** DAGVariable (reads)
 
@@ -981,10 +988,62 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           aload_0
           getfield <member descriptor>
 
+    ***** Assignment (stores)
+
+    IMPORTANT: Order of evaluation: receiving expression, [index expression], value expression.
+
+    DAGAssignment> 1/2
+      DAGAssignment to DAGMember:
+          aload_0                 # load this
+          $loadvalue...           # evaluate value
+          putfield  <member>
+          ... CONTINUE
+
+    DAGAssignment> 2/2
+      DAGAssignment to DAGLocal or DAGParameter:
+          $loadvalue...           # evaluate value
+          [i|a]store VAR          # store appropriate type to local
+          ... CONTINUE
+
+    DAGBracketAssignment> 1/2
+      DAGBracketAssignment to DAGMember:
+          aload_0                 # load this
+          getfield  <member>
+          $loadindex...           # evaluate index
+          $loadvalue...           # evaluate value
+          iastore VAR             # store int in int array
+          ... CONTINUE
+
+    DAGBracketAssignment> 2/2
+      DAGBracketAssignment to DAGLocal or DAGParameter:
+          $loadarray...           # evaluate receiving expression
+          $loadindex...           # evaluate index
+          $loadvalue...           # evaluate value
+          iastore VAR             # store int in int array
+          ... CONTINUE
+
+    ***** Return Statements
+
+    DAGVoidReturn:
+          return
+          ... CONTINUE
+
+    DAGReturnExpression> 1/2
+      Return is int or boolean:
+          $returnexpression
+          ireturn
+          ... CONTINUE
+
+    DAGReturnExpression> 2/2
+      Return is reference:
+          $returnexpression
+          areturn
+          ... CONTINUE
+
     ***** Control Flow
 
-    IfElseStatement> 1/3
-      Condition of boolean type (variable load, function call, etc):
+    DAGIfElse> 1/3
+      DAGCondition of boolean type (variable load, function call, etc):
           $conditionexpression...
           ifeq        A
           $truebranch...
@@ -992,8 +1051,8 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
       A:  $falsebranch...
       B:  ... CONTINUE
 
-    IfElseStatement> 2/3
-      Condition is BinaryOperation Less (<):
+    DAGIfElse> 2/3
+      DAGCondition is BinaryOperation Less (<):
           $lhs...
           $rhs...
           if_icmpge   A
@@ -1003,8 +1062,8 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
       B:  ... CONTINUE
       # NOTA: DAGLess é um caso especial com $truebranch = iconst_1 e $falsebranch = iconst_0
 
-    IfElseStatement> 3/3
-      Condition is BinaryOperation And (&&):
+    DAGIfElse> 3/3
+      DAGCondition is BinaryOperation And (&&):
           $lhs...
           ifeq        A
           $rhs...
@@ -1015,16 +1074,16 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
       B:  ... CONTINUE
       # NOTA: DAGAnd é um caso especial com $truebranch = iconst_1 e $falsebranch = iconst_0
 
-    WhileStatement> 1/3
-      Condition of boolean type (variable load, function call, etc):
+    DAGWhile> 1/3
+      DAGCondition of boolean type (variable load, function call, etc):
       A:  $conditionexpression...
           ifeq        B
           $body...
           goto        A           # only necessary if $body does not return unconditionally
       B:  ... CONTINUE
 
-    WhileStatement> 2/3
-      Condition is BinaryOperation Less (<):
+    DAGWhile> 2/3
+      DAGCondition is BinaryOperation Less (<):
       A:  $lhs...
           $rhs...
           if_icmpge   B
@@ -1032,8 +1091,8 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           goto        A           # only necessary if $body does not return unconditionally
       B:  ... CONTINUE
 
-    WhileStatement> 3/3
-      Condition is BinaryOperation And (&&):
+    DAGWhile> 3/3
+      DAGCondition is BinaryOperation And (&&):
       A:  $lhs...
           ifeq        B
           $rhs...
@@ -1042,51 +1101,9 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
           goto        A           # only necessary if $body does not return unconditionally
       B:  ... CONTINUE
 
-    ***** Assignment (stores)
-    - No distinction between variable types
-
-    Plain Assignment> 1/2
-      Plain AssignmentToMember:
-          aload_0                 # load this
-          $loadvalue...
-          putfield  <member>
+    DAGMulti:
+          $child0...
+          $child1...
+          $child2...
+          ...
           ... CONTINUE
-
-    Plain Assignment> 2/2
-      Plain AssignmentToLocalOrParameter:
-          $loadvalue...
-          [i|a]store VAR          # store appropriate type
-          ... CONTINUE
-
-    Bracket Assignment> 1/2
-      Bracket AssignmentToMember:
-          aload_0                 # load this
-          getfield  <member>
-          $loadindex...
-          $loadvalue...
-          iastore VAR             # store int in int array
-          ... CONTINUE
-
-    Bracket Assignment> 2/2
-      Bracket AssignmentToLocalOrParameter:
-          $loadarray...
-          $loadindex...
-          $loadvalue...
-          iastore VAR             # store int in int array
-          ... CONTINUE
-
-    ***** Return Statements
-
-    ReturnStatement> 1/3
-      Return is void:
-          return
-
-    ReturnStatement> 2/3
-      Return is int or boolean:
-          $returnexpression
-          ireturn
-
-    ReturnStatement> 3/3
-      Return is reference:
-          $returnexpression
-          areturn

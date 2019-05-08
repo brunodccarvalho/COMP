@@ -1,11 +1,10 @@
 package compiler;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
+import compiler.exceptions.CompilationException;
 import compiler.modules.ClassCompiler;
-import compiler.modules.CompilationException;
-import jjt.ParseException;
+import compiler.modules.CompilationStatus.Codes;
 
 final class Compiler {
   private static Compiler compiler;
@@ -22,16 +21,15 @@ final class Compiler {
     }
 
     String source = args[args.length - 1];
-    ClassCompiler compiler = new ClassCompiler(new File(source));
 
     try {
-      compiler.parse();
-      compiler.buildSymbolTables();
-      compiler.buildInternalRepresentations();
-    } catch (ParseException e) {
-      System.err.println(e.getMessage());
-    } catch (FileNotFoundException e) {
-      System.err.println(e.getMessage());
+      ClassCompiler compiler = new ClassCompiler(new File(source));
+
+      compiler.parse().exitOnError(Codes.MAJOR_ERRORS);
+      compiler.buildSymbolTables().exitOnError(Codes.MAJOR_ERRORS);
+      compiler.buildInternalRepresentations().exitOnError(Codes.MINOR_ERRORS);
+      compiler.deduceSignatures().exitOnError(Codes.MINOR_ERRORS);
+      compiler.buildCodeRepresentations();
     } catch (CompilationException e) {
       System.err.println(e.getMessage());
     }

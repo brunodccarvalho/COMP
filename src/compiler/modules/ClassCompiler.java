@@ -7,11 +7,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import compiler.exceptions.CompilationException;
 import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
 
-public final class ClassCompiler extends CompilerModule {
+public final class ClassCompiler extends CompilationStatus {
   private final File sourcefile;
   private final CompilationData data;
 
@@ -23,43 +24,76 @@ public final class ClassCompiler extends CompilerModule {
       DiagnosticsHandler.self = new DiagnosticsHandler(sourcefile);
     } catch (IOException e) {
       System.err.println("File " + sourcefile.getName() + " was not found.");
-      status(FATAL);
-      return;
+      throw new CompilationException(e.getMessage());
     }
   }
 
-  // Parse source file
-  public ClassCompiler parse() throws FileNotFoundException, ParseException {
-    System.out.println(" ***** PARSE");
-    SimpleNode rootNode = jmm.parseClass(sourcefile);
-    assert rootNode.is(JJTPROGRAM);
+  /**
+   * 1. Parse source file with JJT's generated parser.
+   * * Parser.
+   */
+  public ClassCompiler parse() {
+    try {
+      SimpleNode rootNode = jmm.parseClass(sourcefile);
+      assert rootNode.is(JJTPROGRAM);
 
-    SimpleNode classNode = rootNode.jjtGetChild(0);
-    assert classNode.is(JJTCLASSDECLARATION);
+      SimpleNode classNode = rootNode.jjtGetChild(0);
+      assert classNode.is(JJTCLASSDECLARATION);
 
-    data.classNode = classNode;
+      data.classNode = classNode;
+      return this;
+    } catch (FileNotFoundException e) {
+      throw new CompilationException(e);
+    } catch (ParseException e) {
+      throw new CompilationException(e);
+    }
+  }
 
+  /**
+   * 2. Build all symbol tables.
+   * * Compiler proper.
+   */
+  public ClassCompiler buildSymbolTables() {
+    new SymbolsTableBuilder(data).read(this).dump();
     return this;
   }
 
-  // Construct all Symbols Tables; this does stages 1 and 2 of the compiler proper.
-  public ClassCompiler buildSymbolTables() throws CompilationException {
-    System.out.println(" ***** SYMBOLS");
-    SymbolsTableBuilder builder = new SymbolsTableBuilder(data);
-    builder.readClassHeader();
-    builder.readClassMemberVariables();
-    builder.readClassMethodDeclarations();
-    builder.readMethodLocals();
-    builder.dump();
+  /**
+   * 3. Build the internal representation of each method.
+   * * Compiler proper.
+   */
+  public ClassCompiler buildInternalRepresentations() {
+    new DAGBuilder(data).buildMethods(this).dump();
     return this;
   }
 
-  // Build the DAGs for each method
-  public ClassCompiler buildInternalRepresentations() throws CompilationException {
-    System.out.println(" ***** DAGs");
-    MethodBodyBuilder builder = new MethodBodyBuilder(data);
-    builder.buildMethods();
-    builder.dump();
+  /**
+   * 4. Deduce unknown function signatures.
+   * * Compiler proper.
+   */
+  public ClassCompiler deduceSignatures() {
+    // ...
+    return this;
+  }
+
+  /**
+   * 5. Build the code representations for each of the methods.
+   * ... or something. Rename this...
+   * * Assembler
+   */
+  public ClassCompiler buildCodeRepresentations() {
+    // ...
+    return this;
+  }
+
+  /**
+   * Exit if the error code is too high.
+   */
+  public ClassCompiler exitOnError(int level) {
+    if (status() >= level) {
+      System.err.println("Compilation error(s) found, exiting.");
+      System.exit(status());
+    }
     return this;
   }
 }

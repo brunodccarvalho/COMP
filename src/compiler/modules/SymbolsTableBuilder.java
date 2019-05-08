@@ -2,10 +2,8 @@ package compiler.modules;
 
 import static jjt.jmmTreeConstants.*;
 
-import java.util.HashMap;
-
 import compiler.FunctionSignature;
-import compiler.modules.DiagnosticsHandler;
+import compiler.exceptions.CompilationException;
 import compiler.symbols.*;
 import jjt.SimpleNode;
 
@@ -14,14 +12,23 @@ import jjt.SimpleNode;
  * members, member methods, their signatures), constructs a map of methods to
  * SimpleNodes, and populates the local symbol tables for each of the methods.
  */
-public class SymbolsTableBuilder extends CompilerModule {
+public class SymbolsTableBuilder extends CompilationStatus {
   final CompilationData data;
 
   SymbolsTableBuilder(CompilationData data) {
     this.data = data;
   }
 
-  void readClassHeader() throws CompilationException {
+  SymbolsTableBuilder read(CompilationStatus tracker) {
+    readClassHeader();
+    readClassMemberVariables();
+    readClassMethodDeclarations();
+    readMethodLocals();
+    tracker.update(status());
+    return this;
+  }
+
+  private void readClassHeader() {
     SimpleNode classHeader = data.classNode.jjtGetChild(0);
     assert classHeader.is(JJTCLASSHEADER);
 
@@ -35,7 +42,7 @@ public class SymbolsTableBuilder extends CompilerModule {
       throw new CompilationException("Invalid class name " + className);
     }
 
-    // Extends clause...
+    // TODO: Extends clause...
     if (classHeader.jjtGetNumChildren() == 1) {
       data.jmmClass = new JMMClassDescriptor(className);
     } else {
@@ -43,7 +50,7 @@ public class SymbolsTableBuilder extends CompilerModule {
     }
   }
 
-  void readClassMemberVariables() {
+  private void readClassMemberVariables() {
     SimpleNode classBody = data.classNode.jjtGetChild(1);
     assert classBody.is(JJTCLASSBODY);
 
@@ -56,7 +63,7 @@ public class SymbolsTableBuilder extends CompilerModule {
     }
   }
 
-  void readClassMethodDeclarations() {
+  private void readClassMethodDeclarations() {
     SimpleNode classBody = data.classNode.jjtGetChild(1);
     assert classBody.is(JJTCLASSBODY);
 
@@ -75,7 +82,7 @@ public class SymbolsTableBuilder extends CompilerModule {
     }
   }
 
-  void readMethodLocals() {
+  private void readMethodLocals() {
     for (JMMFunction method : data.nodesMap.keySet()) {
       FunctionLocals locals = readOneMethodLocals(method, data.nodesMap.get(method));
       data.localsMap.put(method, locals);
@@ -94,11 +101,11 @@ public class SymbolsTableBuilder extends CompilerModule {
     // ERROR: Repeated class member variable.
     if (data.jmmClass.resolve(identifier) != null) {
       DiagnosticsHandler.varAlreadyDefined(nameNode, identifier);
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
       return;
     }
 
-    TypeDescriptor type = getOrCreateTypeFromNode(typeNode);
+    TypeDescriptor type = Utils.getOrCreateTypeFromNode(typeNode);
     new MemberDescriptor(type, identifier, data.jmmClass);
   }
 
@@ -115,7 +122,7 @@ public class SymbolsTableBuilder extends CompilerModule {
     assert methodBodyNode.is(JJTMETHODBODY);
     assert returnStmtNode.is(JJTRETURNSTATEMENT);
 
-    TypeDescriptor returnType = getOrCreateTypeFromNode(returnTypeNode);
+    TypeDescriptor returnType = Utils.getOrCreateTypeFromNode(returnTypeNode);
     String name = methodNameNode.jjtGetVal();
     int numParameters = paramsListNode.jjtGetNumChildren();
 
@@ -131,7 +138,7 @@ public class SymbolsTableBuilder extends CompilerModule {
       SimpleNode paramNameNode = paramNode.jjtGetChild(1);
       assert paramNameNode.is(JJTIDENTIFIER);
 
-      TypeDescriptor paramType = getOrCreateTypeFromNode(paramTypeNode);
+      TypeDescriptor paramType = Utils.getOrCreateTypeFromNode(paramTypeNode);
       String paramName = paramNameNode.jjtGetVal();
 
       paramTypes[i] = paramType;
@@ -143,14 +150,14 @@ public class SymbolsTableBuilder extends CompilerModule {
     // Error: Repeated methods - Two methods with the same name and signature.
     if (data.jmmClass.hasMethod(name, signature)) {
       DiagnosticsHandler.methodAlreadyDefined(methodNameNode, name, signature);
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
       return;
     }
 
     // Error: Repeated parameter names -- Two parameters have the same name.
     if (!JMMCallableDescriptor.validateParameterNames(paramNames)) {
       DiagnosticsHandler.conflictingParams(methodNameNode, name, signature);
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
       return;
     }
 
@@ -176,7 +183,7 @@ public class SymbolsTableBuilder extends CompilerModule {
     // Error: Repeated methods - Two methods with the same name and signature.
     if (data.jmmClass.hasMain()) {
       DiagnosticsHandler.mainMethodDefined(mainNode);
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
       return;
     }
 
@@ -205,55 +212,30 @@ public class SymbolsTableBuilder extends CompilerModule {
       SimpleNode nameNode = varDeclaration.jjtGetChild(1);
       assert nameNode.is(JJTIDENTIFIER);
 
-      TypeDescriptor type = getOrCreateTypeFromNode(typeNode);
+      TypeDescriptor type = Utils.getOrCreateTypeFromNode(typeNode);
       String name = nameNode.jjtGetVal();
 
       // Error: Redefinition of identifier -- same identifier is used twice locally.
       if (locals.hasVariable(name)) {
         DiagnosticsHandler.localAlreadyDefined(nameNode, name, method);
-        status(MINOR_ERRORS);
+        update(Codes.MINOR_ERRORS);
         continue;
       }
 
       // Error: Redefinition of parameter -- same identifier is a function parameter.
       if (method.hasParameter(name)) {
         DiagnosticsHandler.paramAlreadyDefined(nameNode, name, method);
-        status(MINOR_ERRORS);
+        update(Codes.MINOR_ERRORS);
         continue;
       }
 
       new LocalDescriptor(type, name, locals);
     }
 
-    /*
-    for (; i < methodBodyNode.jjtGetNumChildren(); ++i) {
-      SimpleNode statement = methodBodyNode.jjtGetChild(i);
-      System.out.println("is statement");
-      if (statement.is(JJTASSIGNMENT)) {
-        System.out.println("is assignment");
-
-        SimpleNode leftNode = statement.jjtGetChild(0);
-        SimpleNode rightNode = statement.jjtGetChild(1);
-
-        if (leftNode.is(JJTIDENTIFIER) && rightNode.is(JJTIDENTIFIER)) {
-          TypeDescriptor leftType = getOrCreateTypeFromNode(leftNode);
-          TypeDescriptor rightType = getOrCreateTypeFromNode(rightNode);
-
-          if (leftType != rightType) {
-            DiagnosticsHandler.typeMismatch(statement, leftType, rightType);
-            status(MINOR_ERRORS);
-            continue;
-          }
-        }
-      }
-    }
-    */
-
     return locals;
   }
 
-  @Override
-  public String toString() {
+  String getPrint() {
     MemberDescriptor[] members = data.jmmClass.getMembersList();
     JMMMethodDescriptor[] methods = data.jmmClass.getMethodsList();
 
@@ -261,18 +243,18 @@ public class SymbolsTableBuilder extends CompilerModule {
 
     string.append("=== CLASS " + data.jmmClass.getClassName() + " SYMBOL TABLE ===\n");
 
-    // Member variables
+    // Member variables of JMM class
     string.append(">>> Member Variables:\n");
     for (MemberDescriptor member : members) string.append(member).append('\n');
 
-    // Member methods
+    // Member methods of JMM class
     string.append("\n>>> Member Methods:\n");
     for (JMMMethodDescriptor method : methods) string.append(method).append('\n');
 
-    // Main
+    // Main of JMM class
     if (data.jmmClass.hasMain()) string.append('\n').append(data.jmmClass.getMain()).append('\n');
 
-    // Local tables
+    // Local tables of all methods
     string.append("\n>>> Function Locals Tables:\n");
     for (FunctionLocals locals : data.localsMap.values()) string.append(locals);
 
@@ -280,6 +262,6 @@ public class SymbolsTableBuilder extends CompilerModule {
   }
 
   void dump() {
-    System.out.print(toString());
+    System.out.println(getPrint());
   }
 }

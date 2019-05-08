@@ -4,6 +4,9 @@ import static jjt.jmmTreeConstants.*;
 import static compiler.symbols.TypeDescriptor.*;
 import static compiler.symbols.PrimitiveDescriptor.*;
 
+import compiler.exceptions.InternalCompilerError;
+import compiler.modules.CompilationStatus;
+import compiler.modules.Utils;
 import compiler.symbols.FunctionLocals;
 import compiler.symbols.TypeDescriptor;
 import jjt.SimpleNode;
@@ -11,6 +14,13 @@ import jjt.SimpleNode;
 public class NodeFactory extends BaseDAGFactory {
   public NodeFactory(FunctionLocals locals) {
     super(locals);
+  }
+
+  public DAGMulti buildMethod(SimpleNode methodNode, CompilationStatus tracker) {
+    assert tracker != null;
+    DAGMulti built = buildMethod(methodNode);
+    tracker.update(status());
+    return built;
   }
 
   /**
@@ -22,8 +32,8 @@ public class NodeFactory extends BaseDAGFactory {
   public DAGMulti buildMethod(SimpleNode methodNode) {
     assert methodNode.is(JJTMETHODDECLARATION) || methodNode.is(JJTMAINDECLARATION);
 
-    SimpleNode methodBodyNode = getMethodBodyNode(methodNode);
-    SimpleNode returnNode = getReturnStatementNode(methodNode);
+    SimpleNode methodBodyNode = Utils.getMethodBodyNode(methodNode);
+    SimpleNode returnNode = Utils.getReturnStatementNode(methodNode);
 
     // Construct DAGNodes
     // -- N = (number of method body children)
@@ -55,6 +65,14 @@ public class NodeFactory extends BaseDAGFactory {
   }
 
   @Override
+  public DAGNode build(SimpleNode node, CompilationStatus tracker) {
+    assert tracker != null;
+    DAGNode built = build(node);
+    tracker.update(status());
+    return built;
+  }
+
+  @Override
   public DAGNode build(SimpleNode node) {
     assert node != null;
 
@@ -71,8 +89,7 @@ public class NodeFactory extends BaseDAGFactory {
       return buildReturn(node);
     }
 
-    // We should never arrive here.
-    throw new InternalError("NodeFactory visited node " + node + " (id " + node.getId() + ")");
+    throw new InternalCompilerError();
   }
 
   /**
@@ -88,9 +105,9 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode childNode = node.jjtGetChild(0);
 
     if (childNode.is(JJTASSIGNMENT)) {
-      return new AssignmentFactory(locals).build(childNode);
+      return new AssignmentFactory(locals).build(childNode, this);
     } else {
-      return new ExpressionFactory(locals).build(childNode);
+      return new ExpressionFactory(locals).build(childNode, this);
     }
   }
 
@@ -107,14 +124,14 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode conditionNode = node.jjtGetChild(0);
     SimpleNode bodyNode = node.jjtGetChild(1);
 
-    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode);
+    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this);
     DAGNode loopBody = build(bodyNode);
 
     // ERROR: Type mismatch in condition expression.
     if (!typematch(booleanDescriptor, condition.getType())) {
       System.err.println("Type mismatch: expected boolean condition, but found "
                          + condition.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGWhile(new DAGCondition(condition), loopBody);
@@ -135,7 +152,7 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode thenNode = node.jjtGetChild(1);
     SimpleNode elseNode = node.jjtGetChild(2);
 
-    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode);
+    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this);
     DAGNode thenBody = build(thenNode);
     DAGNode elseBody = build(elseNode);
 
@@ -143,7 +160,7 @@ public class NodeFactory extends BaseDAGFactory {
     if (!typematch(booleanDescriptor, condition.getType())) {
       System.err.println("Type mismatch: expected boolean condition, but found "
                          + condition.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGIfElse(new DAGCondition(condition), thenBody, elseBody);
@@ -181,7 +198,7 @@ public class NodeFactory extends BaseDAGFactory {
 
     SimpleNode expressionNode = node.jjtGetChild(0);
 
-    DAGExpression returned = new ExpressionFactory(locals).build(expressionNode);
+    DAGExpression returned = new ExpressionFactory(locals).build(expressionNode, this);
 
     TypeDescriptor expected = locals.getFunction().getReturnType();
 
@@ -189,7 +206,7 @@ public class NodeFactory extends BaseDAGFactory {
     if (!typematch(expected, returned.getType())) {
       System.err.println("Type mismatch: expected type " + expected
                          + " for return expression, but found " + returned.getType());
-      status(MINOR_ERRORS);
+      update(Codes.MINOR_ERRORS);
     }
 
     return new DAGReturnExpression(returned);
@@ -203,42 +220,5 @@ public class NodeFactory extends BaseDAGFactory {
    */
   private DAGVoidReturn buildVoidReturn() {
     return new DAGVoidReturn();
-  }
-
-  /**
-   * @return The simple node of type MethodBody which is the child of this function node.
-   */
-  private SimpleNode getMethodBodyNode(SimpleNode methodNode) {
-    assert methodNode.is(JJTMETHODDECLARATION) || methodNode.is(JJTMAINDECLARATION);
-
-    SimpleNode bodyNode;
-
-    if (methodNode.is(JJTMETHODDECLARATION)) {
-      assert !locals.getFunction().isStatic();  // method
-      bodyNode = methodNode.jjtGetChild(3);
-    } else {
-      assert locals.getFunction().isStatic();  // main
-      bodyNode = methodNode.jjtGetChild(1);
-    }
-
-    return bodyNode;
-  }
-
-  /**
-   * @return The simple node of type ReturnStatement which is the child of this function node.
-   */
-  private SimpleNode getReturnStatementNode(SimpleNode methodNode) {
-    assert methodNode.is(JJTMETHODDECLARATION) || methodNode.is(JJTMAINDECLARATION);
-
-    SimpleNode returnNode = null;
-
-    if (methodNode.is(JJTMETHODDECLARATION)) {
-      assert !locals.getFunction().isStatic();  // method
-      returnNode = methodNode.jjtGetChild(4);
-    } else {
-      assert locals.getFunction().isStatic();  // main
-    }
-
-    return returnNode;
   }
 }
