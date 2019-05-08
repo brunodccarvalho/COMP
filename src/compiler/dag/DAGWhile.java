@@ -5,8 +5,8 @@ import java.util.Objects;
 public class DAGWhile extends DAGBranch {
   protected final DAGNode body;
 
-  DAGWhile(DAGExpression conditionExpression, DAGNode whileBody) {
-    super(conditionExpression);
+  DAGWhile(DAGCondition condition, DAGNode whileBody) {
+    super(condition);
     assert whileBody != null;
     this.body = whileBody;
   }

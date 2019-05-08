@@ -3,6 +3,8 @@ package compiler.dag;
 import java.util.Arrays;
 
 public class DAGMulti extends DAGNode {
+  protected static final String ntab = "\n    ";
+
   final DAGNode[] body;
 
   DAGMulti(DAGNode[] body) {
@@ -44,11 +46,13 @@ public class DAGMulti extends DAGNode {
   @Override
   public String toString() {
     StringBuilder builder = new StringBuilder();
-    builder.append("{\n");
+    builder.append("{");
     for (DAGNode node : body) {
-      builder.append("  ").append(node.toString()).append('\n');
+      builder.append(ntab);
+      String tabbed = node.toString().replaceAll("\n", ntab);
+      builder.append(tabbed);
     }
-    builder.append("}");
+    builder.append("\n}");
     return builder.toString();
   }
 

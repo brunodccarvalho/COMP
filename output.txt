@@ -1,0 +1,137 @@
+ ***** PARSE
+ ***** SYMBOLS
+=== CLASS TestEverything SYMBOL TABLE ===
+>>> Member Variables:
+int[] input
+TestEverything that
+boolean verified
+int i
+boolean checked
+int j
+int k
+long counter
+SomeClassType type
+boolean both
+
+>>> Member Methods:
+int testPrecedence()
+int testStatements()
+int testExpressions()
+int length(int a, int b, int c, ClassOk ok)
+int main()
+
+main(String[] args)
+
+>>> Function Locals Tables:
+## Function Locals of int testPrecedence()
+## Function Locals of int testExpressions()
+## Function Locals of int testStatements()
+  int equal
+  int a
+  int b
+  int c
+  int min
+## Function Locals of int length(int a, int b, int c, ClassOk ok)
+## Function Locals of main(String[] args)
+  int a
+  length b
+  main c
+  int length
+## Function Locals of int main()
+
+ ***** DAGs
+
+
+=== CLASS TestEverything DAGs ===
+>>> DAG: int testPrecedence()
+{
+    return 0
+}
+>>> DAG: int testExpressions()
+{
+    {boolean both} = {boolean checked} && {boolean verified}
+    {boolean both} = {int j} < {int k}
+    {int i} = {int j} + {int k}
+    {int i} = {int j} - {int k}
+    {int i} = {int j} * {int k}
+    {int i} = {int j} / {int k}
+    {int[] input}[(((1 + (2 * 3)) - ((4 / 5) * 6)) + 7) - (8 * (9 + 10))] = 0
+    {boolean checked} = true
+    {boolean checked} = false
+    {boolean checked} = {boolean both}
+    {TestEverything that} = this
+    {TestEverything that} = new TestEverything()
+    {TestEverything that} = new TestEverything().something().another().length[10]
+    {int[] input} = new int[50 + (this.length * 2)]
+    {boolean both} = !{boolean checked} && !({boolean verified} && !{boolean checked})
+    {boolean both} = {?} + {?}.call(1, 2, 3)
+    {SomeClassType type}.get().length[1][2].put({?}, b.get(), 3 * ({?} + 2))
+    {SomeClassType type}.length.length.length.get({int j})[{int i}].get().length.get()[2]
+    return 0
+}
+>>> DAG: int testStatements()
+{
+    {
+        {int a} = {int b}
+        {int b} = {int c}
+        {int c} = {int a}
+    }
+    {
+        {int a} = {int b}
+        {
+            {int b} = {int c}
+            {
+                {int c} = {int a}
+            }
+        }
+    }
+    if ({int a} < {int b}) {
+        {int min} = {int a}
+    }
+    else if ({int b} < {int a}) {
+        {int min} = {int b}
+    }
+    else {
+        {int min} = {int equal}
+    }
+    while (true && false) {int a} = {int a} + 1
+    while (1 < 2) {
+        if ({int a} < {int b}) {
+            {int b} = 2
+        }
+        else {
+            {int a} = 1
+        }
+    }
+    {int a}
+    {int a}.length
+    {int a}.length.get()
+    {int a}.get().length
+    {int a} + {int b}
+    {int a} + ({int b}.length * {int c})
+    {int a} = 1
+    {int a}[1] = 1 - (2 / 3)
+    {int a}[{int a}[0]] = 1 + (2 * 3)
+    return 0
+}
+>>> DAG: int length(int a, int b, int c, ClassOk ok)
+{
+    return 1
+}
+>>> DAG: main(String[] args)
+{
+    abc.mod(7)
+    abc.length(7)
+    {?}.length
+    abc.main({?}, {?})
+    main.ok()
+    {?}.length
+    {int length}.main({int length}.length({?}.length))
+    {?}[0] = true
+    {?} = 0 + 1
+    return
+}
+>>> DAG: int main()
+{
+    return 0
+}

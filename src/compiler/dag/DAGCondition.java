@@ -7,7 +7,7 @@ import compiler.symbols.PrimitiveDescriptor;
 /**
  * Not used. To be taken into consideration.
  */
-public class DAGCondition extends DAGExpression {
+public class DAGCondition {
   final DAGExpression condition;
 
   DAGCondition(DAGExpression condition) {
@@ -19,7 +19,6 @@ public class DAGCondition extends DAGExpression {
     return condition;
   }
 
-  @Override
   public PrimitiveDescriptor getType() {
     return PrimitiveDescriptor.booleanDescriptor;
   }
@@ -27,7 +26,6 @@ public class DAGCondition extends DAGExpression {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
-
   @Override
   public String toString() {
     return condition.toString();

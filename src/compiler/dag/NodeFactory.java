@@ -117,7 +117,7 @@ public class NodeFactory extends BaseDAGFactory {
       status(MINOR_ERRORS);
     }
 
-    return new DAGWhile(condition, loopBody);
+    return new DAGWhile(new DAGCondition(condition), loopBody);
   }
 
   /**
@@ -146,7 +146,7 @@ public class NodeFactory extends BaseDAGFactory {
       status(MINOR_ERRORS);
     }
 
-    return new DAGIfElse(condition, thenBody, elseBody);
+    return new DAGIfElse(new DAGCondition(condition), thenBody, elseBody);
   }
 
   /**

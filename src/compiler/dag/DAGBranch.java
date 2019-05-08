@@ -3,17 +3,17 @@ package compiler.dag;
 import java.util.Objects;
 
 abstract class DAGBranch extends DAGNode {
-  final DAGExpression condition;
+  final DAGCondition condition;
 
-  DAGBranch(DAGExpression condition) {
+  DAGBranch(DAGCondition condition) {
     assert condition != null;
     this.condition = condition;
   }
 
   /**
-   * @return the DAGExpression node of the control flow's condition
+   * @return the DAGCondition node of the control flow's condition
    */
-  public DAGExpression getConditionExpression() {
+  public DAGCondition getCondition() {
     return condition;
   }
 
