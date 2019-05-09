@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import compiler.exceptions.CompilationException;
+import compiler.modules.CodeGenerator;
 import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
@@ -42,7 +43,7 @@ public final class ClassCompiler extends CompilationStatus {
       deduceSignatures();
       if (onErrorLevel(Codes.MINOR_ERRORS)) return this;
 
-      buildCodeRepresentations();
+      generateCode();
       writeToFile();
     } catch (CompilationException e) {
       System.err.println(e.getMessage());
@@ -68,7 +69,7 @@ public final class ClassCompiler extends CompilationStatus {
     } catch (FileNotFoundException e) {
       throw new CompilationException(e);
     } catch (ParseException e) {
-      throw new CompilationException(e);
+      throw new CompilationException("Parsing Error: " + e.getMessage(), e);
     }
   }
 
@@ -101,8 +102,10 @@ public final class ClassCompiler extends CompilationStatus {
    * ... or something. Rename this...
    * * Assembler
    */
-  private void buildCodeRepresentations() {
-    // ...
+  public void generateCode() {
+    System.out.println(" ***** Code Generation");
+    CodeGenerator codeGenerator = new CodeGenerator(data);
+    codeGenerator.generateCode();
   }
 
   /**

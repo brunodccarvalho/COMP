@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * ParameterPush
  */
-public class ParameterPush extends BaseByteCode{
+public class ParameterPush {
 
     ArrayList<Expression> expressions;
 

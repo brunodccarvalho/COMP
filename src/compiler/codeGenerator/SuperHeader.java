@@ -3,27 +3,25 @@ package compiler.codeGenerator;
 /**
  * SuperHeader
  */
-public class SuperHeader extends BaseByteCode{
+public class SuperHeader extends JVMInst {
     /**
      * 1: name of the super class
      */
     public static String SUPERNAME = ".super ?";
     public static String DEFAULTSUPER = "java/lang/Object";
-
     private String superName;
 
-    SuperHeader () {
-        this.superName=CodeGenerator.singleton.classDescriptor.getSuperClassName();
+    public SuperHeader (String superName) {
+        this.superName = superName;
         if(this.superName==null)
         {
             this.superName=SuperHeader.DEFAULTSUPER;
         }
-        this.regexReplace=SuperHeader.SUPERNAME;
     }
 
     @Override
     public String toString()
     {
-        return this.subst(this.regexReplace, this.superName);
+        return JVMInst.subst(SuperHeader.SUPERNAME, this.superName);
     }
 }

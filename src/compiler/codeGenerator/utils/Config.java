@@ -1,4 +1,4 @@
-package compiler.codeGenerator;
+package compiler.codeGenerator.utils;
 
 public final class Config {
     /**

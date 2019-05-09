@@ -6,7 +6,7 @@ import compiler.dag.DAGMember;
 /**
  * MemberLoad
  */
-public class MemberLoad extends BaseByteCode {
+public class MemberLoad extends JVMInst {
     /**
      * 1: class descriptor
      */

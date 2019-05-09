@@ -7,7 +7,7 @@ import java.util.HashMap;
 /**
  * Store
  */
-public class Store extends BaseByteCode {
+public class Store extends JVMInst {
     
     /**
      * 1: index of the variable

@@ -6,7 +6,7 @@ import java.util.HashMap;
 /**
  * MethodDescriptor
  */
-public class MethodDescriptor extends BaseByteCode {
+public class MethodDescriptor extends JVMInst {
     
     /**
      * 1: type descritor of the method's parameters

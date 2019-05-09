@@ -7,11 +7,11 @@ import java.util.ArrayList;
 /**
  * generateMethods
  */
-public class GenerateMethods extends BaseByteCode {
+public class GenerateMethods {
 
     private ArrayList<Method> methodStructures;
 
-    GenerateMethods() {
+    public GenerateMethods() {
         this.methodStructures = new ArrayList<Method>();
         for (JMMMethodDescriptor method : CodeGenerator.singleton.methodBodies.keySet()) {
             Method methodStructure = new Method(method);

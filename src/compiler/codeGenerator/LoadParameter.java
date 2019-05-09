@@ -6,7 +6,7 @@ import compiler.dag.DAGParameter;
 /**
  * LoadParameter
  */
-public class LoadParameter extends BaseByteCode{
+public class LoadParameter extends JVMInst {
 
     private VariableDescriptor variableDescriptor;
     private Integer variableIndex;
