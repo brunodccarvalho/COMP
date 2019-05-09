@@ -2,8 +2,10 @@ package compiler.codeGenerator;
 
 import compiler.dag.DAGAssignment;
 import compiler.dag.DAGExpression;
+import compiler.dag.DAGIfElse;
 import compiler.dag.DAGMulti;
 import compiler.dag.DAGNode;
+import compiler.dag.DAGWhile;
 import compiler.dag.DAGBranch;
 import compiler.symbols.JMMFunction;
 
@@ -29,8 +31,13 @@ public class MethodBodyGenerator {
                 Expression expression = new Expression(this.function, (DAGExpression)statement);
                 this.statements.add(expression);
             }
-            else if(statement instanceof DAGBranch) {
-                System.out.println("this is a branch!");
+            else if(statement instanceof DAGIfElse) {
+                IfElse ifElse = new IfElse(this.function, (DAGIfElse)statement);
+                this.statements.add(ifElse);
+            }
+            else if(statement instanceof DAGWhile) {
+                While loop = new While(this.function, (DAGWhile)statement);
+                this.statements.add(loop);
             }
         }
     }

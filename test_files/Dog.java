@@ -4,8 +4,8 @@ class Dog {
     int hoursSleep;
     int numberKm;
     public static void main(String[] args) {
-        Dog dog;
-        dog.sleep();
+        boolean full;
+        full = false;
     }
 
     public int run() {

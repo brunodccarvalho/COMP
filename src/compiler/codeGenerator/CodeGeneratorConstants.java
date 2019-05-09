@@ -25,8 +25,8 @@ public final class CodeGeneratorConstants {
         types.put("boolean", "Z");
         types.put("int[]", "[I");
         types.put("void", "V");
-        store.put("int", "\tistore ?");
-        store.put("boolean", "\tistore ?");
+        store.put("int", "\n\tistore ?");
+        store.put("boolean", "\n\tistore ?");
         binaryOperators.put("+", "\tiadd");
         binaryOperators.put("-", "\tisub");
         binaryOperators.put("*", "\timul");

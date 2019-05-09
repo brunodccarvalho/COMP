@@ -2,9 +2,7 @@ package compiler.codeGenerator;
 
 import compiler.dag.DAGMember;
 import compiler.symbols.MemberDescriptor;
-/**
- * StoreMember
- */
+
 public class StoreMember extends JVMInst {
     
     /**

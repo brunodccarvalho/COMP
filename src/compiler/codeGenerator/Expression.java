@@ -2,6 +2,7 @@ package compiler.codeGenerator;
 
 import compiler.dag.BinaryOperator;
 import compiler.dag.DAGBinaryOp;
+import compiler.dag.DAGBooleanConstant;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
 import compiler.dag.DAGLocal;
@@ -24,6 +25,7 @@ public class Expression extends BaseStatement {
     public String toString()
     {
         String expressionBody = new String();
+
         if(expression instanceof DAGBinaryOp) {
             DAGExpression lhs = ((DAGBinaryOp)expression).getLhs();
             DAGExpression rhs = ((DAGBinaryOp)expression).getRhs();
@@ -55,8 +57,13 @@ public class Expression extends BaseStatement {
             MethodCall callBody = new MethodCall(this.function, (DAGMethodCall)expression);
             expressionBody = expressionBody.concat(callBody.toString());
         }
+        else if(expression instanceof DAGBooleanConstant) {
+            BooleanConstant booleanConstant = new BooleanConstant((DAGBooleanConstant)expression);
+            expressionBody = expressionBody.concat(booleanConstant.toString());
+        }
+
+        // TODO: missing some instances of expression?
         return expressionBody;
-        
     }
     
 }
