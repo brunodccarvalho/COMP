@@ -1,8 +1,9 @@
 package compiler.dag;
 
 import compiler.symbols.FunctionSignature;
-import compiler.symbols.ClassDescriptor;
 import compiler.symbols.TypeDescriptor;
+import compiler.symbols.CallableDescriptor;
+import compiler.symbols.ClassDescriptor;
 
 public class DAGMethodCall extends DAGCall {
   final DAGExpression expression;
@@ -15,9 +16,9 @@ public class DAGMethodCall extends DAGCall {
   }
 
   DAGMethodCall(DAGExpression expression, String methodName, FunctionSignature signature,
-                TypeDescriptor returnType, DAGExpression[] arguments) {
-    super(methodName, signature, returnType, arguments);
-    assert expression != null;
+                CallableDescriptor callable, DAGExpression[] arguments) {
+    super(methodName, signature, callable, arguments);
+    assert expression != null && !callable.isStatic();
     this.expression = expression;
   }
 
@@ -45,5 +46,10 @@ public class DAGMethodCall extends DAGCall {
   @Override
   public String toString() {
     return expression.toString() + super.toString();
+  }
+
+  @Override
+  public TypeDescriptor getCallClassUnchecked() {
+    return expression == null ? null : expression.getType();
   }
 }

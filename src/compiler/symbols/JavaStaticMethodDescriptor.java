@@ -2,8 +2,7 @@ package compiler.symbols;
 
 import compiler.symbols.FunctionSignature;
 
-public abstract class JavaStaticMethodDescriptor
-    extends JavaCallableDescriptor implements StaticFunction {
+public class JavaStaticMethodDescriptor extends JavaCallableDescriptor implements StaticFunction {
   protected JavaStaticMethodDescriptor(String name, ClassDescriptor parent,
                                        TypeDescriptor returnType, FunctionSignature signature) {
     super(name, parent, returnType, signature);

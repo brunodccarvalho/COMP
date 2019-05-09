@@ -1,33 +1,38 @@
 package compiler.dag;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 import compiler.symbols.FunctionSignature;
+import compiler.symbols.CallableDescriptor;
 import compiler.symbols.ClassDescriptor;
 import compiler.symbols.TypeDescriptor;
 
 public abstract class DAGCall extends DAGExpression {
   final String methodName;
-  final FunctionSignature signature;
-  final TypeDescriptor returnType;
   final DAGExpression[] arguments;
+  final FunctionSignature original;
+  CallableDescriptor callable;
+  TypeDescriptor returnType;
 
-  DAGCall(String methodName, FunctionSignature signature, DAGExpression[] arguments) {
-    assert methodName != null && signature != null && arguments != null;
+  DAGCall(String methodName, FunctionSignature original, DAGExpression[] arguments) {
+    assert methodName != null && original != null && arguments != null;
+    assert original.getNumParameters() == arguments.length;
     this.methodName = methodName;
-    this.signature = signature;
-    this.returnType = null;
+    this.original = original;
     this.arguments = arguments;
+    this.callable = null;
+    this.returnType = null;
   }
 
-  DAGCall(String methodName, FunctionSignature signature, TypeDescriptor returnType,
+  DAGCall(String methodName, FunctionSignature original, CallableDescriptor callable,
           DAGExpression[] arguments) {
-    assert methodName != null && signature != null && arguments != null;
+    assert methodName != null && original != null && callable != null && arguments != null;
+    assert original.getNumParameters() == arguments.length;
+    assert FunctionSignature.matches(original, callable.getSignature());
+    assert callable.getSignature().isComplete();
     this.methodName = methodName;
-    this.signature = signature;
-    this.returnType = returnType;
+    this.original = original;
     this.arguments = arguments;
+    this.callable = callable;
+    this.returnType = callable.getReturnType();  // possibly null
   }
 
   /**
@@ -37,6 +42,7 @@ public abstract class DAGCall extends DAGExpression {
 
   /**
    * @return The Class this method belongs to.
+   *         If the method is static, its being invoked on this class.
    */
   public abstract ClassDescriptor getCallClass();
 
@@ -48,14 +54,14 @@ public abstract class DAGCall extends DAGExpression {
   }
 
   /**
-   * @return This method's signature.
+   * @return This method's callable signature.
    */
   public FunctionSignature getSignature() {
-    return signature;
+    return callable.getSignature();
   }
 
   /**
-   * @return Number of arguments to this function call.
+   * @return Number of arguments of this function call.
    */
   public int getNumArguments() {
     return arguments.length;
@@ -73,6 +79,13 @@ public abstract class DAGCall extends DAGExpression {
    */
   public DAGExpression getArgument(int i) {
     return arguments[i];
+  }
+
+  /**
+   * @return The callable.
+   */
+  public CallableDescriptor getCallable() {
+    return callable;
   }
 
   @Override
@@ -97,23 +110,54 @@ public abstract class DAGCall extends DAGExpression {
     return string.toString();
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
+  // ****** Package internals for ExpressionResolver
+
+  /**
+   * Set the callable CallableDescriptor matching this invocation.
    */
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + Arrays.hashCode(arguments);
-    result = prime * result + Objects.hash(methodName, returnType, signature);
-    return result;
+  void setDeducedCallable(CallableDescriptor callable, TypeDescriptor returnType) {
+    assert callable.isStatic() == isStatic();
+    assert callable.getParentClass() == getCallClass();
+    assert FunctionSignature.matches(original, callable.getSignature());
+    assert methodName.equals(callable.getName());
+    assert callable.getReturnType() == returnType;
+    this.callable = callable;
+    this.returnType = returnType;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
+  /**
+   * We could not resolve the callable, set the return type so we can keep going.
    */
-  @Override
-  public boolean equals(Object obj) {
-    return obj instanceof DAGCall && this == obj;
+  void setDeducedReturnType(TypeDescriptor returnType) {
+    assert returnType != null;
+    this.returnType = returnType;
   }
+
+  /**
+   * Set an argument of this invocation, it might have changed after an assertType
+   * and an optimize.
+   */
+  void setArgument(int index, DAGExpression argument) {
+    assert index < arguments.length;
+    this.arguments[index] = argument;
+  }
+
+  /**
+   * @return True if this DAGCall has a callable and a return type.
+   */
+  boolean isDeduced() {
+    return returnType != null;
+  }
+
+  /**
+   * @return This method's original signature.
+   */
+  FunctionSignature getOriginalSignature() {
+    return original;
+  }
+
+  /**
+   * Unchecked getCallClass()
+   */
+  abstract TypeDescriptor getCallClassUnchecked();
 }

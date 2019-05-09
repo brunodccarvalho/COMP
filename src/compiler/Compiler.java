@@ -2,9 +2,7 @@ package compiler;
 
 import java.io.File;
 
-import compiler.exceptions.CompilationException;
 import compiler.modules.ClassCompiler;
-import compiler.modules.CompilationStatus.Codes;
 
 final class Compiler {
   private static Compiler compiler;

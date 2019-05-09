@@ -32,6 +32,9 @@ public abstract class TypeDescriptor extends Descriptor {
   // The descriptor of "void"
   public static final VoidDescriptor voidDescriptor = new VoidDescriptor();
 
+  // The descriptor of an unknown type
+  public static final PrimitiveDescriptor unknownResolvedType = PrimitiveDescriptor.intDescriptor;
+
   /**
    * @param name A typename being resolved.
    * @return The TypeDescriptor instance for the given typename, or null if none
@@ -120,6 +123,15 @@ public abstract class TypeDescriptor extends Descriptor {
    * @return true if this is an array type, false otherwise.
    */
   public abstract boolean isArray();
+
+  /**
+   * The only reference types in JMM are int[] and classes.
+   *
+   * @return True if this is a reference type, false otherwise.
+   */
+  public boolean isReference() {
+    return isArray() || isClass();
+  }
 
   /**
    * @return The JVM descriptor string for this type.

@@ -3,7 +3,7 @@
 
 ---
 
-## DAG Hierarchy
+## DAG Hierarchy (8 May 2019)
 
     a = abstract, i = interface, c = class, p = package-private
     e = common subexpression elimination: two instances of this class may be equal
@@ -15,10 +15,10 @@
             ce  DAGIntegerConstant      [int]
             ce  DAGBooleanConstant      [boolean]
             ce  DAGVariable             [typeof(variable)]
-                ne  DAGMember
+                ne  DAGMember           [any]
                 i   LocalVariable
-                    ce  DAGLocal
-                    ce  DAGParameter
+                    ce  DAGLocal        [any]
+                    ce  DAGParameter    [any]
                     ce  DAGThis         [typeof(this), classtype]
             anp DAGNew
                 cn  DAGNewIntArray      [int[]]
@@ -30,7 +30,7 @@
             an  DAGCall                 [return(function)]
                 cn  DAGMethodCall
                 cn  DAGStaticCall
-            ce  DAGCondition            [boolean]
+        ce  DAGCondition                [boolean]
         c   DAGAssignment               [typeof(variable)]
             c   DAGBracketAssignment    [int]
         ap  DAGBranch                   -
@@ -41,10 +41,7 @@
             c   DAGReturnExpression     [typeof(expression)]
             c   DAGVoidReturn           [void]
 
-TODO DAGMember n
-TODO DAGBracket n
-
-## Factories
+## Factories (8 May 2019)
 
     a = abstract, i = interface
     c = public class, p = package-private class
@@ -55,7 +52,7 @@ TODO DAGBracket n
         c    AssignmentFactory (used by NodeFactory)
         cr   ExpressionFactory (used by NodeFactory)
 
-## AST branches for an Expression
+## AST children for Expressions (8 May 2019)
 
     SimpleNode
         Integer            [0]
@@ -80,60 +77,3 @@ TODO DAGBracket n
         Call               [3] ExpressionT MethodName ArgumentList
         --
         ArgumentList       [n] Expression, ...
-
-## DAG Methods
-
-    DAGNode
-        DAGExpression
-         + getType() -> TypeDescriptor
-            DAGIntegerConstant
-             + getValue() -> int
-             ! getType() -> int
-            DAGBooleanConstant
-             + getValue() -> boolean
-             ! getType() -> int
-            DAGVariable
-             + getVariable() -> VariableDescriptor
-                DAGThis
-                 + getVariable() -> ThisDescriptor
-                 ! getType() -> JMMClassDescriptor
-            DAGNew
-                DAGNewIntArray
-                 + getIndexExpression() -> DAGExpression(int)
-                 ! getType() -> int
-                DAGNewClass
-                 + getClassDescriptor() -> ClassDescriptor
-                 ! getType() -> ClassDescriptor
-            DAGLength
-             + getExpression() -> DAGExpression(int[])
-             ! getType() -> int
-            DAGNot
-             + getExpression() -> DAGExpression(boolean)
-             ! getType() -> boolean
-            DAGBinaryOp
-             + getOperator() -> BinaryOperator {+, -, *, /, <, &&}
-             + getLhs() -> DAGExpression(int or boolean)
-             + getRhs() -> DAGExpression(int or boolean)
-             + isArithmetic() -> true for +,-,*,/
-             + isComparison() -> true for <
-             + getOperandType() -> int or boolean
-             ! getType() -> int or boolean
-            DAGBracket
-             + getArrayExpression() -> DAGExpression(int[])
-             + getIndexExpression() -> DAGExpression(int)
-             ! getType() -> int
-            DAGCall
-             + isStatic() -> boolean
-             + getCallClass() -> ClassDescriptor
-             + getMethodName() -> String
-             + getSignature() -> FunctionSignature, possibly incomplete
-             + getNumArguments() -> int
-             + getArguments() -> DAGExpression[num args]
-             + getArgument(i) -> DAGExpression @ i
-                DAGMethodCall
-                 + getObjectExpression() -> DAGExpression(classtype)
-                 > isStatic() -> false
-                 > getCallClass() -> type of expression
-                DAGStaticCall
-                 > isStatic() -> true
-                 > getCallClass() -> identifier class

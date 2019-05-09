@@ -12,4 +12,8 @@ public abstract class JavaCallableDescriptor extends CallableDescriptor implemen
   public boolean isJMM() {
     return false;
   }
+
+  public void deduceReturnType(TypeDescriptor returnType) {
+    this.returnType = returnType;
+  }
 }

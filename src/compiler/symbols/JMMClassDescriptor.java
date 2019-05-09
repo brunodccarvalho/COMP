@@ -1,5 +1,6 @@
 package compiler.symbols;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -48,81 +49,6 @@ public class JMMClassDescriptor extends ClassDescriptor {
     this.superClass = superClass;
     this.members = new HashMap<>();
     this.methods = new HashMap<>();
-  }
-
-  @Override
-  public boolean hasMethod(String name) {
-    return methods.containsKey(name);
-  }
-
-  @Override
-  public boolean hasMethod(String name, FunctionSignature signature) {
-    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
-    if (map == null) return false;
-    if (signature.isComplete())
-      return map.containsKey(signature);
-    else
-      for (FunctionSignature candidate : map.keySet())
-        if (FunctionSignature.matches(candidate, signature)) return true;
-    return false;
-  }
-
-  @Override
-  public boolean hasReturning(String name, FunctionSignature signature, TypeDescriptor returnType) {
-    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
-    if (map == null) return false;
-    if (signature.isComplete())
-      return map.containsKey(signature);
-    else
-      for (JMMMethodDescriptor candidate : map.values())
-        if (candidate.returning(signature, returnType)) return true;
-    return false;
-  }
-
-  @Override
-  public boolean hasStaticMethod(String name) {
-    return false;
-  }
-
-  @Override
-  public boolean hasStaticMethod(String name, FunctionSignature signature) {
-    return false;
-  }
-
-  @Override
-  public boolean hasStaticReturning(String name, FunctionSignature signature,
-                                    TypeDescriptor returnType) {
-    return false;
-  }
-
-  @Override
-  public VariableDescriptor resolve(String name) {
-    MemberDescriptor var = members.get(name);
-    if (var != null)
-      return var;
-    else if (superClass != null)
-      return superClass.resolve(name);
-    else
-      return null;
-  }
-
-  @Override
-  public VariableDescriptor resolveStatic(String name) {
-    if (superClass != null)
-      return superClass.resolveStatic(name);
-    else
-      return null;
-  }
-
-  @Override
-  public TypeDescriptor getReturnType(String name, FunctionSignature signature) {
-    JMMMethodDescriptor method = getMethod(name, signature);
-    return method == null ? null : method.getReturnType();
-  }
-
-  @Override
-  public TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature) {
-    return null;
   }
 
   /**
@@ -229,5 +155,134 @@ public class JMMClassDescriptor extends ClassDescriptor {
       methodsSet.addAll(map.values());
     }
     return methodsSet.toArray(new JMMMethodDescriptor[methodsSet.size()]);
+  }
+
+  @Override
+  public boolean hasMethod(String name) {
+    return methods.containsKey(name);
+  }
+
+  @Override
+  public boolean hasMethod(String name, FunctionSignature signature) {
+    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
+    if (map == null) return false;
+    if (signature.isComplete())
+      return map.containsKey(signature);
+    else
+      for (FunctionSignature candidate : map.keySet())
+        if (FunctionSignature.matches(candidate, signature)) return true;
+    return false;
+  }
+
+  @Override
+  public boolean hasReturning(String name, FunctionSignature signature, TypeDescriptor returnType) {
+    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
+    if (map == null) return false;
+    if (signature.isComplete())
+      return map.containsKey(signature);
+    else
+      for (JMMMethodDescriptor candidate : map.values())
+        if (candidate.returning(signature, returnType)) return true;
+    return false;
+  }
+
+  @Override
+  public boolean hasStaticMethod(String name) {
+    return false;
+  }
+
+  @Override
+  public boolean hasStaticMethod(String name, FunctionSignature signature) {
+    return false;
+  }
+
+  @Override
+  public boolean hasStaticReturning(String name, FunctionSignature signature,
+                                    TypeDescriptor returnType) {
+    return false;
+  }
+
+  @Override
+  public VariableDescriptor resolve(String name) {
+    MemberDescriptor var = members.get(name);
+    if (var != null)
+      return var;
+    else if (superClass != null)
+      return superClass.resolve(name);
+    else
+      return null;
+  }
+
+  @Override
+  public VariableDescriptor resolveStatic(String name) {
+    if (superClass != null)
+      return superClass.resolveStatic(name);
+    else
+      return null;
+  }
+
+  @Override
+  public TypeDescriptor getReturnType(String name, FunctionSignature signature) {
+    JMMMethodDescriptor method = getMethod(name, signature);
+    return method == null ? null : method.getReturnType();
+  }
+
+  @Override
+  public TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature) {
+    return null;
+  }
+
+  @Override
+  public Deduction deduce(String name, FunctionSignature signature, TypeDescriptor returnType) {
+    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
+    if (map == null || map.isEmpty()) return new Deduction(null, false, false);
+
+    ArrayList<JMMMethodDescriptor> list = new ArrayList<>();
+
+    for (FunctionSignature msig : map.keySet()) {
+      JMMMethodDescriptor method = map.get(signature);
+      if (returnType == method.getReturnType() && FunctionSignature.matches(signature, msig)) {
+        list.add(method);
+      }
+    }
+
+    if (list.isEmpty())
+      return new Deduction(null, false, false);
+    else if (list.size() == 1)
+      return new Deduction(list.get(0), true, false);
+    else
+      return new Deduction(list.get(0), true, true);
+  }
+
+  @Override
+  public Deduction deduceStatic(String name, FunctionSignature multi, TypeDescriptor returnType) {
+    return new Deduction(null, false, false);
+  }
+
+  @Override
+  public Deduction deduce(String name, FunctionSignature signature) {
+    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
+    if (map == null || map.isEmpty()) return new Deduction(null, false, false);
+
+    ArrayList<JMMMethodDescriptor> list = new ArrayList<>();
+
+    for (FunctionSignature msig : map.keySet()) {
+      JMMMethodDescriptor method = map.get(signature);
+      if (FunctionSignature.matches(signature, msig)) {
+        list.add(method);
+      }
+    }
+
+    if (list.isEmpty())
+      return new Deduction(null, false, false);
+    else if (list.size() == 1)
+      return new Deduction(list.get(0), true, false);
+    else
+      return new Deduction(list.get(0), true, true);
+  }
+
+  @Override
+  public Deduction deduceStatic(String name, FunctionSignature multi) {
+    return new Deduction(null, false, false);
   }
 }
