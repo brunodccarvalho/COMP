@@ -11,11 +11,11 @@ import compiler.dag.DAGParameter;
 
 public class Expression extends BaseStatement {
 
-    private Function function;
     private DAGExpression expression;
 
     Expression(Function function, DAGExpression expression)
     {
+        super(function);
         this.function = function;
         this.expression=expression;
     }

@@ -5,15 +5,14 @@ import compiler.dag.DAGExpression;
 import compiler.dag.DAGMember;
 import compiler.dag.DAGVariable;
 
-public class Assignment extends BaseStatement{
+public class Assignment extends BaseStatement {
 
-    private Function function;
     private DAGExpression variable;
     private DAGExpression expression;
     private Expression expressionBody;
 
     Assignment(Function function, DAGAssignment statement){
-        this.function = function;
+        super(function);
         this.variable = statement.getVariable();
         this.expression = statement.getExpression();
         this.expressionBody = new Expression(this.function, expression);

@@ -3,14 +3,13 @@ package compiler.codeGenerator;
 import compiler.dag.DAGExpression;
 import java.util.ArrayList;
 
-public class ParameterPush {
+public class ParameterPush extends MethodBodyContent {
 
     private ArrayList<Expression> expressions;
-    private Function function;
 
     ParameterPush(Function function, DAGExpression[] parameters)
     {
-        this.function = function;
+        super(function);
         this.expressions= new ArrayList<Expression>();
         for(DAGExpression parameter: parameters) {
             Expression parameterExpression = new Expression(this.function, parameter);
@@ -26,7 +25,6 @@ public class ParameterPush {
             parameterPush = parameterPush.concat(expression.toString());
         }
         return parameterPush;
-
     }
     
 }

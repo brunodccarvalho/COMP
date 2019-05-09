@@ -4,19 +4,18 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import compiler.modules.CompilationData;
-import compiler.symbols.FunctionLocals;
 import compiler.symbols.JMMCallableDescriptor;
 import compiler.symbols.JMMFunction;
 import compiler.symbols.LocalDescriptor;
 import compiler.symbols.ParameterDescriptor;
 import compiler.symbols.VariableDescriptor;
 
-public abstract class Function extends JVMInst{
+public abstract class Function extends JVMInst {
     
+    protected JMMFunction function;
     private int index;
     protected HashMap<VariableDescriptor, Integer> variablesIndexes;
     protected final CompilationData data;
-    protected final JMMFunction function;
 
     public Function(JMMFunction function, CompilationData data) {
         this.index = 1;
