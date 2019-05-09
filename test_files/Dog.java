@@ -11,9 +11,13 @@ class Dog {
     public int run() {
         boolean full;
         int sleepEatFactor;
-        numberKm = numberKm + 1;
         this.sleep();
         sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
+        if(full) {
+            sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
+        } else {
+            numberKm = numberKm + 1;
+        }
         return numberKm;
     }
 }

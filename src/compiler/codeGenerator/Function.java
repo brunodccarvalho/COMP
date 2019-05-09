@@ -16,12 +16,14 @@ public abstract class Function extends JVMInst {
     private int index;
     protected HashMap<VariableDescriptor, Integer> variablesIndexes;
     protected final CompilationData data;
+    protected MethodBodyGenerator methodBody;
 
     public Function(JMMFunction function, CompilationData data) {
         this.index = 1;
         this.function = function;
         this.data = data;
         this.variablesIndexes = new HashMap<>();
+        this.methodBody = new MethodBodyGenerator(this, function);
         this.arrangeIndexes();
     }
 

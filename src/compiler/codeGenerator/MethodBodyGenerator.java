@@ -4,29 +4,33 @@ import compiler.dag.DAGAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGMulti;
 import compiler.dag.DAGNode;
-import compiler.symbols.JMMCallableDescriptor;
+import compiler.dag.DAGBranch;
+import compiler.symbols.JMMFunction;
+
 import java.util.ArrayList;
 
 public class MethodBodyGenerator {
 
-    private Method method;
+    private Function function;
     private ArrayList<BaseStatement> statements;
 
-    MethodBodyGenerator(Method method, JMMCallableDescriptor methodDescriptor)
+    MethodBodyGenerator(Function function, JMMFunction methodDescriptor)
     {
-        this.method = method;
+        this.function = function;
         this.statements = new ArrayList<BaseStatement>();
-        DAGMulti multiNodes = method.data.bodiesMap.get(methodDescriptor);
-        MethodVarDeclaration varDecl = new MethodVarDeclaration(this.method, methodDescriptor);
+        DAGMulti multiNodes = function.data.bodiesMap.get(methodDescriptor);
         DAGNode[] nodes = multiNodes.getNodes();
         for (DAGNode statement : nodes) {
             if(statement instanceof DAGAssignment) {
-                Assignment assignment = new Assignment(this.method, (DAGAssignment)statement);
+                Assignment assignment = new Assignment(this.function, (DAGAssignment)statement);
                 this.statements.add(assignment);
             }
             else if(statement instanceof DAGExpression) {
-                Expression expression = new Expression(this.method, (DAGExpression)statement);
+                Expression expression = new Expression(this.function, (DAGExpression)statement);
                 this.statements.add(expression);
+            }
+            else if(statement instanceof DAGBranch) {
+                System.out.println("this is a branch!");
             }
         }
     }
