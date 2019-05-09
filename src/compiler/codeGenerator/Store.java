@@ -26,11 +26,10 @@ public class Store extends MethodBodyContent {
             return "";
         }
         String variableType = variableDescriptor.getType().toString();
-        System.out.println("var: " + variableDescriptor.getName() + "( " + variableType + ")");
         String instruction = CodeGeneratorConstants.store.get(variableType);
         if(instruction == null)
             instruction = Store.STOREADDRESS;
-        return subst(instruction, String.valueOf(variableIndex+1)) + "\n";
+        return subst(instruction, String.valueOf(variableIndex+1));
     }
     
 }

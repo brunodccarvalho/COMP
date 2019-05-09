@@ -16,7 +16,7 @@ public class MemberLoad extends JVMInst {
      * 2: call variable name
      * 3: type of variable
      */
-    public static String GETFIELD = "\taload 0\n\tgetfield ?/? ?";
+    public static String GETFIELD = "\n\taload 0\n\tgetfield ?/? ?";
 
     private MemberDescriptor memberDescriptor;
 
@@ -34,7 +34,7 @@ public class MemberLoad extends JVMInst {
         String memberType=CodeGeneratorConstants.types.get(type);
         if(memberType == null)
             memberType = subst(MemberLoad.CLASSTYPE, type);
-        return JVMInst.subst(MemberLoad.GETFIELD, className,memberName,memberType) + "\n";
+        return JVMInst.subst(MemberLoad.GETFIELD, className,memberName,memberType);
     }
     
 }

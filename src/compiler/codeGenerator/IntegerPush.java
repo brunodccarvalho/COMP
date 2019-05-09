@@ -8,11 +8,11 @@ public class IntegerPush extends JVMInst {
     /**
      * 1: number to push to the stack - should be one of: 0,1,2,3,4,5 or m1 (-1)
      */
-    public static String PUSHCONST = "\ticonst_?";
+    public static String PUSHCONST = "\n\ticonst_?";
     /**
      * 1: number to push to the stack
      */
-    public static String PUSHINT = "\tbipush ?";
+    public static String PUSHINT = "\n\tbipush ?";
 
     private int integerConstantValue;
 
@@ -33,7 +33,7 @@ public class IntegerPush extends JVMInst {
         }
         else
             integerPushBody = subst(IntegerPush.PUSHINT, String.valueOf(integerConstantValue));
-        return integerPushBody + "\n";
+        return integerPushBody;
 
     }
 }

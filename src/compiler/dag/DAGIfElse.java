@@ -3,8 +3,9 @@ package compiler.dag;
 import java.util.Objects;
 
 public class DAGIfElse extends DAGBranch {
-  final DAGNode thenBody;
-  final DAGNode elseBody;
+  
+  private final DAGNode thenBody;
+  private final DAGNode elseBody;
 
   public DAGIfElse(DAGCondition condition, DAGNode thenBody, DAGNode elseBody) {
     super(condition);

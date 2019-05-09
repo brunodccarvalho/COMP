@@ -6,7 +6,7 @@ import compiler.dag.DAGVariable;
 
 public class MethodCall extends MethodBodyContent {
 
-    private static final String INVOKEVIRTUAL = "\taload ?\n\tinvokevirtual ? ";
+    private static final String INVOKEVIRTUAL = "\n\taload ?\n\tinvokevirtual ? ";
     private MethodSignature methodSignature;
     private Integer callObjectIndex;
     private ParameterPush parameterPush;
@@ -25,7 +25,7 @@ public class MethodCall extends MethodBodyContent {
         if(this.callObjectIndex == null)
             this.callObjectIndex = 0;
         String methodCallBody = new String();
-        String invoke = JVMInst.subst(MethodCall.INVOKEVIRTUAL, Integer.toString(callObjectIndex), methodSignature.toString() + "\n");
+        String invoke = JVMInst.subst(MethodCall.INVOKEVIRTUAL, Integer.toString(callObjectIndex), methodSignature.toString());
         methodCallBody = methodCallBody.concat(parameterPush.toString()).concat(invoke);
         return methodCallBody;
     }

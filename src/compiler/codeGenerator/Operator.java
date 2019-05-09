@@ -11,12 +11,12 @@ public class Operator {
     public static HashMap<String, String> binaryOperators;
     static{
         binaryOperators = new HashMap<>();
-        binaryOperators.put("+", "\tiadd");
-        binaryOperators.put("-", "\tisub");
-        binaryOperators.put("*", "\timul");
-        binaryOperators.put("/", "\tidiv");
-        binaryOperators.put("<", "\tdcmpg");
-        binaryOperators.put("&&", "\tiand");
+        binaryOperators.put("+", "\n\tiadd");
+        binaryOperators.put("-", "\n\tisub");
+        binaryOperators.put("*", "\n\timul");
+        binaryOperators.put("/", "\n\tidiv");
+        binaryOperators.put("<", "\n\tdcmpg");
+        binaryOperators.put("&&", "\n\tiand");
     }
 
     private BinaryOperator operator;
@@ -29,7 +29,7 @@ public class Operator {
     @Override
     public String toString()
     {
-        return Operator.binaryOperators.get(operator.toString()) + "\n";
+        return Operator.binaryOperators.get(operator.toString());
 
     }
     

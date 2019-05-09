@@ -11,8 +11,6 @@ class Dog {
     public int run() {
         boolean full;
         int sleepEatFactor;
-        this.sleep();
-        sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
         if(full) {
             sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
         } else {

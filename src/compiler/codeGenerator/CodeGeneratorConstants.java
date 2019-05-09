@@ -120,7 +120,7 @@ public final class CodeGeneratorConstants {
      * 2: call variable name
      * 3: type of variable
      */
-    public static String GETFIELD = "\taload 0\n\tgetfield ?/? ?";
+    public static String GETFIELD = "\n\taload 0\n\tgetfield ?/? ?";
 
     /**
      * 1: name of label
@@ -164,7 +164,7 @@ public final class CodeGeneratorConstants {
      * 2: call variable name
      * 3: type of variable
      */
-    public static String PUTFIELD = "\taload 0\n\tswap\n\tputfield ?/? ?";
+    public static String PUTFIELD = "\n\taload 0\n\tswap\n\tputfield ?/? ?";
     /**
      * Main
      */
