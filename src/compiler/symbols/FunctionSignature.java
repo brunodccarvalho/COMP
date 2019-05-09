@@ -52,11 +52,16 @@ public class FunctionSignature {
 
   @Override
   public String toString() {
-    if (parameterTypes.length == 0) return "()";
     StringBuilder string = new StringBuilder();
     string.append('(');
-    string.append(parameterTypes[0]);
-    for (int i = 1; i < parameterTypes.length; ++i) string.append(", ").append(parameterTypes[i]);
+    if (parameterTypes.length > 0) {
+      TypeDescriptor type = parameterTypes[0];
+      string.append(type == null ? '?' : type);
+      for (int i = 1; i < parameterTypes.length; ++i) {
+        type = parameterTypes[i];
+        string.append(", ").append(type == null ? '?' : type);
+      }
+    }
     string.append(')');
     return string.toString();
   }

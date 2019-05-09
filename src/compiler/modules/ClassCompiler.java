@@ -46,6 +46,7 @@ public final class ClassCompiler extends CompilationStatus {
       writeToFile();
     } catch (CompilationException e) {
       System.err.println(e.getMessage());
+      e.printStackTrace();
       update(Codes.FATAL);
     }
     return this;

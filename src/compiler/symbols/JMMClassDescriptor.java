@@ -240,7 +240,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
     ArrayList<JMMMethodDescriptor> list = new ArrayList<>();
 
     for (FunctionSignature msig : map.keySet()) {
-      JMMMethodDescriptor method = map.get(signature);
+      JMMMethodDescriptor method = map.get(msig);
       if (returnType == method.getReturnType() && FunctionSignature.matches(signature, msig)) {
         list.add(method);
       }
@@ -267,7 +267,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
     ArrayList<JMMMethodDescriptor> list = new ArrayList<>();
 
     for (FunctionSignature msig : map.keySet()) {
-      JMMMethodDescriptor method = map.get(signature);
+      JMMMethodDescriptor method = map.get(msig);
       if (FunctionSignature.matches(signature, msig)) {
         list.add(method);
       }

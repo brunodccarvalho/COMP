@@ -8,6 +8,7 @@ COMPILER := compiler
 
 # Test file (in folder test_files)
 TEST_FILE := TestEverything.txt
+MYSTERIOUS := Mysterious.java
 
 # Jasmin file (to see how javac writes bytecode).
 JASMIN_FILE := JavapExample.java
@@ -62,10 +63,16 @@ clean: mkdir
 	@rm -rf bin/* parser/* compiled jjt
 
 test:
+	@clear
 	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(TEST_FILE) || true
 
 parser-test:
+	@clear
 	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) jjt.jmm test_files/$(TEST_FILE) || true
+
+mysterious:
+	@clear
+	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(MYSTERIOUS) || true
 
 jasmin:
 	@javac $(JASMIN_FILE)

@@ -101,9 +101,14 @@ public abstract class DAGCall extends DAGExpression {
     StringBuilder string = new StringBuilder();
     string.append('.').append(methodName).append('(');
     if (arguments.length > 0) {
+      TypeDescriptor type = arguments[0].getType();
+      string.append('<').append(type == null ? '?' : type).append("> ");
       string.append(arguments[0]);
       for (int i = 1; i < arguments.length; ++i) {
-        string.append(", ").append(arguments[i]);
+        type = arguments[i].getType();
+        string.append(", ");
+        string.append('<').append(type == null ? '?' : type).append("> ");
+        string.append(arguments[i]);
       }
     }
     string.append(')');

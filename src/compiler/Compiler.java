@@ -18,7 +18,12 @@ final class Compiler {
       return;
     }
 
-    String source = args[args.length - 1];
-    new ClassCompiler(new File(source)).compile();
+    try {
+      String source = args[args.length - 1];
+      new ClassCompiler(new File(source)).compile();
+
+    } catch (Throwable t) {
+      t.printStackTrace();
+    }
   }
 }

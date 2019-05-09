@@ -701,7 +701,8 @@ public class ExpressionFactory extends BaseDAGFactory {
    * @return The DAGExpression node.
    */
   public DAGExpression assertType(DAGExpression expression, TypeDescriptor type, SimpleNode node) {
-    assert expression != null && type != null & node != null;
+    assert expression != null && node != null;
+    if (type == null) return expression;
 
     if (expression instanceof DAGCall) {
       DAGCall call = (DAGCall) expression;
@@ -779,8 +780,10 @@ public class ExpressionFactory extends BaseDAGFactory {
   private void deduceUnknownCallType(DAGCall call, TypeDescriptor type, SimpleNode node) {
     assert !call.isDeduced() && call.getCallClass() instanceof UnknownClassDescriptor;
 
+    assert call.getCallable() instanceof JavaCallableDescriptor;
+    ((JavaCallableDescriptor) call.getCallable()).deduceReturnType(type);
     call.setDeducedReturnType(type);
-    // assertArgumentList(call, node);
+    assertArgumentList(call, node);
   }
 
   /**
@@ -883,8 +886,10 @@ public class ExpressionFactory extends BaseDAGFactory {
                        + " and being used as a statement top-level statement to method: "
                        + call.getCallable() + ", which returns void.");
 
+    assert call.getCallable() instanceof JavaCallableDescriptor;
+    ((JavaCallableDescriptor) call.getCallable()).deduceReturnType(voidDescriptor);
     call.setDeducedReturnType(voidDescriptor);
-    // assertArgumentList(call, node);
+    assertArgumentList(call, node);
   }
 
   /**

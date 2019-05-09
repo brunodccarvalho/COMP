@@ -32,9 +32,9 @@ public class AssignmentFactory extends BaseDAGFactory {
   @Override
   public DAGAssignment build(SimpleNode assignmentNode, CompilationStatus tracker) {
     assert tracker != null;
-    DAGAssignment built = build(assignmentNode);
+    DAGAssignment assignment = build(assignmentNode);
     tracker.update(status());
-    return built;
+    return assignment;
   }
 
   /**
@@ -69,18 +69,21 @@ public class AssignmentFactory extends BaseDAGFactory {
     assert node.is(JJTASSIGNMENT);
 
     SimpleNode variableNode = node.jjtGetChild(0);
+    SimpleNode expressionNode = node.jjtGetChild(1);
     assert variableNode.is(JJTIDENTIFIER);
 
-    DAGVariable var = this.buildVariable(variableNode);
-    DAGExpression expression = this.factory.build(node.jjtGetChild(1));
+    DAGVariable variable = buildVariable(variableNode);
+    DAGExpression expression = factory.build(expressionNode, variable.getType());
 
+    /*
     // Error: Type mismatch: Expected type T, but expression has type E.
-    if (!typematch(var.getType(), expression.getType())) {
-      DiagnosticsHandler.typeMismatch(node, var.getType(), expression.getType());
+    if (!typematch(variable.getType(), expression.getType())) {
+      DiagnosticsHandler.typeMismatch(node, variable.getType(), expression.getType());
       update(Codes.MAJOR_ERRORS);
     }
+    */
 
-    return new DAGAssignment(var, expression);
+    return new DAGAssignment(variable, expression);
   }
 
   /**
@@ -100,10 +103,11 @@ public class AssignmentFactory extends BaseDAGFactory {
     SimpleNode indexExpressionNode = bracketsNode.jjtGetChild(1);
     assert variableNode.is(JJTIDENTIFIER);
 
-    DAGVariable var = this.buildVariable(variableNode);
-    DAGExpression indexExpression = this.factory.build(indexExpressionNode);
-    DAGExpression assignedExpression = this.factory.build(assignedExpressionNode);
+    DAGVariable var = buildVariable(variableNode);
+    DAGExpression indexExpression = factory.build(indexExpressionNode, intDescriptor);
+    DAGExpression assignedExpression = factory.build(assignedExpressionNode, intDescriptor);
 
+    /*
     // ERROR: Type mismatch in the assigned expression.
     if (!typematch(intDescriptor, assignedExpression.getType())) {
       DiagnosticsHandler.typeMismatch(node, intDescriptor, assignedExpression.getType());
@@ -116,6 +120,7 @@ public class AssignmentFactory extends BaseDAGFactory {
                                       assignedExpression.getType());
       update(Codes.MAJOR_ERRORS);
     }
+    */
 
     return new DAGBracketAssignment(var, assignedExpression, indexExpression);
   }
