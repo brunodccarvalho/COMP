@@ -8,7 +8,7 @@ import java.util.HashMap;
 public final class CodeGeneratorConstants {
 
     public static String DEFAULTSUPER = "java/lang/Object";
-    public static String DEFAULTINITIALIZER = ".method public <init>()V\n\taload_0\n\tinvokenonvirtual java/lang/Object/<init>()V\n\treturn\n.end method";
+    public static String DEFAULTINITIALIZER = "\n.method public <init>()V\n\taload_0\n\tinvokenonvirtual java/lang/Object/<init>()V\n\treturn\n.end method";
     public static String INITIALIZERNAME = "<init>";
     public static HashMap<String, String> types;
     public static HashMap<String, String> store;
@@ -47,7 +47,7 @@ public final class CodeGeneratorConstants {
     public static String getType(TypeDescriptor typeDescriptor) {
         String typeName = typeDescriptor.getName();
         String jvmType = CodeGeneratorConstants.types.get(typeName);
-        return (jvmType != null) ? jvmType : BaseByteCode.subst(CodeGeneratorConstants.CLASSTYPE, typeName);
+        return (jvmType != null) ? jvmType : JVMInst.subst(CodeGeneratorConstants.CLASSTYPE, typeName);
     }
 
     /**
@@ -92,7 +92,7 @@ public final class CodeGeneratorConstants {
      * 2: method stack and locals array size
      * 3: method body
      */
-    public static String METHOD = ".method public ?\n?\n?\n.end method";
+    public static String METHOD = "\n.method public ?\n?\n?\n.end method";
     /**
      * 1: index of the variable
      */
@@ -114,7 +114,7 @@ public final class CodeGeneratorConstants {
     /**
      * 1: method signature
      */
-    public static String INVOKEVIRTUAL = "\taload ?\n\tinvokevirtual ? ";
+    public static String INVOKEVIRTUAL = "\tinvokevirtual ? ";
     /**
      * 1: class name path
      * 2: call variable name
@@ -168,6 +168,5 @@ public final class CodeGeneratorConstants {
     /**
      * Main
      */
-    public static String MAIN = ".method public static main([Ljava/lang/String;)V\n?\n?\n?\n\treturn\n.end method";
-    
+    public static String MAIN = "\n.method public static main([Ljava/lang/String;)V\n?\n?\n?\n\treturn\n.end method";
 }

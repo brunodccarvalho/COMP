@@ -1,35 +1,30 @@
 package compiler.codeGenerator;
 
-import compiler.symbols.JMMMethodDescriptor;
-/**
- * MethodHeader
- */
+import compiler.symbols.JMMCallableDescriptor;
+
 public class MethodHeader extends JVMInst {
     /**
      * 1: method signature
      * 2: method stack and locals array size
      * 3: method body
      */
-    public static String METHOD = ".method public ?\n?\n?\n.end method";
+    public static String METHOD = "\n.method public ?\n?\n?\n.end method";
 
-    private Method belongs;
-
+    private Method method;
     private MethodSignature methodSignature;
     private MethodStackLocals methodStackLocals;
     
-    MethodHeader (Method belongs,JMMMethodDescriptor method)
+    MethodHeader (Method method, JMMCallableDescriptor methodDescriptor)
     {
-        this.belongs=belongs;
-        this.regexReplace=MethodHeader.METHOD;
-        
-        this.methodSignature = new MethodSignature(method, false);
-        this.methodStackLocals = new MethodStackLocals(belongs);
+        this.method = method;
+        this.methodSignature = new MethodSignature(method, methodDescriptor, false);
+        this.methodStackLocals = new MethodStackLocals(method);
     }
 
     @Override
     public String toString()
     {
-        return subst(this.regexReplace, this.methodSignature.toString(), this.methodStackLocals.toString());
+        return subst(MethodHeader.METHOD, this.methodSignature.toString(), this.methodStackLocals.toString());
     }
 
 }

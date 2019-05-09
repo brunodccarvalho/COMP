@@ -32,9 +32,9 @@ public class MemberLoad extends JVMInst {
         String className=memberDescriptor.getParentClass().getClassName();
         String type=memberDescriptor.getType().getName();
         String memberType=CodeGeneratorConstants.types.get(type);
-        if(memberType==null)
-            memberType=subst(MemberLoad.CLASSTYPE, type);
-        return subst(MemberLoad.GETFIELD, className,memberName,memberType) + "\n";
+        if(memberType == null)
+            memberType = subst(MemberLoad.CLASSTYPE, type);
+        return JVMInst.subst(MemberLoad.GETFIELD, className,memberName,memberType) + "\n";
     }
     
 }
