@@ -4,19 +4,19 @@ import compiler.dag.DAGAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGMember;
 import compiler.dag.DAGVariable;
-/**
- * Assignment
- */
+
 public class Assignment extends BaseStatement{
 
+    private Function function;
     private DAGExpression variable;
     private DAGExpression expression;
     private Expression expressionBody;
 
-    Assignment(DAGAssignment statement){
+    Assignment(Function function, DAGAssignment statement){
+        this.function = function;
         this.variable = statement.getVariable();
         this.expression = statement.getExpression();
-        this.expressionBody = new Expression(expression);
+        this.expressionBody = new Expression(this.function, expression);
     }    
 
     @Override
@@ -31,7 +31,7 @@ public class Assignment extends BaseStatement{
         }
         else 
         {
-            Store store= new Store((DAGVariable)variable);
+            Store store= new Store(this.function, (DAGVariable)variable);
             variableStore = store.toString();
         }
         assignmentBody = assignmentBody.concat(expressionBody.toString()).concat(variableStore);

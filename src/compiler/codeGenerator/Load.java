@@ -1,6 +1,7 @@
 package compiler.codeGenerator;
 
 import compiler.dag.DAGLocal;
+import compiler.modules.CodeGenerator;
 import compiler.symbols.LocalDescriptor;
 
 import java.util.HashMap;
@@ -9,7 +10,9 @@ import java.util.HashMap;
  */
 public class Load extends JVMInst {
 
-    public static HashMap<String, String> load;
+    private Function function;
+
+    public static HashMap<String, String> load = new HashMap<>();
     static{
         load.put("int", "\tiload ?");
         load.put("boolean", "\tiload ?");
@@ -22,11 +25,11 @@ public class Load extends JVMInst {
     private LocalDescriptor variableDescriptor;
     private Integer variableIndex;
 
-    Load(DAGLocal variable)
+    public Load(Function function, DAGLocal variable)
     {
+        this.function = function;
         this.variableDescriptor = variable.getVariable();
-        this.variableIndex = CodeGenerator.singleton.variablesIndexes.get(variableDescriptor);
-
+        this.variableIndex = this.function.variablesIndexes.get(variableDescriptor);
     }
 
     @Override

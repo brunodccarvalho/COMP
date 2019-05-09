@@ -1,7 +1,7 @@
 package compiler.codeGenerator;
 
 import compiler.dag.DAGCall;
-import compiler.symbols.JMMMethodDescriptor;
+import compiler.symbols.JMMCallableDescriptor;
 
 /**
  * MethodSignature
@@ -27,14 +27,14 @@ public class MethodSignature extends JVMInst {
 
     private boolean dagCall;
 
-    MethodSignature(JMMMethodDescriptor method, boolean includeClassName) {
+    MethodSignature(Method method, JMMCallableDescriptor methodDescriptor, boolean includeClassName) {
         this.dagCall = false;
         this.includeClassName = includeClassName;
-        this.methodClass = CodeGenerator.singleton.classDescriptor.getClassName();
-        this.methodName = method.getName();
-        MethodDescriptor descript = new MethodDescriptor(method);
+        this.methodClass = method.data.jmmClass.getClassName();
+        this.methodName = methodDescriptor.getName();
+        MethodDescriptor descript = new MethodDescriptor(methodDescriptor);
         this.methodDescriptor = descript.toString();
-        this.returnType = CodeGeneratorConstants.getType(method.getReturnType());
+        this.returnType = CodeGeneratorConstants.getType(methodDescriptor.getReturnType());
     }
 
     MethodSignature(DAGCall methodCall) {

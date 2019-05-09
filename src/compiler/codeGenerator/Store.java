@@ -13,14 +13,15 @@ public class Store extends JVMInst {
      * 1: index of the variable
      */
     public static String STOREADDRESS = "\tastore ?";
-
+    private Function function;
     private VariableDescriptor variableDescriptor;
     private Integer variableIndex;
 
-    Store(DAGVariable variable)
+    Store(Function function, DAGVariable variable)
     {
+        this.function = function;
         this.variableDescriptor = variable.getVariable();
-        this.variableIndex = CodeGenerator.singleton.variablesIndexes.get(this.variableDescriptor);
+        this.variableIndex = function.variablesIndexes.get(this.variableDescriptor);
     }
 
     @Override
@@ -30,11 +31,10 @@ public class Store extends JVMInst {
             return "";
         }
         String variableType = variableDescriptor.getType().toString();
-        this.regexReplace = CodeGeneratorConstants.store.get(variableType);
-        if(this.regexReplace == null)
-            this.regexReplace = Store.STOREADDRESS;
-        return subst(this.regexReplace, String.valueOf(variableIndex+1)) + "\n";
-
+        String instruction = CodeGeneratorConstants.store.get(variableType);
+        if(instruction == null)
+            instruction = Store.STOREADDRESS;
+        return subst(instruction, String.valueOf(variableIndex+1)) + "\n";
     }
     
 }

@@ -4,17 +4,8 @@ class Dog {
     int hoursSleep;
     int numberKm;
     public static void main(String[] args) {
-    }
-
-    public int sleep() {
-        hoursSleep = hoursSleep + 1;
-        return hoursSleep;
-    }
-
-
-    public boolean eat(int quantity, int mult) {
-        availableFood = availableFood - mult * quantity;
-        return (availableFood < 1); 
+        Dog dog;
+        dog.sleep();
     }
 
     public int run() {

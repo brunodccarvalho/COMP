@@ -7,14 +7,14 @@ import compiler.symbols.TypeDescriptor;
 public class DAGMethodCall extends DAGCall {
   final DAGExpression expression;
 
-  DAGMethodCall(DAGExpression expression, String methodName, FunctionSignature signature,
+  public DAGMethodCall(DAGExpression expression, String methodName, FunctionSignature signature,
                 DAGExpression[] arguments) {
     super(methodName, signature, arguments);
     assert expression != null;
     this.expression = expression;
   }
 
-  DAGMethodCall(DAGExpression expression, String methodName, FunctionSignature signature,
+  public DAGMethodCall(DAGExpression expression, String methodName, FunctionSignature signature,
                 TypeDescriptor returnType, DAGExpression[] arguments) {
     super(methodName, signature, returnType, arguments);
     assert expression != null;

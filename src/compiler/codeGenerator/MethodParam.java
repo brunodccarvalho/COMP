@@ -1,17 +1,13 @@
 package compiler.codeGenerator;
 
-import compiler.symbols.JMMMethodDescriptor;
+import compiler.symbols.JMMCallableDescriptor;
 import compiler.symbols.ParameterDescriptor;
 
-import java.util.HashMap;
-/**
- * MethodParam
- */
 public class MethodParam {
 
     private Method belongs;
 
-    MethodParam (Method belongs,JMMMethodDescriptor method) {
+    MethodParam (Method belongs, JMMCallableDescriptor method) {
         this.belongs=belongs;
         ParameterDescriptor[] parameters = method.getParameters();
         for(ParameterDescriptor parameter: parameters) {

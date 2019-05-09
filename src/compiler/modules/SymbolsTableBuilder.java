@@ -1,9 +1,6 @@
 package compiler.modules;
 
 import static jjt.jmmTreeConstants.*;
-
-import java.util.HashMap;
-
 import compiler.FunctionSignature;
 import compiler.modules.DiagnosticsHandler;
 import compiler.symbols.*;

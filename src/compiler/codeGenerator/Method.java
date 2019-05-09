@@ -1,44 +1,31 @@
 package compiler.codeGenerator;
 
-import compiler.symbols.JMMMethodDescriptor;
+import compiler.modules.CompilationData;
+import compiler.symbols.JMMCallableDescriptor;
 
-import compiler.symbols.Descriptor;
-
-import java.util.HashMap;
-import java.util.ArrayList;
-/**
- * Method
- */
-public class Method extends JVMInst {
-
+public class Method extends Function {
     
     protected int numberLocals;
     protected int numberTemp;
     protected int numberParam;
-    protected HashMap<Descriptor, Integer> variablesIndexes;
-
-    private MethodParam generateParamDeclaration;
-    private MethodVarDeclaration generateMethodVarDeclaration;
+    protected CompilationData data;
     private MethodHeader methodHeader;
-    private GenerateMethodBody methodBody;
-    private MethodReturn methodReturn;
+    private MethodBodyGenerator methodBody;
 
-    Method (JMMMethodDescriptor method) {
+    public Method(JMMCallableDescriptor method, CompilationData data) {
+        super(method, data);
+        this.data = data;
         this.numberLocals = 0;
         this.numberParam = 0;
         this.numberTemp = 0;
-        this.variablesIndexes = new HashMap<Descriptor, Integer>();
-        this.generateParamDeclaration = new MethodParam(this,method);
-        this.generateMethodVarDeclaration = new MethodVarDeclaration(this,method);
-        this.methodHeader = new MethodHeader(this,method);
-        this.methodBody = new GenerateMethodBody(this,method);
-        this.methodReturn = new MethodReturn(this,CodeGenerator.singleton.methodBodies.get(method).getReturnExpression());
+        this.methodHeader = new MethodHeader(this, method);
+        this.methodBody = new MethodBodyGenerator(this,method);
     }
 
     @Override
     public String toString()
     {
-        String methodStructure = subst(methodHeader.toString(), methodBody.toString().concat(methodReturn.toString()));
+        String methodStructure = subst(methodHeader.toString(), methodBody.toString());
         return methodStructure;
     }
 

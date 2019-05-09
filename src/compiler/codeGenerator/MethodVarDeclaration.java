@@ -1,26 +1,23 @@
 package compiler.codeGenerator;
 
-import compiler.symbols.JMMMethodDescriptor;
+import compiler.symbols.JMMCallableDescriptor;
 import compiler.symbols.LocalDescriptor;
-
 import java.util.HashMap;
-/**
- * MethodVarDeclaration
- */
+
 public class MethodVarDeclaration {
 
-    private Method belongs;
+    private Method method;
 
-    MethodVarDeclaration(Method belongs,JMMMethodDescriptor method)
+    MethodVarDeclaration(Method method, JMMCallableDescriptor methodDescriptor)
     {
-        this.belongs=belongs;
-        HashMap<String, LocalDescriptor> locals = CodeGenerator.singleton.symbolsTable.getFunctionLocals(method).getVariables();
-        int arrayIndex = this.belongs.numberParam;
+        this.method = method;
+        HashMap<String, LocalDescriptor> locals = method.data.localsMap.get(methodDescriptor).getVariables();
+        int arrayIndex = this.method.numberParam;
         for(LocalDescriptor local : locals.values()) {
-            if(!this.belongs.variablesIndexes.containsKey(local)) {
-                this.belongs.variablesIndexes.put(local, arrayIndex);
+            if(!this.method.variablesIndexes.containsKey(local)) {
+                this.method.variablesIndexes.put(local, arrayIndex);
                 arrayIndex++;
-                this.belongs.numberLocals++;
+                this.method.numberLocals++;
             }
         }
     }

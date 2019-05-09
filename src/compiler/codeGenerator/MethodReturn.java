@@ -1,6 +1,7 @@
 package compiler.codeGenerator;
 
 import compiler.dag.DAGExpression;
+import compiler.modules.CodeGenerator;
 import compiler.symbols.TypeDescriptor;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.HashMap;
  */
 public class MethodReturn extends JVMInst {
 
+    private CodeGenerator codeGenerator;
     public static HashMap<String, String> returnTypes;
     static {
         returnTypes = new HashMap<>();
@@ -23,10 +25,11 @@ public class MethodReturn extends JVMInst {
     private Expression expression;
     private Method belongs;
 
-    MethodReturn(Method belongs, DAGExpression returnExpression) {
+    MethodReturn(CodeGenerator codeGenerator, Method belongs, DAGExpression returnExpression) {
+        this.codeGenerator = codeGenerator;
         this.belongs = belongs;
         this.returnType = returnExpression.getType();
-        this.expression = new Expression(returnExpression);
+        this.expression = new Expression(this.codeGenerator, returnExpression);
 
     }
 
