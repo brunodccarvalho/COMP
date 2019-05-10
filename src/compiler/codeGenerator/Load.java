@@ -36,7 +36,7 @@ public class Load extends MethodBodyContent {
         String regexLoad = Load.load.get(variableType);
         if(regexLoad == null)
             regexLoad = Load.LOADADDRESS;
-        return subst(regexLoad, String.valueOf(variableIndex+1));
+        return subst(regexLoad, String.valueOf(variableIndex));
     }
     
 }

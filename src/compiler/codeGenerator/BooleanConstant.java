@@ -4,8 +4,8 @@ import compiler.dag.DAGBooleanConstant;
 
 public class BooleanConstant extends JVMInst {
 
-    private static String pushTrue = "\ticonst_1";
-    private static String pushFalse = "\ticonst_0";
+    private static String pushTrue = "\n\ticonst_1";
+    private static String pushFalse = "\n\ticonst_0";
     private boolean booleanValue;
 
     public BooleanConstant(DAGBooleanConstant dagBooleanConstant) {

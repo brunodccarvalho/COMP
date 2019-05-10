@@ -11,7 +11,9 @@ class Dog {
     public int run() {
         boolean full;
         int sleepEatFactor;
-        if(full) {
+        int x;
+        int y;
+        if(full && false) {
             sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
         } else {
             numberKm = numberKm + 1;

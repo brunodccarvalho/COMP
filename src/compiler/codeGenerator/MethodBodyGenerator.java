@@ -32,7 +32,6 @@ public class MethodBodyGenerator {
 
     public MethodBodyGenerator(Function function, DAGNode statement) {
         this(function);
-        System.out.println("statement node!");
         this.generateStatement(statement);
     }
 

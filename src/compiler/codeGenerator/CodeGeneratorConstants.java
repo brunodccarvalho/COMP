@@ -104,9 +104,9 @@ public final class CodeGeneratorConstants {
     /**
      * 1: number to push to the stack - should be one of: 0,1,2,3,4,5 or m1 (-1)
      */
-    public static String PUSHCONST = "\ticonst_?";
-    public static String ICONST_0 = "\ticonst_0";  // false constant
-    public static String ICONST_1 = "\ticonst_1";  // true constant
+    public static String PUSHCONST = "\n\ticonst_?";
+    public static String ICONST_0 = "\n\ticonst_0";  // false constant
+    public static String ICONST_1 = "\n\ticonst_1";  // true constant
     /**
      * 1: number to push to the stack
      */
