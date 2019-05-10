@@ -25,8 +25,8 @@ public final class CodeGeneratorConstants {
         types.put("boolean", "Z");
         types.put("int[]", "[I");
         types.put("void", "V");
-        store.put("int", "\tistore ?");
-        store.put("boolean", "\tistore ?");
+        store.put("int", "\n\tistore ?");
+        store.put("boolean", "\n\tistore ?");
         binaryOperators.put("+", "\tiadd");
         binaryOperators.put("-", "\tisub");
         binaryOperators.put("*", "\timul");
@@ -104,9 +104,9 @@ public final class CodeGeneratorConstants {
     /**
      * 1: number to push to the stack - should be one of: 0,1,2,3,4,5 or m1 (-1)
      */
-    public static String PUSHCONST = "\ticonst_?";
-    public static String ICONST_0 = "\ticonst_0";  // false constant
-    public static String ICONST_1 = "\ticonst_1";  // true constant
+    public static String PUSHCONST = "\n\ticonst_?";
+    public static String ICONST_0 = "\n\ticonst_0";  // false constant
+    public static String ICONST_1 = "\n\ticonst_1";  // true constant
     /**
      * 1: number to push to the stack
      */
@@ -120,7 +120,7 @@ public final class CodeGeneratorConstants {
      * 2: call variable name
      * 3: type of variable
      */
-    public static String GETFIELD = "\taload 0\n\tgetfield ?/? ?";
+    public static String GETFIELD = "\n\taload 0\n\tgetfield ?/? ?";
 
     /**
      * 1: name of label
@@ -164,7 +164,7 @@ public final class CodeGeneratorConstants {
      * 2: call variable name
      * 3: type of variable
      */
-    public static String PUTFIELD = "\taload 0\n\tswap\n\tputfield ?/? ?";
+    public static String PUTFIELD = "\n\taload 0\n\tswap\n\tputfield ?/? ?";
     /**
      * Main
      */

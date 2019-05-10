@@ -4,17 +4,17 @@ import compiler.dag.DAGLocal;
 import compiler.symbols.LocalDescriptor;
 import java.util.HashMap;
 
-public class Load extends JVMInst {
+public class Load extends MethodBodyContent {
 
     public static HashMap<String, String> load = new HashMap<>();
     static{
-        load.put("int", "\tiload ?");
-        load.put("boolean", "\tiload ?");
+        load.put("int", "\n\tiload ?");
+        load.put("boolean", "\n\tiload ?");
     }
     /**
      * 1: index of the variable
      */
-    public static String LOADADDRESS = "\taload ?";
+    public static String LOADADDRESS = "\n\taload ?";
 
     private LocalDescriptor variableDescriptor;
     private Integer variableIndex;
@@ -36,7 +36,7 @@ public class Load extends JVMInst {
         String regexLoad = Load.load.get(variableType);
         if(regexLoad == null)
             regexLoad = Load.LOADADDRESS;
-        return subst(regexLoad, String.valueOf(variableIndex+1)) + "\n";
+        return subst(regexLoad, String.valueOf(variableIndex));
     }
     
 }

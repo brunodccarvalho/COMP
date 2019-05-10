@@ -4,18 +4,16 @@ class Dog {
     int hoursSleep;
     int numberKm;
     public static void main(String[] args) {
-        Dog dog;
-        dog.sleep();
+        boolean full;
+        full = false;
     }
 
     public int run() {
         boolean full;
         int sleepEatFactor;
-        this.sleep();
-        sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
-        if(full) {
-            sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
-        } else {
+        int x;
+        int y;
+        while(true) {
             numberKm = numberKm + 1;
         }
         return numberKm;

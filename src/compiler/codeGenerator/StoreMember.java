@@ -2,9 +2,7 @@ package compiler.codeGenerator;
 
 import compiler.dag.DAGMember;
 import compiler.symbols.MemberDescriptor;
-/**
- * StoreMember
- */
+
 public class StoreMember extends JVMInst {
     
     /**
@@ -16,7 +14,7 @@ public class StoreMember extends JVMInst {
      * 2: call variable name
      * 3: type of variable
      */
-    public static String PUTFIELD = "\taload 0\n\tswap\n\tputfield ?/? ?";
+    public static String PUTFIELD = "\n\taload 0\n\tswap\n\tputfield ?/? ?";
 
     private MemberDescriptor memberDescriptor;
 
@@ -34,7 +32,7 @@ public class StoreMember extends JVMInst {
         String memberType=CodeGeneratorConstants.types.get(type);
         if(memberType==null)
             memberType=subst(StoreMember.CLASSTYPE, type);
-        return subst(StoreMember.PUTFIELD, className,memberName,memberType) + "\n";
+        return subst(StoreMember.PUTFIELD, className,memberName,memberType);
     }
 
     

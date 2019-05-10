@@ -3,9 +3,10 @@ package compiler.dag;
 import java.util.Objects;
 
 public abstract class DAGBranch extends DAGNode {
-  final DAGCondition condition;
+  
+  protected final DAGCondition condition;
 
-  DAGBranch(DAGCondition condition) {
+  public DAGBranch(DAGCondition condition) {
     assert condition != null;
     this.condition = condition;
   }

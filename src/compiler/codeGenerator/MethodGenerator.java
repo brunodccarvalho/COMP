@@ -30,7 +30,7 @@ public class MethodGenerator {
     public String toString() {
         String methods = "";
         for (Function m : this.methodStructures)
-            methods += m.toString() + "\n";
+            methods += m.toString();
         return methods;
     }
 

@@ -7,7 +7,7 @@ import compiler.dag.DAGVariable;
 
 public class Assignment extends BaseStatement {
 
-    private DAGExpression variable;
+    private DAGVariable variable;
     private DAGExpression expression;
     private Expression expressionBody;
 
@@ -23,16 +23,18 @@ public class Assignment extends BaseStatement {
     {
         String assignmentBody = new String();
         String variableStore= new String();
+
         if(this.variable instanceof DAGMember)
         {
             StoreMember storeMember =  new StoreMember((DAGMember)variable);
             variableStore = storeMember.toString();
         }
-        else 
+        else
         {
             Store store= new Store(this.function, (DAGVariable)variable);
             variableStore = store.toString();
         }
+        
         assignmentBody = assignmentBody.concat(expressionBody.toString()).concat(variableStore);
         return assignmentBody;
     }
