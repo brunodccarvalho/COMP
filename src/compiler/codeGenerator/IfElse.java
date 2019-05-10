@@ -12,7 +12,7 @@ public class IfElse extends Conditional {
 
     /**
      * 1. Condition
-     * 2: If condition (IFEQ / IFLESS)
+     * 2: If condition (IFEQ / IFGE)
      * 2. Else label
      * 3. if body
      * 4. Goto label
@@ -22,9 +22,9 @@ public class IfElse extends Conditional {
      */
     private static String IFCOND = "?\n\t? ??\n\tgoto ?\n?:?\n?:";
     private static String IFEQ = "ifeq";
-    private static String IFLESS = "if_icmplt";
+    private static String IFGE = "if_icmpge";
     private LabelGenerator labelGenerator;
-    private String cond;    // either IFCOND or IFEQ
+    private String cond;    // either IFEQ or IFGE
 
     public IfElse(Function function, DAGIfElse branch, LabelGenerator labelGenerator) {
         super(function, branch);
@@ -49,7 +49,7 @@ public class IfElse extends Conditional {
         if(dagExpression instanceof DAGBinaryOp) {
             BinaryOperator operator = ((DAGBinaryOp)dagExpression).getOperator();
             if(operator == BinaryOperator.LT) {
-                this.cond = IfElse.IFLESS;
+                this.cond = IfElse.IFGE;
                 return this.generateLESSCondition((DAGBinaryOp)dagExpression);
             }
         }
