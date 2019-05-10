@@ -1,10 +1,6 @@
 package compiler.codeGenerator;
 
 import compiler.codeGenerator.utils.LabelGenerator;
-import compiler.dag.BinaryOperator;
-import compiler.dag.DAGBinaryOp;
-import compiler.dag.DAGCondition;
-import compiler.dag.DAGExpression;
 import compiler.dag.DAGIfElse;
 import compiler.dag.DAGNode;
 
@@ -21,48 +17,16 @@ public class IfElse extends Conditional {
      * 7. Goto label
      */
     private static String IFCOND = "?\n\t? ??\n\tgoto ?\n?:?\n?:";
-    private static String IFEQ = "ifeq";
-    private static String IFGE = "if_icmpge";
-    private LabelGenerator labelGenerator;
-    private String cond;    // either IFEQ or IFGE
 
     public IfElse(Function function, DAGIfElse branch, LabelGenerator labelGenerator) {
-        super(function, branch);
-        this.labelGenerator = labelGenerator;
-        this.cond = IFEQ;
-    }
-
-    private String generateEQCondition(DAGExpression dagExpression) {
-        Expression condition = new Expression(function, dagExpression);
-        return condition.toString();
-    }
-
-    private String generateLESSCondition(DAGBinaryOp dagExpression) {
-        DAGExpression lhsDag = ((DAGBinaryOp)dagExpression).getLhs();
-        Expression lhsExpression = new Expression(function, lhsDag);
-        DAGExpression rhsDag = ((DAGBinaryOp)dagExpression).getRhs();
-        Expression rhsExpression = new Expression(function, rhsDag);
-        return lhsExpression.toString() + rhsExpression.toString();
-    }
-
-    private String generateCondition(DAGExpression dagExpression) {
-        if(dagExpression instanceof DAGBinaryOp) {
-            BinaryOperator operator = ((DAGBinaryOp)dagExpression).getOperator();
-            if(operator == BinaryOperator.LT) {
-                this.cond = IfElse.IFGE;
-                return this.generateLESSCondition((DAGBinaryOp)dagExpression);
-            }
-        }
-        return this.generateEQCondition(dagExpression);
+        super(function, branch, labelGenerator, IFEQ);
     }
 
     @Override
     public String toString() {
 
         // Condition
-        DAGCondition dagCondition = this.branch.getCondition();
-        DAGExpression dagExpression = dagCondition.getExpression();
-        String condition = this.generateCondition(dagExpression);
+        super.generateCondition();
         
         // Else body and label
         String elseLabel = this.labelGenerator.nextLabel();
@@ -74,7 +38,6 @@ public class IfElse extends Conditional {
         DAGNode thenNode = ((DAGIfElse)this.branch).getThenNode();
         MethodBodyGenerator thenGenerator = new MethodBodyGenerator(this.function, thenNode);
 
-
-        return JVMInst.subst(IFCOND, condition, this.cond, elseLabel, thenGenerator.toString(), gotoLabel, elseLabel, elseGenerator.toString(), gotoLabel);
+        return JVMInst.subst(IFCOND, this.condBody, this.cond, elseLabel, thenGenerator.toString(), gotoLabel, elseLabel, elseGenerator.toString(), gotoLabel);
     }
 }

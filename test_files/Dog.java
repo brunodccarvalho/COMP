@@ -13,9 +13,7 @@ class Dog {
         int sleepEatFactor;
         int x;
         int y;
-        if(x < y) {
-            sleepEatFactor = hoursSleep / (availableFood + 5 * 2);
-        } else {
+        while(true) {
             numberKm = numberKm + 1;
         }
         return numberKm;

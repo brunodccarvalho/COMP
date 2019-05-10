@@ -51,7 +51,7 @@ public class MethodBodyGenerator {
         else if(statement instanceof DAGIfElse)
             baseStatement = new IfElse(this.function, (DAGIfElse)statement, this.labelGenerator);
         else if(statement instanceof DAGWhile)
-            baseStatement = new While(this.function, (DAGWhile)statement);
+            baseStatement = new While(this.function, (DAGWhile)statement, this.labelGenerator);
         else if(statement instanceof DAGMulti)
             this.generateMultiStatements((DAGMulti)statement);
             
