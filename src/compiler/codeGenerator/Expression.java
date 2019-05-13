@@ -4,15 +4,10 @@ import compiler.dag.BinaryOperator;
 import compiler.dag.DAGBinaryOp;
 import compiler.dag.DAGBooleanConstant;
 import compiler.dag.DAGBracket;
-import compiler.dag.DAGBracketAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
-import compiler.dag.DAGLocal;
-import compiler.dag.DAGMember;
 import compiler.dag.DAGMethodCall;
-import compiler.dag.DAGNew;
 import compiler.dag.DAGNewIntArray;
-import compiler.dag.DAGParameter;
 import compiler.dag.DAGVariable;
 
 public class Expression extends BaseStatement {

@@ -29,7 +29,4 @@ public class BracketAssignment extends Assignment {
 
         return subst(AASTORE, referenceLoad, expressionContent, expressionBody.toString());
     }
-
-    
-    
 }

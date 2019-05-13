@@ -14,8 +14,8 @@ class Dog {
     int sleepEatFactor;
     int x;
     int y;
-    foodEaten = new int[2];
-    foodEaten[0] = foodEaten[1];
+    // foodEaten = new int[2];
+    foodEaten[0] = -3;
     /*
     if (true) {
       x = 2;
