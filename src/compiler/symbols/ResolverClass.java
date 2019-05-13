@@ -103,24 +103,6 @@ public interface ResolverClass {
   /**
    * @param name       A method's name
    * @param signature  A method's original signature, augmented
-   * @param returnType A method's deduced return type
-   * @return The function matching this member invocation, without unknown types in it.
-   */
-  public abstract Deduction deduce(String name, FunctionSignature signature,
-                                   TypeDescriptor returnType);
-
-  /**
-   * @param name       A static method's name
-   * @param signature  A static method's original signature, augmented
-   * @param returnType A static method's deduced return type
-   * @return The function matching this static invocation, without unknown types in it.
-   */
-  public abstract Deduction deduceStatic(String name, FunctionSignature signature,
-                                         TypeDescriptor returnType);
-
-  /**
-   * @param name       A method's name
-   * @param signature  A method's original signature, augmented
    * @return The function matching this member invocation, without unknown types in it.
    */
   public abstract Deduction deduce(String name, FunctionSignature signature);

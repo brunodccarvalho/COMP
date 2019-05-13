@@ -68,34 +68,17 @@ public class UnknownClassDescriptor extends ClassDescriptor {
   }
 
   @Override
-  public Deduction deduce(String name, FunctionSignature signature, TypeDescriptor returnType) {
-    JavaMethodDescriptor callable;
-    signature.deduceUnknowns();
-    callable = new JavaMethodDescriptor(name, this, returnType, signature);
-    return new Deduction(callable, true, false);
-  }
-
-  @Override
-  public Deduction deduceStatic(String name, FunctionSignature signature,
-                                TypeDescriptor returnType) {
-    JavaStaticMethodDescriptor callable;
-    signature.deduceUnknowns();
-    callable = new JavaStaticMethodDescriptor(name, this, returnType, signature);
-    return new Deduction(callable, true, false);
-  }
-
-  @Override
   public Deduction deduce(String name, FunctionSignature signature) {
+    if (!signature.isComplete()) return new Deduction(null, false, true);
     JavaMethodDescriptor callable;
-    signature.deduceUnknowns();
     callable = new JavaMethodDescriptor(name, this, null, signature);
     return new Deduction(callable, true, false);
   }
 
   @Override
   public Deduction deduceStatic(String name, FunctionSignature signature) {
+    if (!signature.isComplete()) return new Deduction(null, false, true);
     JavaStaticMethodDescriptor callable;
-    signature.deduceUnknowns();
     callable = new JavaStaticMethodDescriptor(name, this, null, signature);
     return new Deduction(callable, true, false);
   }

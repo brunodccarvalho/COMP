@@ -9,6 +9,7 @@ COMPILER := compiler
 # Test file (in folder test_files)
 TEST_FILE := Dog.java
 MYSTERIOUS := Mysterious.java
+DAG_TEST_FILE = DAGTorture.java
 
 # Jasmin file (to see how javac writes bytecode).
 JASMIN_FILE := JavapExample.java
@@ -73,6 +74,10 @@ parser-test:
 mysterious:
 	@clear
 	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(MYSTERIOUS) || true
+
+dagtorture:
+	@clear
+	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(DAG_TEST_FILE) || true
 
 jasmin:
 	@javac $(JASMIN_FILE)

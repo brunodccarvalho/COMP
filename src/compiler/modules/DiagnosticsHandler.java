@@ -21,6 +21,9 @@ public class DiagnosticsHandler {
   private final ArrayList<String> lines;
   public static DiagnosticsHandler self;
 
+  public static boolean SUPPRESS_WARNINGS = false;
+  public static boolean SUPPRESS_NOTES = false;
+
   public DiagnosticsHandler(File file) throws IOException {
     this.file = file;
     this.lines = new ArrayList<>();
@@ -72,6 +75,11 @@ public class DiagnosticsHandler {
     error(node, "Name " + varName + " has already been locally defined");
   }
 
+  // This node
+  public static void staticUseOfThis(SimpleNode node) {
+    error(node, "Cannot use 'this' in a static context");
+  }
+
   // Function node
   public static void paramAlreadyDefined(SimpleNode node, String varName, JMMFunction method) {
     error(node, "Locally defined " + varName + " is a parameter of " + method);
@@ -113,71 +121,78 @@ public class DiagnosticsHandler {
 
   // Function call node
   public static void multipleOverloads(SimpleNode node, String methodName,
-                                       FunctionSignature signature, String className) {
-    error(node, "Unsuccessful function overload resolution in class " + className
-                    + ": Multiple overloads of method " + methodName + " match the signature "
-                    + methodName + signature + "."
+                                       FunctionSignature signature) {
+    error(node, "Unsuccessful function overload resolution: Multiple overloads of method "
+                    + methodName + " match the signature " + methodName + signature + "."
                     + " Please disambiguate your intended method call by assigning the result"
                     + " of external function call arguments to local variables, and using"
-                    + " those local variables as arguments to this function call instead.");
+                    + " those local variables as arguments to this function call instead");
   }
 
   // Function call node
   public static void multipleOverloadsStatic(SimpleNode node, String staticName,
-                                             FunctionSignature signature, String className) {
-    error(node, "Unsuccessful function overload resolution in class " + className
-                    + ": Multiple overloads of static function " + staticName
-                    + " match the signature " + staticName + signature + "."
+                                             FunctionSignature signature) {
+    error(node, "Unsuccessful function overload resolution: Multiple overloads of static function "
+                    + staticName + " match the signature " + staticName + signature + "."
                     + " Please disambiguate your intended method call by assigning the result"
                     + " of external function call arguments to local variables, and using"
-                    + " those local variables as arguments to this function call instead.");
+                    + " those local variables as arguments to this function call instead");
   }
 
   // Parameter node
-  public static void returnTypeDeduced(SimpleNode node, String functionName) {
+  public static void cantDeduceParameterType(SimpleNode node, String functionName) {
     error(node, "Resolution of parameter type in function " + functionName + " is impossible."
                     + " Please disambiguate the method signature by assigning the result of this"
                     + " external function call to a local variable, and using that local variable"
-                    + " as argument to this function call instead.");
-  }
-
-  // This node
-  public static void staticUseOfThis(SimpleNode node) {
-    error(node, "Cannot use 'this' in a static context");
+                    + " as argument to this function call instead");
   }
 
   // Function call node
   public static void deducedReturnType(SimpleNode node, TypeDescriptor returnType,
                                        String functionName, FunctionSignature signature) {
-    warning(node, "Deduced return type of function " + functionName + signature + " to "
-                      + returnType + " because of context");
+    note(node, "Deduced return type of function " + functionName + signature + " to " + returnType);
   }
 
   private static void error(SimpleNode node, String message) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    String preamble = self.file.getName() + ":" + errorLine + ":" + errorCol + ": Error: ";
-    // String preamble = self.file.getName() + ":" + errorLine + ": Error: ";
-    System.err.println(preamble + message + ".");
-    self.pointer(errorLine, errorCol);
+    print(node, message, "Error", ANSI_RED);
   }
 
   private static void warning(SimpleNode node, String message) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    String preamble = self.file.getName() + ":" + errorLine + ":" + errorCol + ": Warning: ";
-    // String preamble = self.file.getName() + ":" + errorLine + ": Error: ";
-    System.err.println(preamble + message + ".");
-    self.pointer(errorLine, errorCol);
+    if (SUPPRESS_WARNINGS) return;
+    print(node, message, "Warning", ANSI_PURPLE);
   }
 
-  private void pointer(int errorLine, int errorCol) {
+  private static void note(SimpleNode node, String message) {
+    if (SUPPRESS_NOTES) return;
+    print(node, message, "note", ANSI_CYAN);
+  }
+
+  private static void print(SimpleNode node, String message, String header, String ansicolor) {
+    int errorLine = node.jjtGetFirstToken().beginLine;
+    int errorCol = node.jjtGetFirstToken().beginColumn;
+    String preamble = self.file.getName() + ":" + errorLine + ":" + errorCol;
+    preamble += ": " + ansicolor + header + ANSI_RESET + ": ";
+    System.err.println(preamble + message + ".");
+    self.pointer(errorLine, errorCol, ansicolor);
+  }
+
+  private void pointer(int errorLine, int errorCol, String ansicolor) {
     char[] data = new char[errorCol - 1];
     Arrays.fill(data, ' ');
     System.err.println(lines.get(errorLine - 1));
     for (int i = 0; i < errorCol - 1; i++) {
       System.err.print(" ");
     }
-    System.err.println("^\n");
+    System.err.println(ansicolor + "^" + ANSI_RESET + "\n");
   }
+
+  private static final String ANSI_RESET = "\u001B[0m";
+  private static final String ANSI_BLACK = "\u001B[30m";
+  private static final String ANSI_RED = "\u001B[31m";
+  private static final String ANSI_GREEN = "\u001B[32m";
+  private static final String ANSI_YELLOW = "\u001B[33m";
+  private static final String ANSI_BLUE = "\u001B[34m";
+  private static final String ANSI_PURPLE = "\u001B[35m";
+  private static final String ANSI_CYAN = "\u001B[36m";
+  private static final String ANSI_WHITE = "\u001B[37m";
 }

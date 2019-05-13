@@ -7,7 +7,7 @@ import compiler.symbols.JMMFunction;
 import jjt.SimpleNode;
 
 class DAGBuilder extends CompilationStatus {
-  final CompilationData data;
+  private final CompilationData data;
 
   DAGBuilder(CompilationData data) {
     this.data = data;
@@ -24,7 +24,7 @@ class DAGBuilder extends CompilationStatus {
       FunctionLocals locals = data.localsMap.get(function);
       SimpleNode functionNode = data.nodesMap.get(function);
 
-      DAGMulti body = new NodeFactory(locals).buildMethod(functionNode, this);
+      DAGMulti body = new NodeFactory(locals, this).buildMethod(functionNode);
       assert body != null;
 
       data.bodiesMap.put(function, body);

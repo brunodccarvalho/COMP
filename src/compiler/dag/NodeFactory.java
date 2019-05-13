@@ -12,15 +12,8 @@ import compiler.symbols.TypeDescriptor;
 import jjt.SimpleNode;
 
 public class NodeFactory extends BaseDAGFactory {
-  public NodeFactory(FunctionLocals locals) {
-    super(locals);
-  }
-
-  public DAGMulti buildMethod(SimpleNode methodNode, CompilationStatus tracker) {
-    assert tracker != null;
-    DAGMulti built = buildMethod(methodNode);
-    tracker.update(status());
-    return built;
+  public NodeFactory(FunctionLocals locals, CompilationStatus tracker) {
+    super(locals, tracker);
   }
 
   /**
@@ -65,14 +58,6 @@ public class NodeFactory extends BaseDAGFactory {
   }
 
   @Override
-  public DAGNode build(SimpleNode node, CompilationStatus tracker) {
-    assert tracker != null;
-    DAGNode built = build(node);
-    tracker.update(status());
-    return built;
-  }
-
-  @Override
   public DAGNode build(SimpleNode node) {
     assert node != null;
 
@@ -105,9 +90,9 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode childNode = node.jjtGetChild(0);
 
     if (childNode.is(JJTASSIGNMENT)) {
-      return new AssignmentFactory(locals).build(childNode, this);
+      return new AssignmentFactory(locals, this).build(childNode);
     } else {
-      return new ExpressionFactory(locals).build(childNode, this);
+      return new ExpressionFactory(locals, this).buildStatement(childNode);
     }
   }
 
@@ -124,8 +109,8 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode conditionNode = node.jjtGetChild(0);
     SimpleNode bodyNode = node.jjtGetChild(1);
 
-    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this,
-                                                                  booleanDescriptor);
+    DAGExpression condition = new ExpressionFactory(locals, this)
+                                  .build(conditionNode, booleanDescriptor);
     DAGNode loopBody = build(bodyNode);
 
     return new DAGWhile(new DAGCondition(condition), loopBody);
@@ -146,8 +131,8 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode thenNode = node.jjtGetChild(1);
     SimpleNode elseNode = node.jjtGetChild(2);
 
-    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this,
-                                                                  booleanDescriptor);
+    DAGExpression condition = new ExpressionFactory(locals, this)
+                                  .build(conditionNode, booleanDescriptor);
     DAGNode thenBody = build(thenNode);
     DAGNode elseBody = build(elseNode);
 
@@ -188,7 +173,7 @@ public class NodeFactory extends BaseDAGFactory {
 
     TypeDescriptor expected = locals.getFunction().getReturnType();
 
-    DAGExpression returned = new ExpressionFactory(locals).build(expressionNode, this, expected);
+    DAGExpression returned = new ExpressionFactory(locals, this).build(expressionNode, expected);
 
     return new DAGReturnExpression(returned);
   }

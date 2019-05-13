@@ -32,9 +32,6 @@ public abstract class TypeDescriptor extends Descriptor {
   // The descriptor of "void"
   public static final VoidDescriptor voidDescriptor = new VoidDescriptor();
 
-  // The descriptor of an unknown type
-  public static final PrimitiveDescriptor unknownResolvedType = PrimitiveDescriptor.intDescriptor;
-
   /**
    * @param name A typename being resolved.
    * @return The TypeDescriptor instance for the given typename, or null if none

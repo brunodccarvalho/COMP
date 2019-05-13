@@ -88,12 +88,4 @@ public class FunctionSignature {
     FunctionSignature other = (FunctionSignature) obj;
     return Arrays.equals(parameterTypes, other.parameterTypes);
   }
-
-  void deduceUnknowns() {
-    for (int i = 0; i < parameterTypes.length; ++i) {
-      if (parameterTypes[i] == null) {
-        parameterTypes[i] = TypeDescriptor.unknownResolvedType;
-      }
-    }
-  }
 }

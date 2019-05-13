@@ -233,33 +233,6 @@ public class JMMClassDescriptor extends ClassDescriptor {
   }
 
   @Override
-  public Deduction deduce(String name, FunctionSignature signature, TypeDescriptor returnType) {
-    HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
-    if (map == null || map.isEmpty()) return new Deduction(null, false, false);
-
-    ArrayList<JMMMethodDescriptor> list = new ArrayList<>();
-
-    for (FunctionSignature msig : map.keySet()) {
-      JMMMethodDescriptor method = map.get(msig);
-      if (returnType == method.getReturnType() && FunctionSignature.matches(signature, msig)) {
-        list.add(method);
-      }
-    }
-
-    if (list.isEmpty())
-      return new Deduction(null, false, false);
-    else if (list.size() == 1)
-      return new Deduction(list.get(0), true, false);
-    else
-      return new Deduction(list.get(0), true, true);
-  }
-
-  @Override
-  public Deduction deduceStatic(String name, FunctionSignature multi, TypeDescriptor returnType) {
-    return new Deduction(null, false, false);
-  }
-
-  @Override
   public Deduction deduce(String name, FunctionSignature signature) {
     HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
     if (map == null || map.isEmpty()) return new Deduction(null, false, false);

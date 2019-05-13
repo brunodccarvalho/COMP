@@ -3,7 +3,6 @@ package compiler.dag;
 import static jjt.jmmTreeConstants.*;
 
 import static compiler.symbols.PrimitiveDescriptor.*;
-import static compiler.symbols.TypeDescriptor.typematch;
 
 import compiler.modules.CompilationStatus;
 import compiler.modules.DiagnosticsHandler;
@@ -24,26 +23,16 @@ import jjt.SimpleNode;
 public class AssignmentFactory extends BaseDAGFactory {
   private final ExpressionFactory factory;
 
-  AssignmentFactory(FunctionLocals locals) {
-    super(locals);
-    this.factory = new ExpressionFactory(locals);
-  }
-
-  @Override
-  public DAGAssignment build(SimpleNode assignmentNode, CompilationStatus tracker) {
-    assert tracker != null;
-    DAGAssignment assignment = build(assignmentNode);
-    tracker.update(status());
-    return assignment;
+  AssignmentFactory(FunctionLocals locals, CompilationStatus tracker) {
+    super(locals, tracker);
+    this.factory = new ExpressionFactory(locals, this);
   }
 
   /**
-   * Construct a new DAGAssignment for this SimpleNode. It is possible for this node to be
-   * a simple assignment node (variable = Expression) or a bracket assignment (variable[Expression]
-   * = expression). DAGAssignments cannot be reused.
+   * Build method #1: Transform a top-level assignment node into a DAGAssignment.
    *
-   * @param assignmentNode The AST's SimpleNode object representing an assignment.
-   * @return The DAGExpression node.
+   * @param node The AST's SimpleNode object.
+   * @return The DAGAssignment node.
    */
   @Override
   public DAGAssignment build(SimpleNode assignmentNode) {
@@ -60,8 +49,6 @@ public class AssignmentFactory extends BaseDAGFactory {
   }
 
   /**
-   * @SemanticError: Type mismatch: expected type T, but expression has type E.
-   *
    * @param assignmentNode A JJT node representing a variable assignment.
    * @return A new DAGAssignment, holding the variable and the expression.
    */
@@ -79,8 +66,6 @@ public class AssignmentFactory extends BaseDAGFactory {
   }
 
   /**
-   * @SemanticError: Type mismatch: expected type int, but expression has type E.
-   *
    * @param assignmentNode A JJT node representing an array assignment.
    * @return A new DAGBracketAssignment, holding the variable and the expression.
    */

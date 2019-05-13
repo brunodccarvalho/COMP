@@ -2,7 +2,6 @@ package compiler.dag;
 
 import static jjt.jmmTreeConstants.*;
 import static compiler.symbols.PrimitiveDescriptor.*;
-import static compiler.symbols.TypeDescriptor.typematch;
 
 import java.util.HashMap;
 
@@ -33,34 +32,42 @@ public class ExpressionFactory extends BaseDAGFactory {
   /**
    * @param locals The table of locals variables.
    */
-  ExpressionFactory(FunctionLocals locals) {
-    super(locals);
+  ExpressionFactory(FunctionLocals locals, CompilationStatus tracker) {
+    super(locals, tracker);
     this.transformer = new ExpressionOptimizer(this);
   }
 
-  public DAGExpression build(SimpleNode node, CompilationStatus tracker, TypeDescriptor type) {
-    assert tracker != null;
-    DAGExpression expression = build(node, type);
-    tracker.update(status());
-    return expression;
-  }
-
-  public DAGExpression build(SimpleNode node, TypeDescriptor type) {
+  /**
+   * Build method #3: Transform a top-level statement expression node into a DAGExpression.
+   *
+   * @param node The AST's SimpleNode object.
+   * @return The DAGExpression node.
+   */
+  public DAGExpression buildStatement(SimpleNode node) {
     DAGExpression expression = build(node);
-    return assertType(expression, type, node);
-  }
-
-  @Override
-  public DAGExpression build(SimpleNode node, CompilationStatus tracker) {
-    assert tracker != null;
-    DAGExpression expression = build(node);
-    tracker.update(status());
+    assertStatement(expression, node);
     return expression;
   }
 
   /**
-   * Construct a new DAGExpression for this SimpleNode. It is possible for an equivalent
-   * DAGExpression to exist in the expression cache.
+   * Build method #2: Transform node into a DAGExpression of the given type.
+   *
+   *  ! Required type for the returned DAGExpression
+   *
+   * @param node The AST's SimpleNode object.
+   * @param type The expected type of the returned DAGExpression.
+   * @return The DAGExpression node.
+   */
+  public DAGExpression build(SimpleNode node, TypeDescriptor type) {
+    DAGExpression expression = build(node);
+    assertType(expression, type, node);
+    return expression;
+  }
+
+  /**
+   * Build method #1: Plainly transform node into a DAGExpression.
+   *
+   *  * No required type for the returned DAGExpression
    *
    * @param node The AST's SimpleNode object.
    * @return The DAGExpression node.
@@ -203,7 +210,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     SimpleNode indexExpressionNode = node.jjtGetChild(0);
     DAGExpression expression = reuse(build(indexExpressionNode));
 
-    expression = assertType(expression, intDescriptor, indexExpressionNode);
+    assertType(expression, intDescriptor, indexExpressionNode);
 
     return new DAGNewIntArray(expression);
   }
@@ -364,17 +371,30 @@ public class ExpressionFactory extends BaseDAGFactory {
     // Attempt deduction.
     else {
       Deduction deduction = classDescriptor.deduceStatic(staticName, signature);
-      assert deduction.wasSuccess();
 
-      if (!deduction.wereMultiple()) {
+      // ERROR #4: Function is external, and some parameter has unknown type
+      if (!deduction.wasSuccess()) {
+        for (int i = 0; i < numArguments; ++i) {
+          if (arguments[i].getType() == null) {
+            SimpleNode argNode = argumentListNode.jjtGetChild(i);
+            DiagnosticsHandler.cantDeduceParameterType(argNode, staticName);
+            break;
+          }
+        }
+        update(Codes.MAJOR_ERRORS);
+      }
+      // ERROR #5: Multiple overloads found
+      else if (deduction.wereMultiple()) {
+        DiagnosticsHandler.multipleOverloads(node, staticName, signature);
+        update(Codes.MAJOR_ERRORS);
+      }
+      // All good!
+      else {
         CallableDescriptor callable = deduction.getCallable();
         DAGStaticCall call = new DAGStaticCall(staticName, signature, callable, arguments);
-        assertArgumentList(call, node);  // TODO (REDO)
+        assertArgumentList(call, node);
         return call;
       }
-
-      DiagnosticsHandler.multipleOverloadsStatic(node, staticName, signature, className);
-      update(Codes.MAJOR_ERRORS);
     }
 
     return new DAGStaticCall(classDescriptor, staticName, signature, arguments);
@@ -432,19 +452,31 @@ public class ExpressionFactory extends BaseDAGFactory {
       // Attempt deduction.
       else {
         Deduction deduction = classDescriptor.deduce(methodName, signature);
-        assert deduction.wasSuccess();
 
-        // Dispatch to return type overload resolution?
-        if (!deduction.wereMultiple()) {
+        // ERROR #4: Function is external, and some parameter has unknown type
+        if (!deduction.wasSuccess()) {
+          for (int i = 0; i < numArguments; ++i) {
+            if (arguments[i].getType() == null) {
+              SimpleNode argNode = argumentListNode.jjtGetChild(i);
+              DiagnosticsHandler.cantDeduceParameterType(argNode, methodName);
+              break;
+            }
+          }
+          update(Codes.MAJOR_ERRORS);
+        }
+        // ERROR #5: Multiple overloads found
+        else if (deduction.wereMultiple()) {
+          DiagnosticsHandler.multipleOverloads(node, methodName, signature);
+          update(Codes.MAJOR_ERRORS);
+        }
+        // All good!
+        else {
           CallableDescriptor callable = deduction.getCallable();
           DAGMethodCall call = new DAGMethodCall(object, methodName, signature, callable,
                                                  arguments);
           assertArgumentList(call, node);
           return call;
         }
-
-        DiagnosticsHandler.multipleOverloads(node, methodName, signature, className);
-        update(Codes.MAJOR_ERRORS);
       }
     }
 
@@ -547,16 +579,16 @@ public class ExpressionFactory extends BaseDAGFactory {
    * @param node       The SimpleNode used to construct the expression, for diagnostics.
    * @return The DAGExpression node.
    */
-  private DAGExpression assertType(DAGExpression expression, TypeDescriptor type, SimpleNode node) {
+  private void assertType(DAGExpression expression, TypeDescriptor type, SimpleNode node) {
     assert expression != null && node != null;
-    if (type == null) return expression;
+    if (type == null) return;
 
     if (expression instanceof DAGCall) {
       DAGCall call = (DAGCall) expression;
 
       if (call.isNotDeduced()) {
         deduceUnknownCallType(call, type, node);
-        return call;
+        return;
       }
     }
 
@@ -565,7 +597,7 @@ public class ExpressionFactory extends BaseDAGFactory {
       update(Codes.MAJOR_ERRORS);
     }
 
-    return expression;
+    return;
   }
 
   /**
@@ -578,7 +610,7 @@ public class ExpressionFactory extends BaseDAGFactory {
    * @param node       The SimpleNode used to construct the expression, for diagnostics.
    * @return The DAGExpression node.
    */
-  private DAGExpression assertStatement(DAGExpression expression, SimpleNode node) {
+  private void assertStatement(DAGExpression expression, SimpleNode node) {
     assert expression != null && node != null;
 
     if (expression instanceof DAGCall) {
@@ -586,22 +618,29 @@ public class ExpressionFactory extends BaseDAGFactory {
 
       if (call.isNotDeduced()) {
         deduceUnknownCallStatement(call, node);
-        return call;
+        return;
       }
     }
 
-    return expression;
+    return;
   }
 
   private void deduceUnknownCallType(DAGCall call, TypeDescriptor type, SimpleNode node) {
     assert call.isNotDeduced();
     ((JavaCallableDescriptor) call.getCallable()).deduceReturnType(type);
+
+    String functionName = call.getMethodName();
+    FunctionSignature original = call.getOriginalSignature();
+    DiagnosticsHandler.deducedReturnType(node, type, functionName, original);
   }
 
   private void deduceUnknownCallStatement(DAGCall call, SimpleNode node) {
     assert call.isNotDeduced();
     ((JavaCallableDescriptor) call.getCallable()).deduceReturnType(voidDescriptor);
-    DiagnosticsHandler.returnTypeDeduced(node, call.getMethodName());
+
+    String functionName = call.getMethodName();
+    FunctionSignature original = call.getOriginalSignature();
+    DiagnosticsHandler.deducedReturnType(node, voidDescriptor, functionName, original);
   }
 
   private void assertArgumentList(DAGCall call, SimpleNode node) {
