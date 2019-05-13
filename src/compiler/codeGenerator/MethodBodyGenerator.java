@@ -2,6 +2,7 @@ package compiler.codeGenerator;
 
 import compiler.codeGenerator.utils.LabelGenerator;
 import compiler.dag.DAGAssignment;
+import compiler.dag.DAGBracketAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIfElse;
 import compiler.dag.DAGMulti;
@@ -44,7 +45,10 @@ public class MethodBodyGenerator {
     private void generateStatement(DAGNode statement) {
         BaseStatement baseStatement = null;
         if(statement instanceof DAGAssignment) {
-            baseStatement = new Assignment(this.function, (DAGAssignment)statement);
+            if(statement instanceof DAGBracketAssignment)
+                baseStatement = new BracketAssignment(this.function, (DAGBracketAssignment)statement);
+            else
+                baseStatement = new Assignment(this.function, (DAGAssignment)statement);
         }
         else if(statement instanceof DAGExpression)
             baseStatement = new Expression(this.function, (DAGExpression)statement);

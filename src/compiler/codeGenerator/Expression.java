@@ -3,12 +3,12 @@ package compiler.codeGenerator;
 import compiler.dag.BinaryOperator;
 import compiler.dag.DAGBinaryOp;
 import compiler.dag.DAGBooleanConstant;
+import compiler.dag.DAGBracket;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
-import compiler.dag.DAGLocal;
-import compiler.dag.DAGMember;
 import compiler.dag.DAGMethodCall;
-import compiler.dag.DAGParameter;
+import compiler.dag.DAGNewIntArray;
+import compiler.dag.DAGVariable;
 
 public class Expression extends BaseStatement {
 
@@ -35,19 +35,9 @@ public class Expression extends BaseStatement {
             Operator operatorBody = new Operator(operator);
             expressionBody = expressionBody.concat(lhsBody.toString()).concat(rhsBody.toString()).concat(operatorBody.toString());
         }
-        else if(expression instanceof DAGMember)
-        {
-            MemberLoad member = new MemberLoad((DAGMember)expression);
-            expressionBody = expressionBody.concat(member.toString());
-        }
-        else if(expression instanceof DAGLocal) {
-            Load loadBody = new Load(this.function, (DAGLocal)expression);
-            expressionBody = expressionBody.concat(loadBody.toString());
-        }
-        else if(expression instanceof DAGParameter)
-        {
-            LoadParameter member = new LoadParameter((DAGParameter)expression);
-            expressionBody = expressionBody.concat(member.toString());
+        else if(expression instanceof DAGVariable) {
+            Variable variable = new Variable(this.function, (DAGVariable)expression);
+            expressionBody = expressionBody.concat(variable.toString());
         }
         else if(expression instanceof DAGIntegerConstant) {
             IntegerPush integerLoadBody = new IntegerPush((DAGIntegerConstant)expression);
@@ -60,6 +50,14 @@ public class Expression extends BaseStatement {
         else if(expression instanceof DAGBooleanConstant) {
             BooleanConstant booleanConstant = new BooleanConstant((DAGBooleanConstant)expression);
             expressionBody = expressionBody.concat(booleanConstant.toString());
+        }
+        else if(expression instanceof DAGBracket) {
+            BracketAccess bracketAccess = new BracketAccess(this.function, (DAGBracket)expression);
+            expressionBody = expressionBody.concat(bracketAccess.toString());
+        }
+        else if(expression instanceof DAGNewIntArray) {
+            NewIntArray newObject = new NewIntArray(this.function, (DAGNewIntArray)expression);
+            expressionBody = expressionBody.concat(newObject.toString());
         }
 
         // TODO: missing some instances of expression?

@@ -44,6 +44,7 @@ public abstract class Conditional extends BaseStatement {
             if(operator == BinaryOperator.LT) {
                 this.cond = IfElse.IFGE;
                 this.condBody = this.generateLESSCondition((DAGBinaryOp)dagExpression);
+                return;
             }
         }
         this.condBody = this.generateEQCondition(dagExpression);
