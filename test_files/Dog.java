@@ -15,14 +15,14 @@ class Dog {
     int x;
     int y;
     // foodEaten = new int[2];
-    foodEaten[0] = -3;
-    /*
+    // foodEaten[0] = -3;
+    
     if (true) {
       x = 2;
     } else {
       y = 1;
     }
-    */
+    
     return numberKm;
   }
 }
