@@ -2,7 +2,7 @@ package compiler.symbols;
 
 import java.util.Objects;
 
-import compiler.FunctionSignature;
+import compiler.symbols.FunctionSignature;
 
 /**
  * A descriptor for a JMM class's main method.
@@ -20,7 +20,9 @@ public class JMMMainDescriptor
    * @param paramName The name of the String[] parameter
    */
   public JMMMainDescriptor(JMMClassDescriptor parent, String paramName) {
-    super("main", parent, TypeDescriptor.voidDescriptor, new FunctionSignature(new TypeDescriptor[]{TypeDescriptor.getOrCreate("String[]")}), new String[]{paramName});
+    super("main", parent, TypeDescriptor.voidDescriptor,
+          new FunctionSignature(new TypeDescriptor[] {TypeDescriptor.getOrCreate("String[]")}),
+          new String[] {paramName});
     assert paramName != null && !parent.hasMain();
     this.paramName = paramName;
     parent.setMain(this);

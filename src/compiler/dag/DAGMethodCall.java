@@ -8,6 +8,7 @@ import compiler.symbols.ClassDescriptor;
 public class DAGMethodCall extends DAGCall {
   final DAGExpression expression;
 
+  // Unresolved return type for propagation
   DAGMethodCall(DAGExpression expression, String methodName, FunctionSignature signature,
                 DAGExpression[] arguments) {
     super(methodName, signature, arguments);
@@ -15,6 +16,7 @@ public class DAGMethodCall extends DAGCall {
     this.expression = expression;
   }
 
+  // Proper constructor
   DAGMethodCall(DAGExpression expression, String methodName, FunctionSignature signature,
                 CallableDescriptor callable, DAGExpression[] arguments) {
     super(methodName, signature, callable, arguments);
@@ -46,10 +48,5 @@ public class DAGMethodCall extends DAGCall {
   @Override
   public String toString() {
     return expression.toString() + super.toString();
-  }
-
-  @Override
-  public TypeDescriptor getCallClassUnchecked() {
-    return expression == null ? null : expression.getType();
   }
 }

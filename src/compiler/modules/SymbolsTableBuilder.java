@@ -99,7 +99,7 @@ public class SymbolsTableBuilder extends CompilationStatus {
 
     // ERROR: Repeated class member variable.
     if (data.jmmClass.resolve(identifier) != null) {
-      DiagnosticsHandler.varAlreadyDefined(nameNode, identifier);
+      DiagnosticsHandler.memberAlreadyDefined(nameNode, identifier);
       update(Codes.MINOR_ERRORS);
       return;
     }

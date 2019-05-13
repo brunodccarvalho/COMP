@@ -1,6 +1,7 @@
 package compiler.dag;
 
 import compiler.symbols.FunctionSignature;
+import compiler.symbols.JavaCallableDescriptor;
 import compiler.symbols.CallableDescriptor;
 import compiler.symbols.ClassDescriptor;
 import compiler.symbols.TypeDescriptor;
@@ -9,9 +10,9 @@ public abstract class DAGCall extends DAGExpression {
   final String methodName;
   final DAGExpression[] arguments;
   final FunctionSignature original;
-  CallableDescriptor callable;
-  TypeDescriptor returnType;
+  final CallableDescriptor callable;
 
+  // Unresolved return type for propagation
   DAGCall(String methodName, FunctionSignature original, DAGExpression[] arguments) {
     assert methodName != null && original != null && arguments != null;
     assert original.getNumParameters() == arguments.length;
@@ -19,9 +20,9 @@ public abstract class DAGCall extends DAGExpression {
     this.original = original;
     this.arguments = arguments;
     this.callable = null;
-    this.returnType = null;
   }
 
+  // Proper constructor
   DAGCall(String methodName, FunctionSignature original, CallableDescriptor callable,
           DAGExpression[] arguments) {
     assert methodName != null && original != null && callable != null && arguments != null;
@@ -32,17 +33,18 @@ public abstract class DAGCall extends DAGExpression {
     this.original = original;
     this.arguments = arguments;
     this.callable = callable;
-    this.returnType = callable.getReturnType();  // possibly null
   }
 
   /**
    * @return true if this call is a static method call, false otherwise.
+   *         instanceof on DAGMethodCall / DAGStaticCall can be used as well.
    */
   public abstract boolean isStatic();
 
   /**
    * @return The Class this method belongs to.
    *         If the method is static, its being invoked on this class.
+   *         If the method is not static, its being invoked on an object of this class.
    */
   public abstract ClassDescriptor getCallClass();
 
@@ -90,7 +92,7 @@ public abstract class DAGCall extends DAGExpression {
 
   @Override
   public TypeDescriptor getType() {
-    return returnType;
+    return callable == null ? null : callable.getReturnType();
   }
 
   /* (non-Javadoc)
@@ -115,54 +117,19 @@ public abstract class DAGCall extends DAGExpression {
     return string.toString();
   }
 
-  // ****** Package internals for ExpressionResolver
+  // ****** Package internals for ExpressionFactory
 
-  /**
-   * Set the callable CallableDescriptor matching this invocation.
-   */
-  void setDeducedCallable(CallableDescriptor callable, TypeDescriptor returnType) {
-    assert callable.isStatic() == isStatic();
-    assert callable.getParentClass() == getCallClass();
-    assert FunctionSignature.matches(original, callable.getSignature());
-    assert methodName.equals(callable.getName());
-    assert callable.getReturnType() == returnType;
-    this.callable = callable;
-    this.returnType = returnType;
+  boolean isNotDeduced() {
+    return callable != null && callable.getReturnType() == null
+        && callable instanceof JavaCallableDescriptor;
   }
 
-  /**
-   * We could not resolve the callable, set the return type so we can keep going.
-   */
-  void setDeducedReturnType(TypeDescriptor returnType) {
-    assert returnType != null;
-    this.returnType = returnType;
-  }
-
-  /**
-   * Set an argument of this invocation, it might have changed after an assertType
-   * and an optimize.
-   */
-  void setArgument(int index, DAGExpression argument) {
-    assert index < arguments.length;
-    this.arguments[index] = argument;
-  }
-
-  /**
-   * @return True if this DAGCall has a callable and a return type.
-   */
-  boolean isDeduced() {
-    return returnType != null;
-  }
-
-  /**
-   * @return This method's original signature.
-   */
   FunctionSignature getOriginalSignature() {
     return original;
   }
 
-  /**
-   * Unchecked getCallClass()
-   */
-  abstract TypeDescriptor getCallClassUnchecked();
+  void deduce(TypeDescriptor returnType) {
+    assert callable instanceof JavaCallableDescriptor;
+    ((JavaCallableDescriptor) callable).deduceReturnType(returnType);
+  }
 }

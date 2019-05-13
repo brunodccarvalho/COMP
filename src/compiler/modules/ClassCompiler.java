@@ -40,14 +40,10 @@ public final class ClassCompiler extends CompilationStatus {
       buildInternalRepresentations();
       if (onErrorLevel(Codes.MINOR_ERRORS)) return this;
 
-      deduceSignatures();
-      if (onErrorLevel(Codes.MINOR_ERRORS)) return this;
-
-      generateCode();
-      writeToFile();
+      // generateCode();
+      // writeToFile();
     } catch (CompilationException e) {
       System.err.println(e.getMessage());
-      e.printStackTrace();
       update(Codes.FATAL);
     }
     return this;
@@ -90,15 +86,7 @@ public final class ClassCompiler extends CompilationStatus {
   }
 
   /**
-   * 4. Deduce unknown function signatures.
-   * * Compiler proper.
-   */
-  private void deduceSignatures() {
-    // ...
-  }
-
-  /**
-   * 5. Build the code representations for each of the methods.
+   * 4. Build the code representations for each of the methods.
    * ... or something. Rename this...
    * * Assembler
    */
@@ -109,7 +97,7 @@ public final class ClassCompiler extends CompilationStatus {
   }
 
   /**
-   * 6. Write everything to output file.
+   * 5. Write everything to output file.
    */
   private void writeToFile() {
     // ...

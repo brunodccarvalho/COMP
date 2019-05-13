@@ -8,19 +8,15 @@ import compiler.symbols.VariableDescriptor;
 public class DAGVariable extends DAGExpression {
   final VariableDescriptor var;
 
-  DAGVariable(VariableDescriptor var) {
-    assert var != null;
-    this.var = var;
-  }
-
-  // Dummy variable constructor.
+  // Dummy variable constructor, for propagation
   DAGVariable() {
     this.var = null;
   }
 
-  // Internal method for ExpressionFactory and AssignmentFactory.
-  boolean isDummy() {
-    return var == null;
+  // Proper constructor
+  DAGVariable(VariableDescriptor var) {
+    assert var != null;
+    this.var = var;
   }
 
   /**
@@ -67,5 +63,10 @@ public class DAGVariable extends DAGExpression {
     if (!(obj instanceof DAGVariable)) return false;
     DAGVariable other = (DAGVariable) obj;
     return Objects.equals(var, other.var);
+  }
+
+  // Internal method for ExpressionFactory and AssignmentFactory.
+  boolean isDummy() {
+    return var == null;
   }
 }

@@ -38,9 +38,4 @@ public class DAGStaticCall extends DAGCall {
   public String toString() {
     return classDescriptor.toString() + super.toString();
   }
-
-  @Override
-  public ClassDescriptor getCallClassUnchecked() {
-    return classDescriptor;
-  }
 }

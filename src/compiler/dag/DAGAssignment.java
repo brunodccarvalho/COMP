@@ -17,6 +17,7 @@ public class DAGAssignment extends DAGNode {
   final DAGVariable assignVariable;
   final DAGExpression assignedExpression;
 
+  // Proper constructor, variable may be null during propagation.
   DAGAssignment(DAGVariable assignVariable, DAGExpression assignedExpression) {
     assert assignVariable != null && assignedExpression != null;
     this.assignVariable = assignVariable;
