@@ -15,8 +15,6 @@ import java.util.Arrays;
 /**
  * Handles I/O logging of various compilation diagnostics, let it be
  * information, warnings or errors.
- *
- * TODO
  */
 public class DiagnosticsHandler {
   private final File file;
@@ -36,7 +34,63 @@ public class DiagnosticsHandler {
     }
   }
 
-  public void errorPointer(int errorLine, int errorCol) {
+  // Any expression node
+  public static void typeMismatch(SimpleNode node, TypeDescriptor expectedType,
+                                  TypeDescriptor foundType) {
+    printError(node, "Type mismatch: expected type " + expectedType + ", but found " + foundType);
+  }
+
+  // Identifier node
+  public static void unresolvedVarName(SimpleNode node, String varName) {
+    printError(node, varName + " cannot be resolved to a variable");
+  }
+
+  // Member variable node
+  public static void memberAlreadyDefined(SimpleNode node, String varName) {
+    printError(node, "Class member " + varName + " has already been defined here");
+  }
+
+  // Function node
+  public static void methodAlreadyDefined(SimpleNode node, String methodName,
+                                          FunctionSignature signature) {
+    printError(node, "Class method " + methodName + signature + " has already been defined");
+  }
+
+  // Function node
+  public static void conflictingParams(SimpleNode node, String methodName,
+                                       FunctionSignature signature) {
+    printError(node, "Class method " + methodName + signature + " has conflicting parameter names");
+  }
+
+  // Main node
+  public static void mainMethodDefined(SimpleNode node) {
+    printError(node, "Main method has already been defined here");
+  }
+
+  // Local variable node
+  public static void localAlreadyDefined(SimpleNode node, String varName, JMMFunction method) {
+    printError(node, "Name " + varName + " has already been locally defined");
+  }
+
+  // Function node
+  public static void paramAlreadyDefined(SimpleNode node, String varName, JMMFunction method) {
+    printError(node, "Locally defined " + varName + " is a parameter of " + method);
+  }
+
+  // Integer literal node
+  public static void intLiteralOutOfRange(SimpleNode node, String intLiteral) {
+    printError(node, "Integer literal out of range: " + intLiteral);
+  }
+
+  private static void printError(SimpleNode node, String message) {
+    int errorLine = node.jjtGetFirstToken().beginLine;
+    int errorCol = node.jjtGetFirstToken().beginColumn;
+    String preamble = self.file.getName() + ":" + errorLine + ":" + errorCol + ": Error: ";
+    System.err.println(preamble + message + ".");
+    self.errorPointer(errorLine, errorCol);
+  }
+
+  private void errorPointer(int errorLine, int errorCol) {
     char[] data = new char[errorCol - 1];
     Arrays.fill(data, ' ');
     System.err.println(lines.get(errorLine - 1));
@@ -45,82 +99,4 @@ public class DiagnosticsHandler {
     }
     System.err.println("^\n");
   }
-
-  public static void typeMismatch(SimpleNode node, TypeDescriptor varType,
-                                  TypeDescriptor expressionType) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine + ": Error: "
-                       + "Type mismatch: expected type " + varType + ", but expression has type "
-                       + expressionType);
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void unresolvedVarName(SimpleNode node, String varName) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine + ": Error: " + varName
-                       + " cannot be resolved to a variable");
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void varAlreadyDefined(SimpleNode node, String varName) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine + ": Error: Class member " + varName
-                       + " is already defined");
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void methodAlreadyDefined(SimpleNode node, String methodName,
-                                          FunctionSignature signature) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine + ": Error: Class method " + methodName
-                       + signature + " is already defined");
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void conflictingParams(SimpleNode node, String methodName,
-                                       FunctionSignature signature) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine + ": Error: Class method " + methodName
-                       + signature + " has conflicting parameter names");
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void mainMethodDefined(SimpleNode node) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine
-                       + ": Error: Main method already defined");
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void localAlreadyDefined(SimpleNode node, String varName, JMMFunction method) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine + ": Error: " + varName
-                       + " is already locally defined in " + method);
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void paramAlreadyDefined(SimpleNode node, String varName, JMMFunction method) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine + ": Error: locally defined " + varName
-                       + " is a parameter of " + method);
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  public static void incompatibleTypes(SimpleNode node) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    System.err.println(self.file.getName() + ":" + errorLine
-                       + ": Error: Main method already defined");
-    self.errorPointer(errorLine, errorCol);
-  }
-
-  // ... similar logic to ParseException::initialize
 }

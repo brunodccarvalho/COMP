@@ -75,14 +75,6 @@ public class AssignmentFactory extends BaseDAGFactory {
     DAGVariable variable = buildVariable(variableNode);
     DAGExpression expression = factory.build(expressionNode, variable.getType());
 
-    /*
-    // Error: Type mismatch: Expected type T, but expression has type E.
-    if (!typematch(variable.getType(), expression.getType())) {
-      DiagnosticsHandler.typeMismatch(node, variable.getType(), expression.getType());
-      update(Codes.MAJOR_ERRORS);
-    }
-    */
-
     return new DAGAssignment(variable, expression);
   }
 
@@ -107,27 +99,10 @@ public class AssignmentFactory extends BaseDAGFactory {
     DAGExpression indexExpression = factory.build(indexExpressionNode, intDescriptor);
     DAGExpression assignedExpression = factory.build(assignedExpressionNode, intDescriptor);
 
-    /*
-    // ERROR: Type mismatch in the assigned expression.
-    if (!typematch(intDescriptor, assignedExpression.getType())) {
-      DiagnosticsHandler.typeMismatch(node, intDescriptor, assignedExpression.getType());
-      update(Codes.MAJOR_ERRORS);
-    }
-
-    // ERROR: Type mismatch in the index expression.
-    if (!typematch(intDescriptor, indexExpression.getType())) {
-      DiagnosticsHandler.typeMismatch(indexExpressionNode, intDescriptor,
-                                      assignedExpression.getType());
-      update(Codes.MAJOR_ERRORS);
-    }
-    */
-
     return new DAGBracketAssignment(var, assignedExpression, indexExpression);
   }
 
   /**
-   * @SemanticError: Variable name cannot be resolved to a variable.
-   *
    * @param node A JJT node holding a variable identifier
    * @return A new DAGVariable holding the variable's descriptor.
    */
@@ -137,7 +112,7 @@ public class AssignmentFactory extends BaseDAGFactory {
     String varName = node.jjtGetVal();
     VariableDescriptor var = locals.resolve(varName);
 
-    // ERROR: varName cannot be resolved to a variable.
+    // ERROR: Unresolved variable name.
     if (var == null) {
       DiagnosticsHandler.unresolvedVarName(node, varName);
       update(Codes.MAJOR_ERRORS);

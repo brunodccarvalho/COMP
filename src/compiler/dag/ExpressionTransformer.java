@@ -1,6 +1,12 @@
 package compiler.dag;
 
-interface ExpressionTransformerInterface {
+abstract class ExpressionTransformer {
+  protected final ExpressionFactory factory;
+
+  ExpressionTransformer(ExpressionFactory factory) {
+    this.factory = factory;
+  }
+
   /**
    * Optimize the given DAGExpression node. A simple implementation of this method simply
    * returns the given node immediately, and no optimization is performed in expressions.

@@ -25,15 +25,16 @@ public class ExpressionFactory extends BaseDAGFactory {
   /**
    * Set of DAG expressions already constructed, for common subexpression elimination.
    */
-  private HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
+  private final HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
 
-  private ExpressionTransformerInterface transformer;
+  private final ExpressionTransformer transformer;
 
   /**
    * @param locals The table of locals variables.
    */
   ExpressionFactory(FunctionLocals locals) {
     super(locals);
+    this.transformer = new ExpressionOptimizer(this);
   }
 
   public DAGExpression build(SimpleNode node, CompilationStatus tracker, TypeDescriptor type) {
@@ -103,6 +104,8 @@ public class ExpressionFactory extends BaseDAGFactory {
   }
 
   private DAGExpression reuse(DAGExpression dagNode) {
+    dagNode = transformer.optimize(dagNode);
+
     if (cache.containsKey(dagNode)) {
       return cache.get(dagNode);
     } else {
@@ -112,8 +115,6 @@ public class ExpressionFactory extends BaseDAGFactory {
   }
 
   /**
-   * @SemanticError: Integer literal constant value is not representable.
-   *
    * @param node A JJT node holding an integer literal constant
    * @return A new DAGIntegerConstant holding the constant.
    */
@@ -149,8 +150,6 @@ public class ExpressionFactory extends BaseDAGFactory {
   }
 
   /**
-   * @SemanticError: Variable name cannot be resolved to a variable.
-   *
    * @param node A JJT node holding a variable identifier
    * @return A new DAGVariable holding the variable's descriptor.
    */
@@ -520,8 +519,8 @@ public class ExpressionFactory extends BaseDAGFactory {
                                                  arguments);
           assertArgumentList(call, node);
           return call;
+        } else {
         }
-        // yes
       }
     }
 

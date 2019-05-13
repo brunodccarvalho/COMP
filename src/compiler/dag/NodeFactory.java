@@ -124,15 +124,9 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode conditionNode = node.jjtGetChild(0);
     SimpleNode bodyNode = node.jjtGetChild(1);
 
-    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this);
+    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this,
+                                                                  booleanDescriptor);
     DAGNode loopBody = build(bodyNode);
-
-    // ERROR: Type mismatch in condition expression.
-    if (!typematch(booleanDescriptor, condition.getType())) {
-      System.err.println("Type mismatch: expected boolean condition, but found "
-                         + condition.getType());
-      update(Codes.MINOR_ERRORS);
-    }
 
     return new DAGWhile(new DAGCondition(condition), loopBody);
   }
@@ -152,16 +146,10 @@ public class NodeFactory extends BaseDAGFactory {
     SimpleNode thenNode = node.jjtGetChild(1);
     SimpleNode elseNode = node.jjtGetChild(2);
 
-    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this);
+    DAGExpression condition = new ExpressionFactory(locals).build(conditionNode, this,
+                                                                  booleanDescriptor);
     DAGNode thenBody = build(thenNode);
     DAGNode elseBody = build(elseNode);
-
-    // ERROR: Type mismatch in condition expression.
-    if (!typematch(booleanDescriptor, condition.getType())) {
-      System.err.println("Type mismatch: expected boolean condition, but found "
-                         + condition.getType());
-      update(Codes.MINOR_ERRORS);
-    }
 
     return new DAGIfElse(new DAGCondition(condition), thenBody, elseBody);
   }
@@ -198,16 +186,9 @@ public class NodeFactory extends BaseDAGFactory {
 
     SimpleNode expressionNode = node.jjtGetChild(0);
 
-    DAGExpression returned = new ExpressionFactory(locals).build(expressionNode, this);
-
     TypeDescriptor expected = locals.getFunction().getReturnType();
 
-    // ERROR: Type mismatch: Invalid return type.
-    if (!typematch(expected, returned.getType())) {
-      System.err.println("Type mismatch: expected type " + expected
-                         + " for return expression, but found " + returned.getType());
-      update(Codes.MINOR_ERRORS);
-    }
+    DAGExpression returned = new ExpressionFactory(locals).build(expressionNode, this, expected);
 
     return new DAGReturnExpression(returned);
   }
