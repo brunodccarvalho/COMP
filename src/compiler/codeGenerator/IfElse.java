@@ -9,14 +9,14 @@ public class IfElse extends Conditional {
     /**
      * 1. Condition
      * 2: If condition (IFEQ / IFGE)
-     * 2. Else label
-     * 3. if body
+     * 2. If label
+     * 3. Else body
      * 4. Goto label
-     * 5. Else label
-     * 6. Else body
+     * 5. If label
+     * 6. if body
      * 7. Goto label
      */
-    private static String IFCOND = "?\n\t? ??\n\tgoto ?\n?:?\n?:";
+    private static String IFCOND = "?\n? ??\n\tgoto ?\n?:?\n?:";
 
     public IfElse(Function function, DAGIfElse branch, LabelGenerator labelGenerator) {
         super(function, branch, labelGenerator, IFEQ);
@@ -28,16 +28,16 @@ public class IfElse extends Conditional {
         // Condition
         super.generateCondition();
         
+        // If body and label
+        String ifLabel = this.labelGenerator.nextLabel();
+        DAGNode ifNode = ((DAGIfElse)this.branch).getThenNode();
+        MethodBodyGenerator thenGenerator = new MethodBodyGenerator(this.function, ifNode);
+
         // Else body and label
-        String elseLabel = this.labelGenerator.nextLabel();
+        String gotoLabel = this.labelGenerator.nextLabel();
         DAGNode elseNode = ((DAGIfElse)this.branch).getElseNode();
         MethodBodyGenerator elseGenerator = new MethodBodyGenerator(this.function, elseNode);
 
-        // If body and label
-        String gotoLabel = this.labelGenerator.nextLabel();
-        DAGNode thenNode = ((DAGIfElse)this.branch).getThenNode();
-        MethodBodyGenerator thenGenerator = new MethodBodyGenerator(this.function, thenNode);
-
-        return JVMInst.subst(IFCOND, this.condBody, this.cond, elseLabel, thenGenerator.toString(), gotoLabel, elseLabel, elseGenerator.toString(), gotoLabel);
+        return JVMInst.subst(IFCOND, this.condBody, this.cond, ifLabel, elseGenerator.toString(), gotoLabel, ifLabel, thenGenerator.toString(), gotoLabel);
     }
 }

@@ -27,7 +27,7 @@ public class MethodStackLocals extends JVMInst {
          * protected int numberParam;
          * protected HashMap<Descriptor, Integer> variablesIndexes;
          */
-        this.localsSize = 99;
+        this.localsSize = 999;
 
     }
 

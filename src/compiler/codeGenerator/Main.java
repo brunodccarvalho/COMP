@@ -9,7 +9,7 @@ public class Main extends Function {
 
     Main(JMMMainDescriptor main, CompilationData data) {
         super(main, data);
-        this.localsSize = 99;
+        this.localsSize = 999;
     }
 
     @Override
