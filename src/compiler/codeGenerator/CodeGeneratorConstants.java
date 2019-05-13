@@ -96,7 +96,7 @@ public final class CodeGeneratorConstants {
     /**
      * 1: index of the variable
      */
-    public static String STOREADDRESS = "\tastore ?";
+    public static String STOREADDRESS = "\n\tastore ?";
     /**
      * 1: index of the variable
      */

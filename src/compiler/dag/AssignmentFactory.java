@@ -3,7 +3,6 @@ package compiler.dag;
 import static jjt.jmmTreeConstants.*;
 
 import static compiler.symbols.PrimitiveDescriptor.*;
-import static compiler.symbols.TypeDescriptor.typematch;
 
 import compiler.modules.CompilationStatus;
 import compiler.modules.DiagnosticsHandler;

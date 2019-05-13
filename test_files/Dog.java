@@ -1,7 +1,8 @@
 class Dog {
-  int availableFood  //;
-      int hoursSleep;
+  int availableFood;
+  int hoursSleep;
   int numberKm;
+  int[] foodEaten;
 
   public static void main(String[] args) {
     boolean full;
@@ -13,12 +14,15 @@ class Dog {
     int sleepEatFactor;
     int x;
     int y;
+    foodEaten = new int[2];
+    foodEaten[0] = foodEaten[1];
+    /*
     if (true) {
       x = 2;
     } else {
       y = 1;
     }
+    */
     return numberKm;
   }
-  return numberKm;
 }

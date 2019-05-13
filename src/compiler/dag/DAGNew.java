@@ -1,6 +1,6 @@
 package compiler.dag;
 
-abstract class DAGNew extends DAGExpression {
+public abstract class DAGNew extends DAGExpression {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */

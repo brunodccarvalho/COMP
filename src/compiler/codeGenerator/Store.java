@@ -8,7 +8,7 @@ public class Store extends MethodBodyContent {
     /**
      * 1: index of the variable
      */
-    public static String STOREADDRESS = "\tastore ?";
+    public static String STOREADDRESS = "\n\tastore ?";
     private VariableDescriptor variableDescriptor;
     private Integer variableIndex;
 

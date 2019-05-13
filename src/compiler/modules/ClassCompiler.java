@@ -40,8 +40,8 @@ public final class ClassCompiler extends CompilationStatus {
       buildInternalRepresentations();
       if (onErrorLevel(Codes.MINOR_ERRORS)) return this;
 
-      // generateCode();
-      // writeToFile();
+      generateCode();
+      
     } catch (CompilationException e) {
       System.err.println(e.getMessage());
       update(Codes.FATAL);
