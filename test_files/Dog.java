@@ -17,10 +17,8 @@ class Dog {
     // foodEaten = new int[2];
     // foodEaten[0] = -3;
     
-    if (true) {
-      x = 2;
-    } else {
-      y = 1;
+    while(1 < 2) {
+      x = x + 1;
     }
     
     return numberKm;
