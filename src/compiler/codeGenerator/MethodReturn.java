@@ -25,13 +25,13 @@ public class MethodReturn extends JVMInst {
     private Expression expression;
     private Method belongs;
 
-    MethodReturn(CodeGenerator codeGenerator, Method belongs, DAGExpression returnExpression) {
+    /*MethodReturn(CodeGenerator codeGenerator, Method belongs, DAGExpression returnExpression) {
         this.codeGenerator = codeGenerator;
         this.belongs = belongs;
         this.returnType = returnExpression.getType();
         this.expression = new Expression(this.codeGenerator, returnExpression);
 
-    }
+    }*/
 
     @Override
     public String toString() {
