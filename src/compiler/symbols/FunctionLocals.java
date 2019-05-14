@@ -95,6 +95,27 @@ public class FunctionLocals extends Descriptor {
       return function.resolve(name);
   }
 
+  /**
+   * @return The number of declared local variables.
+   */
+  public int numLocalVariables() {
+    return variables.size();
+  }
+
+  /**
+   * @return The number of parameters.
+   */
+  public int numParameters() {
+    return function.getNumParameters();
+  }
+
+  /**
+   * @return The total size of the local variables table.
+   */
+  public int localsTableSize() {
+    return (function.isStatic() ? 0 : 1) + numParameters() + numLocalVariables();
+  }
+
   @Override
   public String toString() {
     StringBuilder string = new StringBuilder();
