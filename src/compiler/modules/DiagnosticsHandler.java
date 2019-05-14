@@ -140,8 +140,10 @@ public class DiagnosticsHandler {
   }
 
   // Parameter node
-  public static void cantDeduceParameterType(SimpleNode node, String functionName) {
-    error(node, "Resolution of parameter type in function " + functionName + " is impossible."
+  public static void cantDeduceParameterType(SimpleNode node, String functionName,
+                                             FunctionSignature signature, String className) {
+    error(node, "Resolution of parameter type in function " + className + "." + functionName
+                    + signature + " is impossible."
                     + " Please disambiguate the method signature by assigning the result of this"
                     + " external function call to a local variable, and using that local variable"
                     + " as argument to this function call instead");

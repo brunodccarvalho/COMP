@@ -359,7 +359,7 @@ public class ExpressionFactory extends BaseDAGFactory {
         for (int i = 0; i < numArguments; ++i) {
           if (arguments[i].getType() == null) {
             SimpleNode argNode = argumentListNode.jjtGetChild(i);
-            DiagnosticsHandler.cantDeduceParameterType(argNode, staticName);
+            DiagnosticsHandler.cantDeduceParameterType(argNode, staticName, signature, className);
             break;
           }
         }
@@ -440,7 +440,7 @@ public class ExpressionFactory extends BaseDAGFactory {
           for (int i = 0; i < numArguments; ++i) {
             if (arguments[i].getType() == null) {
               SimpleNode argNode = argumentListNode.jjtGetChild(i);
-              DiagnosticsHandler.cantDeduceParameterType(argNode, methodName);
+              DiagnosticsHandler.cantDeduceParameterType(argNode, methodName, signature, className);
               break;
             }
           }
