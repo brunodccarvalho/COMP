@@ -291,10 +291,10 @@
     ? DAGNewIntArray       jasmin uses 'newarray int' instead
     + DAGIntegerConstant
     + DAGBooleanConstant
-      DAGCall 1/4 (Method Call -> void)
-      DAGCall 2/4 (Static Call -> void)
-      DAGCall 3/4 (Method Call -> not void)
-      DAGCall 4/4 (Static Call -> not void)
+      DAGCall 1/4 (Method Call -> void)         see code above
+      DAGCall 2/4 (Static Call -> void)         see code above
+      DAGCall 3/4 (Method Call -> not void)     see code above
+      DAGCall 4/4 (Static Call -> not void)     see code above
     ? DAGVariable 1/3 (Local and Parameter)
     ? DAGVariable 2/3 (this)
     ? DAGVariable 3/3 (Member)
@@ -304,11 +304,11 @@
       DAGVoidReturn
       DAGReturnExpression 1/2 (primitives)
       DAGReturnExpression 2/2 (references)
-    - DAGIfElse 1/3 (boolean)   no if*
-    + DAGIfElse 2/3 (Less, <)   looks correct
+    + DAGIfElse 1/3 (boolean)   correct, ifeq
+    - DAGIfElse 2/3 (Less, <)   if_icmpge
     - DAGIfElse 3/3 (And, &&)   very different, needs short-circuiting
-    - DAGWhile 1/3 (boolean)   no if*
-    + DAGWhile 2/3 (Less, <)   looks correct
+    + DAGWhile 1/3 (boolean)   correct, ifeq
+    - DAGWhile 2/3 (Less, <)   if_icmpge
     - DAGWhile 3/3 (And, &&)   very different, needs short-circuiting
     + DAGMulti
 

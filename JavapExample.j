@@ -1,30 +1,30 @@
 Classfile /home/bruno/mieic/comp/COMP/JavapExample.class
-  Last modified May 8, 2019; size 3748 bytes
-  MD5 checksum 17df8d013719d44160b0efd00c3e9c9d
+  Last modified May 14, 2019; size 3860 bytes
+  MD5 checksum f98b684778215f514967ff827003ae54
   Compiled from "JavapExample.java"
 class JavapExample
   minor version: 0
   major version: 55
   flags: (0x0020) ACC_SUPER
-  this_class: #3                          // JavapExample
+  this_class: #2                          // JavapExample
   super_class: #15                        // java/lang/Object
-  interfaces: 0, fields: 7, methods: 45, attributes: 1
+  interfaces: 0, fields: 7, methods: 46, attributes: 1
 Constant pool:
-    #1 = Methodref          #15.#95       // java/lang/Object."<init>":()V
-    #2 = Methodref          #3.#96        // JavapExample.NOP_int:()I
-    #3 = Class              #97           // JavapExample
-    #4 = Methodref          #3.#95        // JavapExample."<init>":()V
-    #5 = Integer            -1000000
-    #6 = Integer            2000000
-    #7 = Fieldref           #3.#98        // JavapExample.member:I
-    #8 = Fieldref           #3.#99        // JavapExample.memberArray:[I
-    #9 = Methodref          #3.#100       // JavapExample.getIntArray:()[I
-   #10 = Methodref          #3.#101       // JavapExample.methodF:(IZI)V
-   #11 = Methodref          #3.#102       // JavapExample.staticF:(IZI)V
-   #12 = Methodref          #3.#103       // JavapExample.methodI:(IZI)I
-   #13 = Methodref          #3.#104       // JavapExample.staticI:(IZI)I
-   #14 = Methodref          #3.#105       // JavapExample.NOP_boolean:()Z
-   #15 = Class              #106          // java/lang/Object
+    #1 = Methodref          #15.#97       // java/lang/Object."<init>":()V
+    #2 = Class              #98           // JavapExample
+    #3 = Methodref          #2.#97        // JavapExample."<init>":()V
+    #4 = Integer            -1000000
+    #5 = Integer            2000000
+    #6 = Fieldref           #2.#99        // JavapExample.member:I
+    #7 = Fieldref           #2.#100       // JavapExample.memberArray:[I
+    #8 = Methodref          #2.#101       // JavapExample.getIntArray:()[I
+    #9 = Methodref          #2.#102       // JavapExample.methodF:(IZI)V
+   #10 = Methodref          #2.#103       // JavapExample.staticF:(IZI)V
+   #11 = Methodref          #2.#104       // JavapExample.methodI:(IZI)I
+   #12 = Methodref          #2.#105       // JavapExample.staticI:(IZI)I
+   #13 = Methodref          #2.#106       // JavapExample.NOP_int:()I
+   #14 = Methodref          #2.#107       // JavapExample.NOP_boolean:()Z
+   #15 = Class              #108          // java/lang/Object
    #16 = Utf8               member
    #17 = Utf8               I
    #18 = Utf8               memberArray
@@ -45,44 +45,44 @@ Constant pool:
    #33 = Utf8               ()Z
    #34 = Utf8               NOP_int
    #35 = Utf8               ()I
-   #36 = Utf8               callInts
-   #37 = Utf8               DAGAdd
-   #38 = Utf8               (II)V
-   #39 = Utf8               DAGSub
-   #40 = Utf8               DAGMul
-   #41 = Utf8               DAGDiv
-   #42 = Utf8               DAGLess
-   #43 = Utf8               StackMapTable
-   #44 = Utf8               DAGAnd
-   #45 = Utf8               (ZZ)V
-   #46 = Utf8               DAGLength
-   #47 = Utf8               ([I)V
-   #48 = Utf8               DAGNot
-   #49 = Utf8               (Z)V
-   #50 = Utf8               DAGBracket
-   #51 = Utf8               ([II)V
-   #52 = Utf8               DAGNewClass
-   #53 = Utf8               DAGNewIntArray
-   #54 = Utf8               (I)V
-   #55 = Utf8               DAGIntegerConstant
-   #56 = Utf8               DAGBooleanConstant
-   #57 = Utf8               DAGAssignmentMember
-   #58 = Utf8               DAGAssignmentParameter
-   #59 = Utf8               DAGAssignmentLocal
-   #60 = Utf8               DAGBracketAssignmentMember
-   #61 = Utf8               DAGBracketAssignmentParameter
-   #62 = Utf8               ([III)V
-   #63 = Utf8               DAGBracketAssignmentLocal
-   #64 = Utf8               methodF
-   #65 = Utf8               (IZI)V
-   #66 = Utf8               staticF
-   #67 = Utf8               methodI
-   #68 = Utf8               (IZI)I
-   #69 = Utf8               staticI
-   #70 = Utf8               DAGMethodCall
-   #71 = Utf8               DAGStaticCall
-   #72 = Utf8               DAGMethodCallInt
-   #73 = Utf8               DAGStaticCallInt
+   #36 = Utf8               DAGAdd
+   #37 = Utf8               (II)V
+   #38 = Utf8               DAGSub
+   #39 = Utf8               DAGMul
+   #40 = Utf8               DAGDiv
+   #41 = Utf8               DAGLess
+   #42 = Utf8               StackMapTable
+   #43 = Utf8               DAGAnd
+   #44 = Utf8               (ZZ)V
+   #45 = Utf8               DAGLength
+   #46 = Utf8               ([I)V
+   #47 = Utf8               DAGNot
+   #48 = Utf8               (Z)V
+   #49 = Utf8               DAGBracket
+   #50 = Utf8               ([II)V
+   #51 = Utf8               DAGNewClass
+   #52 = Utf8               DAGNewIntArray
+   #53 = Utf8               (I)V
+   #54 = Utf8               DAGIntegerConstant
+   #55 = Utf8               DAGBooleanConstant
+   #56 = Utf8               DAGAssignmentMember
+   #57 = Utf8               DAGAssignmentParameter
+   #58 = Utf8               DAGAssignmentLocal
+   #59 = Utf8               DAGBracketAssignmentMember
+   #60 = Utf8               DAGBracketAssignmentParameter
+   #61 = Utf8               ([III)V
+   #62 = Utf8               DAGBracketAssignmentLocal
+   #63 = Utf8               methodF
+   #64 = Utf8               (IZI)V
+   #65 = Utf8               staticF
+   #66 = Utf8               methodI
+   #67 = Utf8               (IZI)I
+   #68 = Utf8               staticI
+   #69 = Utf8               DAGMethodCall
+   #70 = Utf8               DAGStaticCall
+   #71 = Utf8               DAGMethodCallInt
+   #72 = Utf8               DAGStaticCallInt
+   #73 = Utf8               DAGCallReturningIgnored
    #74 = Utf8               IfElseStatementBoolean
    #75 = Utf8               (Z)I
    #76 = Utf8               IfElseStatementLess
@@ -101,21 +101,23 @@ Constant pool:
    #89 = Utf8               (I)I
    #90 = Utf8               assignmentIntArray
    #91 = Utf8               ([I)[I
-   #92 = Utf8               commonSubexpressionInt
-   #93 = Utf8               SourceFile
-   #94 = Utf8               JavapExample.java
-   #95 = NameAndType        #26:#27       // "<init>":()V
-   #96 = NameAndType        #34:#35       // NOP_int:()I
-   #97 = Utf8               JavapExample
-   #98 = NameAndType        #16:#17       // member:I
-   #99 = NameAndType        #18:#19       // memberArray:[I
-  #100 = NameAndType        #30:#31       // getIntArray:()[I
-  #101 = NameAndType        #64:#65       // methodF:(IZI)V
-  #102 = NameAndType        #66:#65       // staticF:(IZI)V
-  #103 = NameAndType        #67:#68       // methodI:(IZI)I
-  #104 = NameAndType        #69:#68       // staticI:(IZI)I
-  #105 = NameAndType        #32:#33       // NOP_boolean:()Z
-  #106 = Utf8               java/lang/Object
+   #92 = Utf8               assignmentClass
+   #93 = Utf8               (LJavapExample;)LJavapExample;
+   #94 = Utf8               commonSubexpressionInt
+   #95 = Utf8               SourceFile
+   #96 = Utf8               JavapExample.java
+   #97 = NameAndType        #26:#27       // "<init>":()V
+   #98 = Utf8               JavapExample
+   #99 = NameAndType        #16:#17       // member:I
+  #100 = NameAndType        #18:#19       // memberArray:[I
+  #101 = NameAndType        #30:#31       // getIntArray:()[I
+  #102 = NameAndType        #63:#64       // methodF:(IZI)V
+  #103 = NameAndType        #65:#64       // staticF:(IZI)V
+  #104 = NameAndType        #66:#67       // methodI:(IZI)I
+  #105 = NameAndType        #68:#67       // staticI:(IZI)I
+  #106 = NameAndType        #34:#35       // NOP_int:()I
+  #107 = NameAndType        #32:#33       // NOP_boolean:()Z
+  #108 = Utf8               java/lang/Object
 {
   int member;
     descriptor: I
@@ -186,27 +188,6 @@ Constant pool:
       LineNumberTable:
         line 11: 0
 
-  void callInts();
-    descriptor: ()V
-    flags: (0x0000)
-    Code:
-      stack=1, locals=1, args_size=1
-         0: aload_0
-         1: invokevirtual #2                  // Method NOP_int:()I
-         4: pop
-         5: aload_0
-         6: invokevirtual #2                  // Method NOP_int:()I
-         9: pop
-        10: aload_0
-        11: invokevirtual #2                  // Method NOP_int:()I
-        14: pop
-        15: return
-      LineNumberTable:
-        line 15: 0
-        line 16: 5
-        line 17: 10
-        line 18: 15
-
   void DAGAdd(int, int);
     descriptor: (II)V
     flags: (0x0000)
@@ -218,8 +199,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 21: 0
-        line 22: 4
+        line 15: 0
+        line 16: 4
 
   void DAGSub(int, int);
     descriptor: (II)V
@@ -232,8 +213,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 25: 0
-        line 26: 4
+        line 19: 0
+        line 20: 4
 
   void DAGMul(int, int);
     descriptor: (II)V
@@ -246,8 +227,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 29: 0
-        line 30: 4
+        line 23: 0
+        line 24: 4
 
   void DAGDiv(int, int);
     descriptor: (II)V
@@ -260,8 +241,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 33: 0
-        line 34: 4
+        line 27: 0
+        line 28: 4
 
   void DAGLess(int, int);
     descriptor: (II)V
@@ -277,8 +258,8 @@ Constant pool:
         10: istore_3
         11: return
       LineNumberTable:
-        line 37: 0
-        line 38: 11
+        line 31: 0
+        line 32: 11
       StackMapTable: number_of_entries = 2
         frame_type = 9 /* same */
         frame_type = 64 /* same_locals_1_stack_item */
@@ -299,8 +280,8 @@ Constant pool:
         13: istore_3
         14: return
       LineNumberTable:
-        line 41: 0
-        line 42: 14
+        line 35: 0
+        line 36: 14
       StackMapTable: number_of_entries = 2
         frame_type = 12 /* same */
         frame_type = 64 /* same_locals_1_stack_item */
@@ -316,8 +297,8 @@ Constant pool:
          2: istore_2
          3: return
       LineNumberTable:
-        line 45: 0
-        line 46: 3
+        line 39: 0
+        line 40: 3
 
   void DAGNot(boolean);
     descriptor: (Z)V
@@ -332,8 +313,8 @@ Constant pool:
          9: istore_2
         10: return
       LineNumberTable:
-        line 49: 0
-        line 50: 10
+        line 43: 0
+        line 44: 10
       StackMapTable: number_of_entries = 2
         frame_type = 8 /* same */
         frame_type = 64 /* same_locals_1_stack_item */
@@ -350,22 +331,22 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 53: 0
-        line 54: 4
+        line 47: 0
+        line 48: 4
 
   void DAGNewClass();
     descriptor: ()V
     flags: (0x0000)
     Code:
       stack=2, locals=2, args_size=1
-         0: new           #3                  // class JavapExample
+         0: new           #2                  // class JavapExample
          3: dup
-         4: invokespecial #4                  // Method "<init>":()V
+         4: invokespecial #3                  // Method "<init>":()V
          7: astore_1
          8: return
       LineNumberTable:
-        line 57: 0
-        line 58: 8
+        line 51: 0
+        line 52: 8
 
   void DAGNewIntArray(int);
     descriptor: (I)V
@@ -377,8 +358,8 @@ Constant pool:
          3: astore_2
          4: return
       LineNumberTable:
-        line 61: 0
-        line 62: 4
+        line 55: 0
+        line 56: 4
 
   void DAGIntegerConstant();
     descriptor: ()V
@@ -395,20 +376,20 @@ Constant pool:
         11: istore        4
         13: sipush        30000
         16: istore        5
-        18: ldc           #5                  // int -1000000
+        18: ldc           #4                  // int -1000000
         20: istore        6
-        22: ldc           #6                  // int 2000000
+        22: ldc           #5                  // int 2000000
         24: istore        7
         26: return
       LineNumberTable:
-        line 65: 0
-        line 66: 2
-        line 67: 5
-        line 68: 8
-        line 69: 13
-        line 70: 18
-        line 71: 22
-        line 72: 26
+        line 59: 0
+        line 60: 2
+        line 61: 5
+        line 62: 8
+        line 63: 13
+        line 64: 18
+        line 65: 22
+        line 66: 26
 
   void DAGBooleanConstant();
     descriptor: ()V
@@ -421,9 +402,9 @@ Constant pool:
          3: istore_2
          4: return
       LineNumberTable:
-        line 75: 0
-        line 76: 2
-        line 77: 4
+        line 69: 0
+        line 70: 2
+        line 71: 4
 
   void DAGAssignmentMember(int);
     descriptor: (I)V
@@ -432,11 +413,11 @@ Constant pool:
       stack=2, locals=2, args_size=2
          0: aload_0
          1: iload_1
-         2: putfield      #7                  // Field member:I
+         2: putfield      #6                  // Field member:I
          5: return
       LineNumberTable:
-        line 82: 0
-        line 83: 5
+        line 76: 0
+        line 77: 5
 
   void DAGAssignmentParameter(int, int);
     descriptor: (II)V
@@ -447,8 +428,8 @@ Constant pool:
          1: istore_1
          2: return
       LineNumberTable:
-        line 86: 0
-        line 87: 2
+        line 80: 0
+        line 81: 2
 
   void DAGAssignmentLocal(int);
     descriptor: (I)V
@@ -459,8 +440,8 @@ Constant pool:
          1: istore_2
          2: return
       LineNumberTable:
-        line 90: 0
-        line 91: 2
+        line 84: 0
+        line 85: 2
 
   void DAGBracketAssignmentMember(int, int);
     descriptor: (II)V
@@ -468,14 +449,14 @@ Constant pool:
     Code:
       stack=3, locals=3, args_size=3
          0: aload_0
-         1: getfield      #8                  // Field memberArray:[I
+         1: getfield      #7                  // Field memberArray:[I
          4: iload_1
          5: iload_2
          6: iastore
          7: return
       LineNumberTable:
-        line 96: 0
-        line 97: 7
+        line 90: 0
+        line 91: 7
 
   void DAGBracketAssignmentParameter(int[], int, int);
     descriptor: ([III)V
@@ -488,15 +469,15 @@ Constant pool:
          3: iastore
          4: return
       LineNumberTable:
-        line 100: 0
-        line 101: 4
+        line 94: 0
+        line 95: 4
 
   void DAGBracketAssignmentLocal(int, int);
     descriptor: (II)V
     flags: (0x0000)
     Code:
       stack=3, locals=4, args_size=3
-         0: invokestatic  #9                  // Method getIntArray:()[I
+         0: invokestatic  #8                  // Method getIntArray:()[I
          3: astore_3
          4: aload_3
          5: iload_1
@@ -504,9 +485,9 @@ Constant pool:
          7: iastore
          8: return
       LineNumberTable:
-        line 104: 0
-        line 105: 4
-        line 106: 8
+        line 98: 0
+        line 99: 4
+        line 100: 8
 
   void methodF(int, boolean, int);
     descriptor: (IZI)V
@@ -515,7 +496,7 @@ Constant pool:
       stack=0, locals=4, args_size=4
          0: return
       LineNumberTable:
-        line 108: 0
+        line 102: 0
 
   static void staticF(int, boolean, int);
     descriptor: (IZI)V
@@ -524,7 +505,7 @@ Constant pool:
       stack=0, locals=3, args_size=3
          0: return
       LineNumberTable:
-        line 110: 0
+        line 104: 0
 
   int methodI(int, boolean, int);
     descriptor: (IZI)I
@@ -534,7 +515,7 @@ Constant pool:
          0: iconst_0
          1: ireturn
       LineNumberTable:
-        line 113: 0
+        line 107: 0
 
   static int staticI(int, boolean, int);
     descriptor: (IZI)I
@@ -544,7 +525,7 @@ Constant pool:
          0: iconst_0
          1: ireturn
       LineNumberTable:
-        line 117: 0
+        line 111: 0
 
   void DAGMethodCall();
     descriptor: ()V
@@ -555,11 +536,11 @@ Constant pool:
          1: bipush        10
          3: iconst_1
          4: bipush        50
-         6: invokevirtual #10                 // Method methodF:(IZI)V
+         6: invokevirtual #9                  // Method methodF:(IZI)V
          9: return
       LineNumberTable:
-        line 121: 0
-        line 122: 9
+        line 115: 0
+        line 116: 9
 
   void DAGStaticCall();
     descriptor: ()V
@@ -569,11 +550,11 @@ Constant pool:
          0: bipush        10
          2: iconst_1
          3: bipush        50
-         5: invokestatic  #11                 // Method staticF:(IZI)V
+         5: invokestatic  #10                 // Method staticF:(IZI)V
          8: return
       LineNumberTable:
-        line 125: 0
-        line 126: 8
+        line 119: 0
+        line 120: 8
 
   void DAGMethodCallInt();
     descriptor: ()V
@@ -584,12 +565,12 @@ Constant pool:
          1: bipush        10
          3: iconst_1
          4: bipush        50
-         6: invokevirtual #12                 // Method methodI:(IZI)I
+         6: invokevirtual #11                 // Method methodI:(IZI)I
          9: istore_1
         10: return
       LineNumberTable:
-        line 129: 0
-        line 130: 10
+        line 123: 0
+        line 124: 10
 
   void DAGStaticCallInt();
     descriptor: ()V
@@ -599,12 +580,33 @@ Constant pool:
          0: bipush        10
          2: iconst_1
          3: bipush        50
-         5: invokestatic  #13                 // Method staticI:(IZI)I
+         5: invokestatic  #12                 // Method staticI:(IZI)I
          8: istore_1
          9: return
       LineNumberTable:
-        line 133: 0
-        line 134: 9
+        line 127: 0
+        line 128: 9
+
+  void DAGCallReturningIgnored();
+    descriptor: ()V
+    flags: (0x0000)
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokevirtual #13                 // Method NOP_int:()I
+         4: pop
+         5: aload_0
+         6: invokevirtual #13                 // Method NOP_int:()I
+         9: pop
+        10: aload_0
+        11: invokevirtual #13                 // Method NOP_int:()I
+        14: pop
+        15: return
+      LineNumberTable:
+        line 131: 0
+        line 132: 5
+        line 133: 10
+        line 134: 15
 
   int IfElseStatementBoolean(boolean);
     descriptor: (Z)I
@@ -723,10 +725,10 @@ Constant pool:
          3: iload_2
          4: if_icmpge     23
          7: aload_0
-         8: invokevirtual #2                  // Method NOP_int:()I
+         8: invokevirtual #13                 // Method NOP_int:()I
         11: istore_1
         12: aload_0
-        13: invokevirtual #2                  // Method NOP_int:()I
+        13: invokevirtual #13                 // Method NOP_int:()I
         16: istore_2
         17: iinc          3, 1
         20: goto          2
@@ -793,7 +795,7 @@ Constant pool:
     flags: (0x0000)
     Code:
       stack=1, locals=1, args_size=1
-         0: iconst_2
+         0: iconst_1
          1: ireturn
       LineNumberTable:
         line 216: 0
@@ -848,6 +850,19 @@ Constant pool:
         line 234: 0
         line 235: 2
 
+  JavapExample assignmentClass(JavapExample);
+    descriptor: (LJavapExample;)LJavapExample;
+    flags: (0x0000)
+    Code:
+      stack=1, locals=3, args_size=2
+         0: aload_1
+         1: astore_2
+         2: aload_2
+         3: areturn
+      LineNumberTable:
+        line 239: 0
+        line 240: 2
+
   int commonSubexpressionInt(int, int);
     descriptor: (II)I
     flags: (0x0000)
@@ -866,6 +881,6 @@ Constant pool:
         10: iadd
         11: ireturn
       LineNumberTable:
-        line 239: 0
+        line 244: 0
 }
 SourceFile: "JavapExample.java"
