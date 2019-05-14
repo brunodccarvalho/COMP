@@ -66,9 +66,9 @@ public class JMMMainDescriptor
   }
 
   @Override
-  public String getBytecodeString() {
-    String mainbytecode = "main([Ljava/lang/String;)V";
-    return getParentClass().getBytecodeString() + "/" + mainbytecode;
+  public String getBytecodeStringWithoutClass() {
+    String s = "main([Ljava/lang/String;)V"; // keep this line, minor vscode parsing bug
+    return s;
   }
 
   @Override

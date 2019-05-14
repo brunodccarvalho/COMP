@@ -40,4 +40,9 @@ public interface Function {
    * @return The Jasmin bytecode String descriptor for this function.
    */
   public String getBytecodeString();
+
+  /**
+   * rename this shit
+   */
+  public String getBytecodeStringWithoutClass();
 }

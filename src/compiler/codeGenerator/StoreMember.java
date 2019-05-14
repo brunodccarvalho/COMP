@@ -4,7 +4,7 @@ import compiler.dag.DAGMember;
 import compiler.symbols.MemberDescriptor;
 
 public class StoreMember extends JVMInst {
-    
+
     /**
      * 1: class descriptor
      */
@@ -14,11 +14,11 @@ public class StoreMember extends JVMInst {
      * 2: call variable name
      * 3: type of variable
      */
-    public static String PUTFIELD = "\n\taload 0\n\tswap\n\tputfield ?/? ?";
+    public static String PUTFIELD = "\n\taload_0\n\tswap\n\tputfield ?/? ?";
 
     private MemberDescriptor memberDescriptor;
 
-    StoreMember (DAGMember member) 
+    StoreMember (DAGMember member)
     {
         this.memberDescriptor = member.getVariable();
     }
@@ -35,5 +35,5 @@ public class StoreMember extends JVMInst {
         return subst(StoreMember.PUTFIELD, className,memberName,memberType);
     }
 
-    
+
 }

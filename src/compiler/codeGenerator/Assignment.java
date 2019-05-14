@@ -19,7 +19,7 @@ public class Assignment extends BaseStatement {
         this.variable = statement.getVariable();
         this.expression = statement.getExpression();
         this.expressionBody = new Expression(this.function, expression);
-    }    
+    }
 
     @Override
     public String toString()
@@ -37,7 +37,7 @@ public class Assignment extends BaseStatement {
             Store store = new Store(this.function, (DAGVariable)variable);
             variableStore = store.toString();
         }
-        
+
         assignmentBody = assignmentBody.concat(expressionBody.toString()).concat(variableStore);
         return assignmentBody;
     }

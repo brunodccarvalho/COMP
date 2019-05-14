@@ -59,7 +59,7 @@ public class Expression extends BaseStatement {
             NewIntArray newObject = new NewIntArray(this.function, (DAGNewIntArray)expression);
             expressionBody = expressionBody.concat(newObject.toString());
         }
-        
+
         else if(expression instanceof DAGStaticCall)
         {
             StaticCall scall = new StaticCall(this.function, (DAGStaticCall) expression);
@@ -69,5 +69,5 @@ public class Expression extends BaseStatement {
         // TODO: missing some instances of expression?
         return expressionBody;
     }
-    
+
 }

@@ -174,18 +174,9 @@
           [i|a]store VAR          # store appropriate type to local
           ... CONTINUE
 
-    DAGBracketAssignment> 1/2
-      DAGBracketAssignment to DAGMember:
-          aload_0                 # load this
-          getfield  <member> <type>
-          $loadindex...           # evaluate index
-          $loadvalue...           # evaluate value
-          iastore VAR             # store int in int array
-          ... CONTINUE
-
-    DAGBracketAssignment> 2/2
-      DAGBracketAssignment to DAGLocal or DAGParameter:
-          $loadarray...           # evaluate receiving expression
+    DAGBracketAssignment>
+      DAGBracketAssignment to DAGLocal or DAGParameter or DAGMember:
+          $loadarray...           # evaluate receiving expression, possibly getfield...
           $loadindex...           # evaluate index
           $loadvalue...           # evaluate value
           iastore VAR             # store int in int array
@@ -282,44 +273,51 @@
 
 ## DAG code generation
 
-    DAGBinaryOp 1/6 (Add, +)
-    DAGBinaryOp 2/6 (Sub, -)
-    DAGBinaryOp 3/6 (Mul, *)
-    DAGBinaryOp 4/6 (Div, /)
-    DAGBinaryOp 5/6 (Less, <)
-    DAGBinaryOp 6/6 (And, &&)
-    DAGLength
-    DAGNot
-    DAGBracket
-    DAGNewClass
-    DAGNewIntArray
-    DAGIntegerConstant
-    DAGBooleanConstant
-    DAGCall 1/4 (Method Call -> void)
-    DAGCall 2/4 (Static Call -> void)
-    DAGCall 3/4 (Method Call -> not void)
-    DAGCall 4/4 (Static Call -> not void)
-    DAGVariable 1/3 (Local and Parameter)
-    DAGVariable 2/3 (this)
-    DAGVariable 3/3 (Member)
-    DAGAssignment 1/2 (to Member)
-    DAGAssignment 2/2 (to Local or Parameter)
-    DAGBracketAssignment 1/2 (to Member)
-    DAGBracketAssignment 2/2 (to Member)
-    DAGVoidReturn
-    DAGReturnExpression 1/2 (primitives)
-    DAGReturnExpression 2/2 (references)
-    DAGIfElse 1/3 (boolean)
-    DAGIfElse 2/3 (Less, <)
-    DAGIfElse 3/3 (And, &&)
-    DAGWhile 1/3 (boolean)
-    DAGWhile 2/3 (Less, <)
-    DAGWhile 3/3 (And, &&)
-    DAGMulti
+    + means correct
+    - means incorrect
+      means i didnt find it anywhere
+    ? means i dont know
+
+    + DAGBinaryOp 1/6 (Add, +)
+    + DAGBinaryOp 2/6 (Sub, -)
+    + DAGBinaryOp 3/6 (Mul, *)
+    + DAGBinaryOp 4/6 (Div, /)
+    - DAGBinaryOp 5/6 (Less, <)  completely different, involves jumps
+    - DAGBinaryOp 6/6 (And, &&)  completely different, involves jumps
+      DAGLength
+      DAGNot
+    - DAGBracket   should be iastore
+      DAGNewClass
+    ? DAGNewIntArray       jasmin uses 'newarray int' instead
+    + DAGIntegerConstant
+    + DAGBooleanConstant
+      DAGCall 1/4 (Method Call -> void)
+      DAGCall 2/4 (Static Call -> void)
+      DAGCall 3/4 (Method Call -> not void)
+      DAGCall 4/4 (Static Call -> not void)
+    ? DAGVariable 1/3 (Local and Parameter)
+    ? DAGVariable 2/3 (this)
+    ? DAGVariable 3/3 (Member)
+    ? DAGAssignment 1/2 (to Member)
+    ? DAGAssignment 2/2 (to Local or Parameter)
+    - DAGBracketAssignment               should be iastore
+      DAGVoidReturn
+      DAGReturnExpression 1/2 (primitives)
+      DAGReturnExpression 2/2 (references)
+    - DAGIfElse 1/3 (boolean)   no if*
+    + DAGIfElse 2/3 (Less, <)   looks correct
+    - DAGIfElse 3/3 (And, &&)   very different, needs short-circuiting
+    - DAGWhile 1/3 (boolean)   no if*
+    + DAGWhile 2/3 (Less, <)   looks correct
+    - DAGWhile 3/3 (And, &&)   very different, needs short-circuiting
+    + DAGMulti
 
 ## More method body code
 
-    Pop return values of top-level statement-expressions.
+    . Pop return values of top-level statement-expressions.
+    --> implement in MethodBodyGenerator.generateStatement(DAGNode),
+        appending to expression a pop instruction.
+
 
 ## General code generation
 

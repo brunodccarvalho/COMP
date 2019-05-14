@@ -32,9 +32,8 @@ public abstract class CallableDescriptor extends BaseFunctionDescriptor implemen
   }
 
   @Override
-  public String getBytecodeString() {
-    return getParentClass().getBytecodeString() + "/" + getName() + signature.getBytecodeString()
-        + returnType.getBytecodeString();
+  public String getBytecodeStringWithoutClass() {
+    return getName() + signature.getBytecodeString() + returnType.getBytecodeString();
   }
 
   @Override

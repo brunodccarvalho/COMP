@@ -42,6 +42,11 @@ abstract class BaseFunctionDescriptor extends Descriptor implements Function {
     return functionName + "(...)";
   }
 
+  @Override
+  public String getBytecodeString() {
+    return classDescriptor.getBytecodeString() + "/" + getBytecodeStringWithoutClass();
+  }
+
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
