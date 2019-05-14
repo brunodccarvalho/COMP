@@ -58,7 +58,6 @@ public class MethodBodyGenerator {
             baseStatement = new While(this.function, (DAGWhile)statement, this.labelGenerator);
         else if(statement instanceof DAGMulti)
             this.generateMultiStatements((DAGMulti)statement);
-            
         if(baseStatement != null)
             this.statements.add(baseStatement);
     }

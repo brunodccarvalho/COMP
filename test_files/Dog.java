@@ -6,10 +6,10 @@ class Dog {
 
   public static void main(String[] args) {
     boolean full;
+    ioPlus.printResult(100*100);
     full = false;
   }
-
-  public int run() {
+  /*public int run(int a,int b) {
     boolean full;
     int sleepEatFactor;
     int x;
@@ -22,5 +22,5 @@ class Dog {
     }
     
     return numberKm;
-  }
+  }*/
 }

@@ -84,5 +84,5 @@ jasmin:
 	@javap -verbose -cp . -s $(JASMIN_FILE:.java=) > $(JASMIN_FILE:.java=.j)
 	@rm $(JASMIN_FILE:.java=.class)
 jvm:
-	@java -jar jasmin.jar bin/codeGenerator/Dog.j
-	@java Dog
+	@java -jar jasmin_files/jasmin.jar bin/codeGenerator/$(basename $(TEST_FILE)).j -d jasmin_files
+	@java -cp jasmin_files $(basename $(TEST_FILE))

@@ -8,6 +8,7 @@ import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
 import compiler.dag.DAGMethodCall;
 import compiler.dag.DAGNewIntArray;
+import compiler.dag.DAGStaticCall;
 import compiler.dag.DAGVariable;
 
 public class Expression extends BaseStatement {
@@ -25,7 +26,6 @@ public class Expression extends BaseStatement {
     public String toString()
     {
         String expressionBody = new String();
-
         if(expression instanceof DAGBinaryOp) {
             DAGExpression lhs = ((DAGBinaryOp)expression).getLhs();
             DAGExpression rhs = ((DAGBinaryOp)expression).getRhs();
@@ -58,6 +58,12 @@ public class Expression extends BaseStatement {
         else if(expression instanceof DAGNewIntArray) {
             NewIntArray newObject = new NewIntArray(this.function, (DAGNewIntArray)expression);
             expressionBody = expressionBody.concat(newObject.toString());
+        }
+        
+        else if(expression instanceof DAGStaticCall)
+        {
+            StaticCall scall = new StaticCall(this.function, (DAGStaticCall) expression);
+            expressionBody = expressionBody.concat(scall.toString());
         }
 
         // TODO: missing some instances of expression?
