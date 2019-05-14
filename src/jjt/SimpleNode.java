@@ -21,11 +21,9 @@ public class SimpleNode implements Node {
     parser = p;
   }
 
-  public void jjtOpen() {
-  }
+  public void jjtOpen() {}
 
-  public void jjtClose() {
-  }
+  public void jjtClose() {}
 
   public void jjtSetParent(Node n) {
     parent = n;
@@ -125,21 +123,20 @@ public class SimpleNode implements Node {
 
   int[] cacheBegin, cacheEnd;
 
-  protected int[] treeBegin() {
-    if (cacheBegin != null)
-      return cacheBegin;
-    int[] mine = { firstToken.beginLine, firstToken.beginColumn };
+  public int[] treeBegin() {
+    if (cacheBegin != null) return cacheBegin;
+    int[] mine = {firstToken.beginLine, firstToken.beginColumn};
 
     if (children != null && children.length > 0) {
       SimpleNode childnode = (SimpleNode) children[0];
       int[] childs = childnode.treeBegin();
-      cacheBegin = rangeCompare(mine, childs) < 0 ? mine : childs; // min
+      cacheBegin = rangeCompare(mine, childs) < 0 ? mine : childs;  // min
     } else {
       cacheBegin = mine;
     }
 
     // Sanity check, fix for MethodName length
-    int[] end = { lastToken.beginLine, lastToken.beginColumn };
+    int[] end = {lastToken.beginLine, lastToken.beginColumn};
     if (rangeCompare(cacheBegin, end) < 0) {
       cacheBegin = end;
 
@@ -153,15 +150,14 @@ public class SimpleNode implements Node {
     return cacheBegin;
   }
 
-  protected int[] treeEnd() {
-    if (cacheEnd != null)
-      return cacheEnd;
-    int[] mine = { lastToken.endLine, lastToken.endColumn + 1 };
+  public int[] treeEnd() {
+    if (cacheEnd != null) return cacheEnd;
+    int[] mine = {lastToken.endLine, lastToken.endColumn + 1};
 
     if (children != null && children.length > 0) {
       SimpleNode childnode = (SimpleNode) children[children.length - 1];
       int[] childs = childnode.treeEnd();
-      cacheEnd = rangeCompare(mine, childs) < 0 ? childs : mine; // max
+      cacheEnd = rangeCompare(mine, childs) < 0 ? childs : mine;  // max
     } else {
       cacheEnd = mine;
     }

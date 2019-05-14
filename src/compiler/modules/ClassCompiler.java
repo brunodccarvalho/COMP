@@ -41,7 +41,7 @@ public final class ClassCompiler extends CompilationStatus {
       if (onErrorLevel(Codes.MINOR_ERRORS)) return this;
 
       generateCode();
-      
+
     } catch (CompilationException e) {
       System.err.println(e.getMessage());
       update(Codes.FATAL);
@@ -87,20 +87,12 @@ public final class ClassCompiler extends CompilationStatus {
 
   /**
    * 4. Build the code representations for each of the methods.
-   * ... or something. Rename this...
    * * Assembler
    */
   public void generateCode() {
     System.out.println(" ***** Code Generation");
     CodeGenerator codeGenerator = new CodeGenerator(data);
     codeGenerator.generateCode();
-  }
-
-  /**
-   * 5. Write everything to output file.
-   */
-  private void writeToFile() {
-    // ...
   }
 
   /**

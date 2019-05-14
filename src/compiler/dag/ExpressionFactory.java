@@ -3,8 +3,6 @@ package compiler.dag;
 import static jjt.jmmTreeConstants.*;
 import static compiler.symbols.PrimitiveDescriptor.*;
 
-import java.util.HashMap;
-
 import compiler.symbols.FunctionSignature;
 import compiler.symbols.ResolverClass.Deduction;
 import compiler.exceptions.InternalCompilerError;
@@ -22,11 +20,6 @@ import jjt.SimpleNode;
  * If more Expressions are found within the initial JJT Expression (naturally) no more are created.
  */
 public class ExpressionFactory extends BaseDAGFactory {
-  /**
-   * Set of DAG expressions already constructed, for common subexpression elimination.
-   */
-  private final HashMap<DAGExpression, DAGExpression> cache = new HashMap<>();
-
   private final ExpressionTransformer transformer;
 
   /**
@@ -79,52 +72,41 @@ public class ExpressionFactory extends BaseDAGFactory {
     // Forward the build to the appropriate build function.
     switch (node.getId()) {
     case JJTINTEGER:
-      return reuse(buildInteger(node));
+      return transformer.optimize(buildInteger(node));
     case JJTTRUE:
     case JJTFALSE:
-      return reuse(buildBoolean(node));
+      return transformer.optimize(buildBoolean(node));
     case JJTIDENTIFIER:
-      return reuse(buildVariable(node));
+      return transformer.optimize(buildVariable(node));
     case JJTTHIS:
-      return reuse(buildThis(node));
+      return transformer.optimize(buildThis(node));
     case JJTNEWINTARRAY:
-      return reuse(buildNewIntArray(node));
+      return transformer.optimize(buildNewIntArray(node));
     case JJTNEWCLASS:
-      return reuse(buildNewClass(node));
+      return transformer.optimize(buildNewClass(node));
     case JJTLENGTH:
-      return reuse(buildLength(node));
+      return transformer.optimize(buildLength(node));
     case JJTNOT:
-      return reuse(buildUnaryOp(node));
+      return transformer.optimize(buildUnaryOp(node));
     case JJTAND:
     case JJTLT:
     case JJTSUM:
     case JJTSUB:
     case JJTMUL:
     case JJTDIV:
-      return reuse(buildBinaryOp(node));
+      return transformer.optimize(buildBinaryOp(node));
     case JJTBRACKET:
-      return reuse(buildBracket(node));
+      return transformer.optimize(buildBracket(node));
     case JJTCALL:
-      return reuse(buildCall(node));
+      return transformer.optimize(buildCall(node));
     }
 
     throw new InternalCompilerError();
   }
 
-  private DAGExpression reuse(DAGExpression dagNode) {
-    dagNode = transformer.optimize(dagNode);
-
-    if (cache.containsKey(dagNode)) {
-      return cache.get(dagNode);
-    } else {
-      cache.put(dagNode, dagNode);
-      return dagNode;
-    }
-  }
-
   /**
    * @param node A JJT node holding an integer literal constant
-   * @return A new DAGIntegerConstant holding the constant.
+   * @return A DAGIntegerConstant holding the constant.
    */
   private DAGIntegerConstant buildInteger(SimpleNode node) {
     assert node.is(JJTINTEGER);
@@ -145,7 +127,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node holding a true or false boolean literal
-   * @return A new DAGBooleanConstant holding the constant.
+   * @return A DAGBooleanConstant holding the constant.
    */
   private DAGBooleanConstant buildBoolean(SimpleNode node) {
     assert node.is(JJTTRUE) || node.is(JJTFALSE);
@@ -159,7 +141,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node holding a variable identifier
-   * @return A new DAGVariable holding the variable's descriptor, or a dummy for propagation.
+   * @return A DAGVariable holding the variable's descriptor, or a dummy for propagation.
    */
   private DAGVariable buildVariable(SimpleNode node) {
     assert node.is(JJTIDENTIFIER);
@@ -183,7 +165,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node holding a this literal keyword
-   * @return A new DAGThis node, or dummy for propagation.
+   * @return A DAGThis node, or dummy for propagation.
    */
   private DAGVariable buildThis(SimpleNode node) {
     assert node.is(JJTTHIS);
@@ -202,13 +184,13 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node representing a new int array declaration.
-   * @return A new DAGNewIntArray node.
+   * @return A DAGNewIntArray node.
    */
   private DAGNewIntArray buildNewIntArray(SimpleNode node) {
     assert node.is(JJTNEWINTARRAY);
 
     SimpleNode indexExpressionNode = node.jjtGetChild(0);
-    DAGExpression expression = reuse(build(indexExpressionNode));
+    DAGExpression expression = build(indexExpressionNode);
 
     assertType(expression, intDescriptor, indexExpressionNode);
 
@@ -217,7 +199,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node representing a new declaration for a class type, with no args.
-   * @return A new DAGNewClass node.
+   * @return A DAGNewClass node.
    */
   private DAGNewClass buildNewClass(SimpleNode node) {
     assert node.is(JJTNEWCLASS);
@@ -233,13 +215,13 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node representing access to a property called 'length' of an int array.
-   * @return A new DAGLength node.
+   * @return A DAGLength node.
    */
   private DAGLength buildLength(SimpleNode node) {
     assert node.is(JJTLENGTH);
 
     SimpleNode expressionNode = node.jjtGetChild(0);
-    DAGExpression expression = reuse(build(expressionNode));
+    DAGExpression expression = build(expressionNode);
 
     assertType(expression, intArrayDescriptor, expressionNode);
 
@@ -248,7 +230,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node representing a unary operation. Only ! is supported.
-   * @return A new DAGNot node.
+   * @return A DAGNot node.
    */
   private DAGNot buildUnaryOp(SimpleNode node) {
     assert node.is(JJTNOT);
@@ -263,7 +245,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT node representing a binary operation. Only ! is supported.
-   * @return A new DAGBinaryOp node, if not optimized.
+   * @return A DAGBinaryOp node, if not optimized.
    */
   private DAGExpression buildBinaryOp(SimpleNode node) {
     assert node.is(JJTAND) || node.is(JJTLT) || node.is(JJTSUM) || node.is(JJTSUB)
@@ -272,8 +254,8 @@ public class ExpressionFactory extends BaseDAGFactory {
     SimpleNode lhsNode = node.jjtGetChild(0);
     SimpleNode rhsNode = node.jjtGetChild(1);
 
-    DAGExpression lhsExpression = reuse(build(lhsNode));
-    DAGExpression rhsExpression = reuse(build(rhsNode));
+    DAGExpression lhsExpression = build(lhsNode);
+    DAGExpression rhsExpression = build(rhsNode);
     BinaryOperator op = BinaryOperator.from(node);
 
     assertType(lhsExpression, op.getOperandType(), lhsNode);
@@ -284,7 +266,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT Bracket node representing an array access.
-   * @return A possibly reused DAGBracket node.
+   * @return A DAGBracket node.
    */
   private DAGBracket buildBracket(SimpleNode node) {
     assert node.is(JJTBRACKET);
@@ -292,8 +274,8 @@ public class ExpressionFactory extends BaseDAGFactory {
     SimpleNode arrayNode = node.jjtGetChild(0);
     SimpleNode indexNode = node.jjtGetChild(1);
 
-    DAGExpression arrayExpression = reuse(build(arrayNode));
-    DAGExpression indexExpression = reuse(build(indexNode));
+    DAGExpression arrayExpression = build(arrayNode);
+    DAGExpression indexExpression = build(indexNode);
 
     assertType(arrayExpression, intArrayDescriptor, arrayNode);
     assertType(indexExpression, intDescriptor, indexNode);
@@ -303,7 +285,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT function call node, either member or static method.
-   * @return A new DAGCall node.
+   * @return A DAGCall node.
    */
   private DAGCall buildCall(SimpleNode node) {
     assert node.is(JJTCALL);
@@ -329,7 +311,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT static method call node.
-   * @return A new DAGStaticCall node.
+   * @return A DAGStaticCall node.
    */
   private DAGStaticCall buildStaticCall(SimpleNode node) {
     assert node.is(JJTCALL);
@@ -351,7 +333,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     TypeDescriptor[] types = new TypeDescriptor[numArguments];
 
     for (int i = 0; i < numArguments; ++i) {
-      arguments[i] = reuse(build(argumentListNode.jjtGetChild(i)));
+      arguments[i] = build(argumentListNode.jjtGetChild(i));
       types[i] = arguments[i].getType();
     }
 
@@ -402,7 +384,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * @param node A JJT member method call node.
-   * @return A new DAGMethodCall node.
+   * @return A DAGMethodCall node.
    */
   private DAGMethodCall buildMethodCall(SimpleNode node) {
     assert node.is(JJTCALL);
@@ -413,7 +395,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     assert methodNameNode.is(JJTMETHODNAME);
     assert argumentListNode.is(JJTARGUMENTLIST);
 
-    DAGExpression object = reuse(build(objectNode));
+    DAGExpression object = build(objectNode);
 
     String methodName = methodNameNode.jjtGetVal();
 
@@ -422,7 +404,7 @@ public class ExpressionFactory extends BaseDAGFactory {
     TypeDescriptor[] types = new TypeDescriptor[numArguments];
 
     for (int i = 0; i < numArguments; ++i) {
-      arguments[i] = reuse(build(argumentListNode.jjtGetChild(i)));
+      arguments[i] = build(argumentListNode.jjtGetChild(i));
       types[i] = arguments[i].getType();
     }
 
@@ -485,6 +467,7 @@ public class ExpressionFactory extends BaseDAGFactory {
 
   /**
    * * Analysis of the problem of function signature deduction
+   * ! Problem #1:
    * During the process of evaluating a function call in buildCall(), we might
    * encounter an invocation of a method whose class we do not know about:
    *
@@ -514,6 +497,11 @@ public class ExpressionFactory extends BaseDAGFactory {
    * The specification says we must accept this code. So method1 must be deduced to return a's type,
    * i.e. it must be deduced to return int. Then the return types of a1, a2, a3, a4 are not relevant
    * even if they aren't actually known.
+   *
+   * More generally, our solution to this problem is as follows: if the method1 call is used in a
+   * context which expects a type T, it is assumed to return exactly T, and that return type is
+   * assigned to the Callable held by the DAGCall and is used when writing bytecode. If the method1
+   * call is a top-level statement, it is assumed
    *
    * It gets worse...
    *
@@ -577,7 +565,6 @@ public class ExpressionFactory extends BaseDAGFactory {
    * @param expression The DAGExpression node whose type is being checked.
    * @param type       The type the node should have.
    * @param node       The SimpleNode used to construct the expression, for diagnostics.
-   * @return The DAGExpression node.
    */
   private void assertType(DAGExpression expression, TypeDescriptor type, SimpleNode node) {
     assert expression != null && node != null;
@@ -604,11 +591,12 @@ public class ExpressionFactory extends BaseDAGFactory {
    * Asserts that the given DAGExpression node is a top-level statement. The SimpleNode
    * corresponding to this DAGExpression node is given as well. If the DAGExpression node is a
    * DAGCall of an external function, verify whether return type overload resolution should be
-   * applied.
+   * applied. Otherwise, it should be a DAGCall or a DAGNew, because these are the only expression
+   * which have side-effects. A binary-operator expression, for example, is unexpected in this
+   * context as it has no side-effects.
    *
    * @param expression The DAGExpression node whose type is being verified.
    * @param node       The SimpleNode used to construct the expression, for diagnostics.
-   * @return The DAGExpression node.
    */
   private void assertStatement(DAGExpression expression, SimpleNode node) {
     assert expression != null && node != null;
@@ -622,7 +610,12 @@ public class ExpressionFactory extends BaseDAGFactory {
       }
     }
 
-    return;
+    // Expression has side-effects?
+    if (expression instanceof DAGCall || expression instanceof DAGNew) return;
+
+    // No side-effects, issue diagnostic
+    DiagnosticsHandler.invalidTopLevelExpression(node);
+    update(Codes.WARNINGS);
   }
 
   private void deduceUnknownCallType(DAGCall call, TypeDescriptor type, SimpleNode node) {

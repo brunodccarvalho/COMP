@@ -66,6 +66,12 @@ public class JMMMainDescriptor
   }
 
   @Override
+  public String getBytecodeString() {
+    String mainbytecode = "main([Ljava/lang/String;)V";
+    return getParentClass().getBytecodeString() + "/" + mainbytecode;
+  }
+
+  @Override
   public boolean hasParameter(String name) {
     return false;
   }

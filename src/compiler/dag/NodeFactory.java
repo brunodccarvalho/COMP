@@ -1,8 +1,15 @@
 package compiler.dag;
 
-import static jjt.jmmTreeConstants.*;
-import static compiler.symbols.TypeDescriptor.*;
-import static compiler.symbols.PrimitiveDescriptor.*;
+import static compiler.symbols.PrimitiveDescriptor.booleanDescriptor;
+import static jjt.jmmTreeConstants.JJTASSIGNMENT;
+import static jjt.jmmTreeConstants.JJTBLOCKSTATEMENT;
+import static jjt.jmmTreeConstants.JJTIFELSESTATEMENT;
+import static jjt.jmmTreeConstants.JJTMAINDECLARATION;
+import static jjt.jmmTreeConstants.JJTMETHODDECLARATION;
+import static jjt.jmmTreeConstants.JJTPLAINSTATEMENT;
+import static jjt.jmmTreeConstants.JJTRETURNSTATEMENT;
+import static jjt.jmmTreeConstants.JJTVARIABLEDECLARATION;
+import static jjt.jmmTreeConstants.JJTWHILESTATEMENT;
 
 import compiler.exceptions.InternalCompilerError;
 import compiler.modules.CompilationStatus;
@@ -153,8 +160,7 @@ public class NodeFactory extends BaseDAGFactory {
     DAGNode[] nodes = new DAGNode[numNodes];
 
     for (int i = 0; i < numNodes; ++i) {
-      SimpleNode child = node.jjtGetChild(i);
-      nodes[i] = build(child);
+      nodes[i] = build(node.jjtGetChild(i));
     }
 
     return new DAGMulti(nodes);

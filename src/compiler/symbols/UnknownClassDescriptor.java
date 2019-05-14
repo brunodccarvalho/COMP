@@ -58,16 +58,6 @@ public class UnknownClassDescriptor extends ClassDescriptor {
   }
 
   @Override
-  public TypeDescriptor getReturnType(String name, FunctionSignature signature) {
-    return null;
-  }
-
-  @Override
-  public TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature) {
-    return null;
-  }
-
-  @Override
   public Deduction deduce(String name, FunctionSignature signature) {
     if (!signature.isComplete()) return new Deduction(null, false, true);
     JavaMethodDescriptor callable;

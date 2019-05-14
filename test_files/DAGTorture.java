@@ -115,6 +115,7 @@ class DAGTorture extends Torture {
     bool = io.get(io.put());      // E1: cannot deduce return type of io.put().
     External.get(io.what(1, 2));  // E2: cannot deduce return type of io.what().
     A.get(B.get(C.get()));        // E3: cannot deduce return types of B.get() and C.get()
+    2 * 3 + External.free();
 
     return 0;
   }

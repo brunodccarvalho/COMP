@@ -916,7 +916,7 @@ It applies to DAGBinaryOp, DAGBracket, DAGLength and DAGNot.
 
     DAGNewIntArray:
           $loadcount...
-          newarray
+          newarray int
         ? astore                  Store result of new int[loadcount]
 
     DAGIntegerConstant:

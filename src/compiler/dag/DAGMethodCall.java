@@ -1,7 +1,6 @@
 package compiler.dag;
 
 import compiler.symbols.FunctionSignature;
-import compiler.symbols.TypeDescriptor;
 import compiler.symbols.CallableDescriptor;
 import compiler.symbols.ClassDescriptor;
 

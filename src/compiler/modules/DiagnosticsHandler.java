@@ -10,7 +10,6 @@ import compiler.symbols.FunctionSignature;
 import compiler.symbols.TypeDescriptor;
 import compiler.symbols.JMMFunction;
 import jjt.SimpleNode;
-import java.util.Arrays;
 
 /**
  * Handles I/O logging of various compilation diagnostics, let it be
@@ -23,6 +22,7 @@ public class DiagnosticsHandler {
 
   public static boolean SUPPRESS_WARNINGS = false;
   public static boolean SUPPRESS_NOTES = false;
+  public static int PADDING = 7;
 
   public DiagnosticsHandler(File file) throws IOException {
     this.file = file;
@@ -153,6 +153,12 @@ public class DiagnosticsHandler {
     note(node, "Deduced return type of function " + functionName + signature + " to " + returnType);
   }
 
+  // Expression node, top level
+  public static void invalidTopLevelExpression(SimpleNode node) {
+    warning(node, "Top level expressions should be function calls or new statements;"
+                      + " these kind of expressions are not accepted in Java");
+  }
+
   private static void error(SimpleNode node, String message) {
     print(node, message, "Error", ANSI_RED);
   }
@@ -167,32 +173,59 @@ public class DiagnosticsHandler {
     print(node, message, "note", ANSI_CYAN);
   }
 
-  private static void print(SimpleNode node, String message, String header, String ansicolor) {
-    int errorLine = node.jjtGetFirstToken().beginLine;
-    int errorCol = node.jjtGetFirstToken().beginColumn;
-    String preamble = self.file.getName() + ":" + errorLine + ":" + errorCol;
-    preamble += ": " + ansicolor + header + ANSI_RESET + ": ";
-    System.err.println(preamble + message + ".");
-    self.pointer(errorLine, errorCol, ansicolor);
+  private static void print(SimpleNode node, String message, String kind, String ansicolor) {
+    int[] begin = node.treeBegin(), end = node.treeEnd();
+    int beginLine = begin[0], endLine = end[0], beginColumn = begin[1], endColumn = end[1];
+
+    header(endLine, endColumn, message, kind, ansicolor);
+
+    if (beginLine == endLine) {
+      tilded(endLine, beginColumn, endColumn, ansicolor);
+    } else {
+      pointer(endLine, endColumn, ansicolor);
+    }
   }
 
-  private void pointer(int errorLine, int errorCol, String ansicolor) {
-    char[] data = new char[errorCol - 1];
-    Arrays.fill(data, ' ');
-    System.err.println(lines.get(errorLine - 1));
-    for (int i = 0; i < errorCol - 1; i++) {
-      System.err.print(" ");
-    }
-    System.err.println(ansicolor + "^" + ANSI_RESET + "\n");
+  //    123 |
+  private static String front(int line) {
+    String lineString = Integer.toString(line);
+    int numspaces = PADDING - 2 > lineString.length() ? (PADDING - 2 - lineString.length()) : 0;
+    return " ".repeat(numspaces) + lineString + " |";
+  }
+
+  //  File.java:line:col: $kind$: message\n
+  private static void header(int line, int col, String message, String kind, String ansicolor) {
+    String header = self.file.getName() + ":" + line + ":" + col;
+    header += ": " + ansicolor + kind + ANSI_RESET + ": " + message + ".";
+    System.err.println(header);
+  }
+
+  //       |     ~~~~~~~~~~^
+  private static void tilded(int line, int beginColumn, int endColumn, String ansicolor) {
+    String spaces = " ".repeat(beginColumn - 1), tildes = "~".repeat(endColumn - beginColumn - 1);
+    String pointer = spaces + ansicolor + tildes + "^" + ANSI_RESET;
+    String leftTop = front(line), leftBot = " ".repeat(leftTop.length() - 1) + "|";
+
+    System.err.println(leftTop + self.lines.get(line - 1));
+    System.err.println(leftBot + pointer);
+  }
+
+  //       |               ^
+  private static void pointer(int line, int col, String ansicolor) {
+    String spaces = " ".repeat(col - 1);
+    String leftTop = front(line), leftBot = " ".repeat(leftTop.length() - 1) + "|";
+
+    System.err.println(leftTop + self.lines.get(line - 1));
+    System.err.println(leftBot + spaces + ansicolor + "^" + ANSI_RESET + "\n");
   }
 
   private static final String ANSI_RESET = "\u001B[0m";
-  private static final String ANSI_BLACK = "\u001B[30m";
+  // private static final String ANSI_BLACK = "\u001B[30m";
   private static final String ANSI_RED = "\u001B[31m";
-  private static final String ANSI_GREEN = "\u001B[32m";
-  private static final String ANSI_YELLOW = "\u001B[33m";
-  private static final String ANSI_BLUE = "\u001B[34m";
+  // private static final String ANSI_GREEN = "\u001B[32m";
+  // private static final String ANSI_YELLOW = "\u001B[33m";
+  // private static final String ANSI_BLUE = "\u001B[34m";
   private static final String ANSI_PURPLE = "\u001B[35m";
   private static final String ANSI_CYAN = "\u001B[36m";
-  private static final String ANSI_WHITE = "\u001B[37m";
+  // private static final String ANSI_WHITE = "\u001B[37m";
 }

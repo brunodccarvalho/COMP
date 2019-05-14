@@ -29,6 +29,13 @@ public class MemberDescriptor extends VariableDescriptor {
     return parent;
   }
 
+  /**
+   * @return The field spec for Jasmin bytecode.
+   */
+  public String getBytecodeFieldSpec() {
+    return parent.getBytecodeString() + "/" + getName();
+  }
+
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */

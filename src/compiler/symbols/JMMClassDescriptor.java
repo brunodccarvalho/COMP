@@ -222,17 +222,6 @@ public class JMMClassDescriptor extends ClassDescriptor {
   }
 
   @Override
-  public TypeDescriptor getReturnType(String name, FunctionSignature signature) {
-    JMMMethodDescriptor method = getMethod(name, signature);
-    return method == null ? null : method.getReturnType();
-  }
-
-  @Override
-  public TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature) {
-    return null;
-  }
-
-  @Override
   public Deduction deduce(String name, FunctionSignature signature) {
     HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
     if (map == null || map.isEmpty()) return new Deduction(null, false, false);

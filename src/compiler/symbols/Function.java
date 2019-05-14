@@ -35,4 +35,9 @@ public interface Function {
    * @return The type descriptor for the return type of this function.
    */
   public TypeDescriptor getReturnType();
+
+  /**
+   * @return The Jasmin bytecode String descriptor for this function.
+   */
+  public String getBytecodeString();
 }

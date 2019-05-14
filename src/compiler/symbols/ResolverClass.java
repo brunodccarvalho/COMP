@@ -87,20 +87,6 @@ public interface ResolverClass {
   public abstract VariableDescriptor resolveStatic(String name);
 
   /**
-   * @param name      The name of a method
-   * @param signature The signature of the method
-   * @return The return type of that method.
-   */
-  public abstract TypeDescriptor getReturnType(String name, FunctionSignature signature);
-
-  /**
-   * @param name The name of a static method
-   * @param signature The signature of the method
-   * @return The return type of that method.
-   */
-  public abstract TypeDescriptor getReturnTypeStatic(String name, FunctionSignature signature);
-
-  /**
    * @param name       A method's name
    * @param signature  A method's original signature, augmented
    * @return The function matching this member invocation, without unknown types in it.

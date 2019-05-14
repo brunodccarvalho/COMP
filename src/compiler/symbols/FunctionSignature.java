@@ -50,6 +50,14 @@ public class FunctionSignature {
     return true;
   }
 
+  public String getBytecodeString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("(");
+    for (TypeDescriptor type : parameterTypes) builder.append(type.getBytecodeString());
+    builder.append(")");
+    return builder.toString();
+  }
+
   @Override
   public String toString() {
     StringBuilder string = new StringBuilder();
