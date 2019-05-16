@@ -9,10 +9,10 @@ class Dog {
     Dog dog;
     ioPlus.printResult(100*100);
     full = false;
-    //dog = new Dog();
-    //dog.run(10);
+    dog = new Dog();
+    dog.run();
   }
-  public int run(int a) {
+  public int run() {
     boolean full;
     int sleepEatFactor;
     int x;

@@ -7,6 +7,7 @@ import compiler.dag.DAGBracket;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
 import compiler.dag.DAGMethodCall;
+import compiler.dag.DAGNewClass;
 import compiler.dag.DAGNewIntArray;
 import compiler.dag.DAGStaticCall;
 import compiler.dag.DAGVariable;
@@ -59,7 +60,11 @@ public class Expression extends BaseStatement {
             NewIntArray newObject = new NewIntArray(this.function, (DAGNewIntArray)expression);
             expressionBody = expressionBody.concat(newObject.toString());
         }
-
+        else if(expression instanceof DAGNewClass)
+        {
+            NewClass nclass = new NewClass(this.function, (DAGNewClass) expression);
+            expressionBody = expressionBody.concat(nclass.toString());
+        }
         else if(expression instanceof DAGStaticCall)
         {
             StaticCall scall = new StaticCall(this.function, (DAGStaticCall) expression);
