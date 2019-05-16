@@ -4,15 +4,7 @@ class Dog {
   int numberKm;
   int[] foodEaten;
 
-  public static void main(String[] args) {
-    boolean full;
-    Dog dog;
-    ioPlus.printResult(100*100);
-    full = false;
-    dog = new Dog();
-    dog.run();
-  }
-  public int run() {
+  public int run(int a, int b) {
     boolean full;
     int sleepEatFactor;
     int x;

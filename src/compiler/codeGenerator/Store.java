@@ -16,7 +16,7 @@ public class Store extends MethodBodyContent {
     {
         super(function);
         this.variableDescriptor = variable.getVariable();
-        this.variableIndex = function.variablesIndexes.get(this.variableDescriptor);
+        this.variableIndex = this.function.variablesIndexes.get(this.variableDescriptor);
     }
 
     @Override

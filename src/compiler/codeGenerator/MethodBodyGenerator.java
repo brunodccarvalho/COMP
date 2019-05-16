@@ -7,6 +7,7 @@ import compiler.dag.DAGExpression;
 import compiler.dag.DAGIfElse;
 import compiler.dag.DAGMulti;
 import compiler.dag.DAGNode;
+import compiler.dag.DAGReturn;
 import compiler.dag.DAGWhile;
 import compiler.symbols.JMMFunction;
 
@@ -52,6 +53,8 @@ public class MethodBodyGenerator {
         }
         else if(statement instanceof DAGExpression)
             baseStatement = new Expression(this.function, (DAGExpression)statement);
+        else if(statement instanceof DAGReturn)
+            baseStatement = new MethodReturn(this.function, (DAGReturn)statement);
         else if(statement instanceof DAGIfElse)
             baseStatement = new IfElse(this.function, (DAGIfElse)statement, this.labelGenerator);
         else if(statement instanceof DAGWhile)
