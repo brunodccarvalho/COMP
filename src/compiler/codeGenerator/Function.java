@@ -23,14 +23,14 @@ public abstract class Function extends JVMInst {
         this.function = function;
         this.data = data;
         this.variablesIndexes = new HashMap<>();
-        this.methodBody = new MethodBodyGenerator(this, function);
         this.arrangeIndexes();
+        this.methodBody = new MethodBodyGenerator(this, function);
     }
 
     private void arrangeIndexes() {
-        this.arrangeLocalsIndexes();
         if(this.function instanceof JMMCallableDescriptor) 
             this.arrangeParamIndexes();
+        this.arrangeLocalsIndexes();
     }
 
     private void arrangeLocalsIndexes() {
