@@ -9,7 +9,7 @@ public class BracketAccess extends MethodBodyContent {
      * 1. Load reference to the given array
      * 2. Push the array's index
      */
-    private static String AALOAD = "??\n\taaload";
+    private static String AALOAD = "??\n\tiaload";
     private DAGExpression arrayReference;
     private DAGExpression indexExpression;
 

@@ -13,18 +13,24 @@ class Dog {
     dog.run(10,10);
   }
   public int run(int a, int b) {
-    boolean full;
-    int sleepEatFactor;
-    int x;
-    int y;
-    x=a;
-    // foodEaten = new int[2];
-    // foodEaten[0] = -3;
-    
-    while(1 < 2) {
-      x = x + 1;
+    int[] array;
+    int i;
+    array = new int[11];
+    i = 0;
+
+    while(i < 10) {
+      ioPlus.printResult(i);
+      array[i] = i;
+      i = i + 1;
     }
-    
-    return numberKm;
+
+    i = 0;
+
+    while(i < 11) {
+      ioPlus.printResult(array[i]);
+      i = i + 1;
+    }
+  
+    return i;
   }
 }

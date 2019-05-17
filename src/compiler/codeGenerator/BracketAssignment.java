@@ -10,7 +10,7 @@ public class BracketAssignment extends Assignment {
      * 2. Push the array's index
      * 3. Load value to be assigned to the a position of the array
      */
-    private static String AASTORE = "???\n\taastore";
+    private static String IASTORE = "???\n\tiastore";
     private DAGExpression indexExpression;
 
     public BracketAssignment(Function function, DAGBracketAssignment statement) {
@@ -27,6 +27,6 @@ public class BracketAssignment extends Assignment {
         Expression expression = new Expression(this.function, indexExpression);
         String expressionContent = expression.toString();
 
-        return subst(AASTORE, referenceLoad, expressionContent, expressionBody.toString());
+        return subst(IASTORE, referenceLoad, expressionContent, expressionBody.toString());
     }
 }

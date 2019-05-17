@@ -8,7 +8,7 @@ public class NewIntArray extends NewObject {
     /**
      * 1. Expression which represents the number of elements in the array
      */
-    private static String NEWINTARRAY = "?\n\tanewarray I";
+    private static String NEWINTARRAY = "?\n\tnewarray int";
 
     public NewIntArray(Function function, DAGNewIntArray dagNew) {
         super(function, dagNew);
