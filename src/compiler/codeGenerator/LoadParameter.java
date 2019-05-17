@@ -27,7 +27,7 @@ public class LoadParameter extends JVMInst {
         String regexLoad = CodeGeneratorConstants.load.get(variableType);
         if(regexLoad == null)
             regexLoad = Load.LOADADDRESS;
-        return subst(regexLoad, String.valueOf(variableIndex+1));
+        return subst(regexLoad, String.valueOf(variableIndex));
 
     }
     

@@ -36,8 +36,10 @@ public abstract class Function extends JVMInst {
 
     private void arrangeLocalsIndexes() {
         Collection<LocalDescriptor> locals = this.data.localsMap.get(this.function).getVariables().values();
-        for(LocalDescriptor local: locals) 
+        for(LocalDescriptor local: locals) {
             this.variablesIndexes.put(local, ++index);
+            System.out.println("local " + local.getName() + " : " + index);
+        }
     }
 
     private void arrangeParamIndexes() {

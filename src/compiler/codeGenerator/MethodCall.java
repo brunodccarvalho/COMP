@@ -16,7 +16,8 @@ public class MethodCall extends MethodBodyContent {
         DAGExpression expression = (((DAGMethodCall)methodCall).getObjectExpression());
         if(expression instanceof DAGVariable)
             this.callObjectIndex = this.function.variablesIndexes.get(((DAGVariable)expression).getVariable());
-        this.methodSignature = new MethodSignature(methodCall);
+            System.out.println("--> " + ((DAGVariable)expression).getVariable().getName() + " : " + this.callObjectIndex);
+            this.methodSignature = new MethodSignature(methodCall);
         this.parameterPush = new ParameterPush(this.function, methodCall.getArguments());
     }
 
@@ -25,7 +26,7 @@ public class MethodCall extends MethodBodyContent {
         if(this.callObjectIndex == null)
             this.callObjectIndex = 0;
         String methodCallBody = new String();
-        String invoke = JVMInst.subst(MethodCall.INVOKEVIRTUAL, Integer.toString(callObjectIndex+1),parameterPush.toString(), methodSignature.toString());
+        String invoke = JVMInst.subst(MethodCall.INVOKEVIRTUAL, Integer.toString(callObjectIndex),parameterPush.toString(), methodSignature.toString());
         methodCallBody = methodCallBody.concat(invoke);
         return methodCallBody;
     }

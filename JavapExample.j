@@ -1,6 +1,6 @@
-Classfile /home/bruno/mieic/comp/COMP/JavapExample.class
-  Last modified May 14, 2019; size 3866 bytes
-  MD5 checksum 62859f8959a6872b453250ad2991c419
+Classfile /home/sofia/Documents/professional/2nd_semestre/COMP/FEUP-COMP/JavapExample.class
+  Last modified May 17, 2019; size 3860 bytes
+  MD5 checksum f98b684778215f514967ff827003ae54
   Compiled from "JavapExample.java"
 class JavapExample
   minor version: 0
@@ -197,13 +197,10 @@ Constant pool:
          1: iload_2
          2: iadd
          3: istore_3
-         4: iconst_0
-         5: istore_3
-         6: return
+         4: return
       LineNumberTable:
         line 15: 0
         line 16: 4
-        line 17: 6
 
   void DAGSub(int, int);
     descriptor: (II)V
@@ -216,8 +213,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 20: 0
-        line 21: 4
+        line 19: 0
+        line 20: 4
 
   void DAGMul(int, int);
     descriptor: (II)V
@@ -230,8 +227,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 24: 0
-        line 25: 4
+        line 23: 0
+        line 24: 4
 
   void DAGDiv(int, int);
     descriptor: (II)V
@@ -244,8 +241,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 28: 0
-        line 29: 4
+        line 27: 0
+        line 28: 4
 
   void DAGLess(int, int);
     descriptor: (II)V
@@ -261,8 +258,8 @@ Constant pool:
         10: istore_3
         11: return
       LineNumberTable:
-        line 32: 0
-        line 33: 11
+        line 31: 0
+        line 32: 11
       StackMapTable: number_of_entries = 2
         frame_type = 9 /* same */
         frame_type = 64 /* same_locals_1_stack_item */
@@ -283,8 +280,8 @@ Constant pool:
         13: istore_3
         14: return
       LineNumberTable:
-        line 36: 0
-        line 37: 14
+        line 35: 0
+        line 36: 14
       StackMapTable: number_of_entries = 2
         frame_type = 12 /* same */
         frame_type = 64 /* same_locals_1_stack_item */
@@ -300,8 +297,8 @@ Constant pool:
          2: istore_2
          3: return
       LineNumberTable:
-        line 40: 0
-        line 41: 3
+        line 39: 0
+        line 40: 3
 
   void DAGNot(boolean);
     descriptor: (Z)V
@@ -316,8 +313,8 @@ Constant pool:
          9: istore_2
         10: return
       LineNumberTable:
-        line 44: 0
-        line 45: 10
+        line 43: 0
+        line 44: 10
       StackMapTable: number_of_entries = 2
         frame_type = 8 /* same */
         frame_type = 64 /* same_locals_1_stack_item */
@@ -334,8 +331,8 @@ Constant pool:
          3: istore_3
          4: return
       LineNumberTable:
-        line 48: 0
-        line 49: 4
+        line 47: 0
+        line 48: 4
 
   void DAGNewClass();
     descriptor: ()V
@@ -348,8 +345,8 @@ Constant pool:
          7: astore_1
          8: return
       LineNumberTable:
-        line 52: 0
-        line 53: 8
+        line 51: 0
+        line 52: 8
 
   void DAGNewIntArray(int);
     descriptor: (I)V
@@ -361,8 +358,8 @@ Constant pool:
          3: astore_2
          4: return
       LineNumberTable:
-        line 56: 0
-        line 57: 4
+        line 55: 0
+        line 56: 4
 
   void DAGIntegerConstant();
     descriptor: ()V
@@ -385,14 +382,14 @@ Constant pool:
         24: istore        7
         26: return
       LineNumberTable:
-        line 60: 0
-        line 61: 2
-        line 62: 5
-        line 63: 8
-        line 64: 13
-        line 65: 18
-        line 66: 22
-        line 67: 26
+        line 59: 0
+        line 60: 2
+        line 61: 5
+        line 62: 8
+        line 63: 13
+        line 64: 18
+        line 65: 22
+        line 66: 26
 
   void DAGBooleanConstant();
     descriptor: ()V
@@ -405,9 +402,9 @@ Constant pool:
          3: istore_2
          4: return
       LineNumberTable:
-        line 70: 0
-        line 71: 2
-        line 72: 4
+        line 69: 0
+        line 70: 2
+        line 71: 4
 
   void DAGAssignmentMember(int);
     descriptor: (I)V
@@ -419,8 +416,8 @@ Constant pool:
          2: putfield      #6                  // Field member:I
          5: return
       LineNumberTable:
-        line 77: 0
-        line 78: 5
+        line 76: 0
+        line 77: 5
 
   void DAGAssignmentParameter(int, int);
     descriptor: (II)V
@@ -431,8 +428,8 @@ Constant pool:
          1: istore_1
          2: return
       LineNumberTable:
-        line 81: 0
-        line 82: 2
+        line 80: 0
+        line 81: 2
 
   void DAGAssignmentLocal(int);
     descriptor: (I)V
@@ -443,8 +440,8 @@ Constant pool:
          1: istore_2
          2: return
       LineNumberTable:
-        line 85: 0
-        line 86: 2
+        line 84: 0
+        line 85: 2
 
   void DAGBracketAssignmentMember(int, int);
     descriptor: (II)V
@@ -458,8 +455,8 @@ Constant pool:
          6: iastore
          7: return
       LineNumberTable:
-        line 91: 0
-        line 92: 7
+        line 90: 0
+        line 91: 7
 
   void DAGBracketAssignmentParameter(int[], int, int);
     descriptor: ([III)V
@@ -472,8 +469,8 @@ Constant pool:
          3: iastore
          4: return
       LineNumberTable:
-        line 95: 0
-        line 96: 4
+        line 94: 0
+        line 95: 4
 
   void DAGBracketAssignmentLocal(int, int);
     descriptor: (II)V
@@ -488,9 +485,9 @@ Constant pool:
          7: iastore
          8: return
       LineNumberTable:
-        line 99: 0
-        line 100: 4
-        line 101: 8
+        line 98: 0
+        line 99: 4
+        line 100: 8
 
   void methodF(int, boolean, int);
     descriptor: (IZI)V
@@ -499,7 +496,7 @@ Constant pool:
       stack=0, locals=4, args_size=4
          0: return
       LineNumberTable:
-        line 103: 0
+        line 102: 0
 
   static void staticF(int, boolean, int);
     descriptor: (IZI)V
@@ -508,7 +505,7 @@ Constant pool:
       stack=0, locals=3, args_size=3
          0: return
       LineNumberTable:
-        line 105: 0
+        line 104: 0
 
   int methodI(int, boolean, int);
     descriptor: (IZI)I
@@ -518,7 +515,7 @@ Constant pool:
          0: iconst_0
          1: ireturn
       LineNumberTable:
-        line 108: 0
+        line 107: 0
 
   static int staticI(int, boolean, int);
     descriptor: (IZI)I
@@ -528,7 +525,7 @@ Constant pool:
          0: iconst_0
          1: ireturn
       LineNumberTable:
-        line 112: 0
+        line 111: 0
 
   void DAGMethodCall();
     descriptor: ()V
@@ -542,8 +539,8 @@ Constant pool:
          6: invokevirtual #9                  // Method methodF:(IZI)V
          9: return
       LineNumberTable:
-        line 116: 0
-        line 117: 9
+        line 115: 0
+        line 116: 9
 
   void DAGStaticCall();
     descriptor: ()V
@@ -556,8 +553,8 @@ Constant pool:
          5: invokestatic  #10                 // Method staticF:(IZI)V
          8: return
       LineNumberTable:
-        line 120: 0
-        line 121: 8
+        line 119: 0
+        line 120: 8
 
   void DAGMethodCallInt();
     descriptor: ()V
@@ -572,8 +569,8 @@ Constant pool:
          9: istore_1
         10: return
       LineNumberTable:
-        line 124: 0
-        line 125: 10
+        line 123: 0
+        line 124: 10
 
   void DAGStaticCallInt();
     descriptor: ()V
@@ -587,8 +584,8 @@ Constant pool:
          8: istore_1
          9: return
       LineNumberTable:
-        line 128: 0
-        line 129: 9
+        line 127: 0
+        line 128: 9
 
   void DAGCallReturningIgnored();
     descriptor: ()V
@@ -606,10 +603,10 @@ Constant pool:
         14: pop
         15: return
       LineNumberTable:
-        line 132: 0
-        line 133: 5
-        line 134: 10
-        line 135: 15
+        line 131: 0
+        line 132: 5
+        line 133: 10
+        line 134: 15
 
   int IfElseStatementBoolean(boolean);
     descriptor: (Z)I
@@ -626,10 +623,10 @@ Constant pool:
         11: iload_2
         12: ireturn
       LineNumberTable:
-        line 140: 0
-        line 141: 4
-        line 143: 9
-        line 146: 11
+        line 139: 0
+        line 140: 4
+        line 142: 9
+        line 145: 11
       StackMapTable: number_of_entries = 2
         frame_type = 9 /* same */
         frame_type = 252 /* append */
@@ -652,10 +649,10 @@ Constant pool:
         12: iload_3
         13: ireturn
       LineNumberTable:
-        line 152: 0
-        line 153: 5
-        line 155: 10
-        line 158: 12
+        line 151: 0
+        line 152: 5
+        line 154: 10
+        line 157: 12
       StackMapTable: number_of_entries = 2
         frame_type = 10 /* same */
         frame_type = 252 /* append */
@@ -679,10 +676,10 @@ Constant pool:
         15: iload_3
         16: ireturn
       LineNumberTable:
-        line 164: 0
-        line 165: 8
-        line 167: 13
-        line 170: 15
+        line 163: 0
+        line 164: 8
+        line 166: 13
+        line 169: 15
       StackMapTable: number_of_entries = 2
         frame_type = 13 /* same */
         frame_type = 252 /* append */
@@ -706,11 +703,11 @@ Constant pool:
         17: iload_2
         18: ireturn
       LineNumberTable:
-        line 178: 0
-        line 180: 2
-        line 181: 6
-        line 182: 11
-        line 185: 17
+        line 177: 0
+        line 179: 2
+        line 180: 6
+        line 181: 11
+        line 184: 17
       StackMapTable: number_of_entries = 2
         frame_type = 252 /* append */
           offset_delta = 2
@@ -738,12 +735,12 @@ Constant pool:
         23: iload_3
         24: ireturn
       LineNumberTable:
-        line 189: 0
-        line 191: 2
-        line 192: 7
-        line 193: 12
-        line 194: 17
-        line 197: 23
+        line 188: 0
+        line 190: 2
+        line 191: 7
+        line 192: 12
+        line 193: 17
+        line 196: 23
       StackMapTable: number_of_entries = 2
         frame_type = 252 /* append */
           offset_delta = 2
@@ -772,12 +769,12 @@ Constant pool:
         26: iload_3
         27: ireturn
       LineNumberTable:
-        line 201: 0
-        line 203: 2
-        line 204: 10
-        line 205: 15
-        line 206: 20
-        line 209: 26
+        line 200: 0
+        line 202: 2
+        line 203: 10
+        line 204: 15
+        line 205: 20
+        line 208: 26
       StackMapTable: number_of_entries = 2
         frame_type = 252 /* append */
           offset_delta = 2
@@ -791,7 +788,7 @@ Constant pool:
       stack=0, locals=1, args_size=1
          0: return
       LineNumberTable:
-        line 213: 0
+        line 212: 0
 
   int ReturnInt();
     descriptor: ()I
@@ -801,7 +798,7 @@ Constant pool:
          0: iconst_1
          1: ireturn
       LineNumberTable:
-        line 217: 0
+        line 216: 0
 
   int[] ReturnReference();
     descriptor: ()[I
@@ -812,7 +809,7 @@ Constant pool:
          1: newarray       int
          3: areturn
       LineNumberTable:
-        line 221: 0
+        line 220: 0
 
   boolean assignmentBoolean(boolean);
     descriptor: (Z)Z
@@ -824,8 +821,8 @@ Constant pool:
          2: iload_2
          3: ireturn
       LineNumberTable:
-        line 225: 0
-        line 226: 2
+        line 224: 0
+        line 225: 2
 
   int assignmentInt(int);
     descriptor: (I)I
@@ -837,8 +834,8 @@ Constant pool:
          2: iload_2
          3: ireturn
       LineNumberTable:
-        line 230: 0
-        line 231: 2
+        line 229: 0
+        line 230: 2
 
   int[] assignmentIntArray(int[]);
     descriptor: ([I)[I
@@ -850,8 +847,8 @@ Constant pool:
          2: aload_2
          3: areturn
       LineNumberTable:
-        line 235: 0
-        line 236: 2
+        line 234: 0
+        line 235: 2
 
   JavapExample assignmentClass(JavapExample);
     descriptor: (LJavapExample;)LJavapExample;
@@ -863,8 +860,8 @@ Constant pool:
          2: aload_2
          3: areturn
       LineNumberTable:
-        line 240: 0
-        line 241: 2
+        line 239: 0
+        line 240: 2
 
   int commonSubexpressionInt(int, int);
     descriptor: (II)I
@@ -884,6 +881,6 @@ Constant pool:
         10: iadd
         11: ireturn
       LineNumberTable:
-        line 245: 0
+        line 244: 0
 }
 SourceFile: "JavapExample.java"

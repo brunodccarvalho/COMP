@@ -5,6 +5,7 @@ import compiler.dag.DAGAssignment;
 import compiler.dag.DAGBracketAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIfElse;
+import compiler.dag.DAGLength;
 import compiler.dag.DAGMulti;
 import compiler.dag.DAGNode;
 import compiler.dag.DAGReturn;

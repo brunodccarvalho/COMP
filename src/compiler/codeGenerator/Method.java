@@ -23,7 +23,7 @@ public class Method extends Function {
     @Override
     public String toString()
     {
-        String methodStructure = subst(methodHeader.toString(), methodBody.toString());
+        String methodStructure = subst(this.methodHeader.toString(), this.methodBody.toString());
         return methodStructure;
     }
 

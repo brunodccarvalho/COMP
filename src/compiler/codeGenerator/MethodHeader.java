@@ -8,7 +8,7 @@ public class MethodHeader extends JVMInst {
      * 2: method stack and locals array size
      * 3: method body
      */
-    public static String METHOD = "\n.method public ?\n?\n?\n.end method";
+    public static String METHOD = "\n\n.method public ?\n?\n?\n.end method";
 
     private Method method;
     private MethodSignature methodSignature;

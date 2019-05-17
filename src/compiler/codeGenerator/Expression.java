@@ -6,6 +6,7 @@ import compiler.dag.DAGBooleanConstant;
 import compiler.dag.DAGBracket;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIntegerConstant;
+import compiler.dag.DAGLength;
 import compiler.dag.DAGMethodCall;
 import compiler.dag.DAGNewClass;
 import compiler.dag.DAGNewIntArray;
@@ -69,6 +70,10 @@ public class Expression extends BaseStatement {
         {
             StaticCall scall = new StaticCall(this.function, (DAGStaticCall) expression);
             expressionBody = expressionBody.concat(scall.toString());
+        }
+        else if(expression instanceof DAGExpression) {
+            ArrayLength arrayLength = new ArrayLength(this.function, (DAGLength)expression);
+            expressionBody = expressionBody.concat(arrayLength.toString());
         }
 
         // TODO: missing some instances of expression?

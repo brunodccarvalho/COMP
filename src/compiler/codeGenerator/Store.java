@@ -29,7 +29,7 @@ public class Store extends MethodBodyContent {
         String instruction = CodeGeneratorConstants.store.get(variableType);
         if(instruction == null)
             instruction = Store.STOREADDRESS;
-        return subst(instruction, String.valueOf(variableIndex+1));
+        return subst(instruction, String.valueOf(variableIndex));
     }
     
 }
