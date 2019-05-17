@@ -16,7 +16,6 @@ public class MethodCall extends MethodBodyContent {
         DAGExpression expression = (((DAGMethodCall)methodCall).getObjectExpression());
         if(expression instanceof DAGVariable)
             this.callObjectIndex = this.function.variablesIndexes.get(((DAGVariable)expression).getVariable());
-            System.out.println("--> " + ((DAGVariable)expression).getVariable().getName() + " : " + this.callObjectIndex);
             this.methodSignature = new MethodSignature(methodCall);
         this.parameterPush = new ParameterPush(this.function, methodCall.getArguments());
     }

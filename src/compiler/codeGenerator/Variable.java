@@ -30,7 +30,7 @@ public class Variable extends MethodBodyContent {
         }
         else if(variable instanceof DAGParameter)
         {
-            LoadParameter member = new LoadParameter((DAGParameter)variable);
+            LoadParameter member = new LoadParameter(this.function, (DAGParameter)variable);
             variableLoad = member.toString();
         }
         return variableLoad;

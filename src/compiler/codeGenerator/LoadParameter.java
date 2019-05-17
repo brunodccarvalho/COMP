@@ -6,15 +6,16 @@ import compiler.dag.DAGParameter;
 /**
  * LoadParameter
  */
-public class LoadParameter extends JVMInst {
+public class LoadParameter extends MethodBodyContent {
 
     private VariableDescriptor variableDescriptor;
     private Integer variableIndex;
 
-    LoadParameter(DAGParameter member)
+    LoadParameter(Function function, DAGParameter member)
     {
+        super(function);
         this.variableDescriptor = member.getVariable();
-        this.variableIndex = member.getIndex();
+        this.variableIndex = this.function.variablesIndexes.get(variableDescriptor);
     }
 
     @Override
