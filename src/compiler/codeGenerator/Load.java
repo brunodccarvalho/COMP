@@ -24,7 +24,6 @@ public class Load extends MethodBodyContent {
         super(function);
         this.variableDescriptor = variable.getVariable();
         this.variableIndex = this.function.variablesIndexes.get(variableDescriptor);
-        System.out.println("-- local " + variableDescriptor.getName() + " : " + this.variableIndex);
     }
 
     @Override

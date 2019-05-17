@@ -2,7 +2,7 @@ class Dog {
   int availableFood;
   int hoursSleep;
   int numberKm;
-  int[] foodEaten;
+  int[] array;
 
   public static void main(String[] args) {
     boolean full;
@@ -13,7 +13,6 @@ class Dog {
     dog.run(10,10);
   }
   public int run(int a, int b) {
-    int[] array;
     int i;
     array = new int[11];
     i = 0;
@@ -26,7 +25,7 @@ class Dog {
 
     i = 0;
 
-    while(i < 11) {
+    while(i < array.length) {
       ioPlus.printResult(array[i]);
       i = i + 1;
     }
