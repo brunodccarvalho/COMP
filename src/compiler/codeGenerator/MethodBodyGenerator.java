@@ -5,13 +5,11 @@ import compiler.dag.DAGAssignment;
 import compiler.dag.DAGBracketAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGIfElse;
-import compiler.dag.DAGLength;
 import compiler.dag.DAGMulti;
 import compiler.dag.DAGNode;
 import compiler.dag.DAGReturn;
 import compiler.dag.DAGWhile;
 import compiler.symbols.JMMFunction;
-
 import java.util.ArrayList;
 
 public class MethodBodyGenerator {
@@ -22,19 +20,34 @@ public class MethodBodyGenerator {
 
     private MethodBodyGenerator(Function function) {
         this.function = function;
-        this.labelGenerator = new LabelGenerator();
         this.statements = new ArrayList<BaseStatement>();
     } 
     
     public MethodBodyGenerator(Function function, JMMFunction methodDescriptor)
     {
         this(function);
+        this.labelGenerator = new LabelGenerator();
+        DAGMulti multiNodes = function.data.bodiesMap.get(methodDescriptor);
+        this.generateMultiStatements(multiNodes);
+    }
+
+    public MethodBodyGenerator(Function function, JMMFunction methodDescriptor, LabelGenerator labelGenerator)
+    {
+        this(function);
+        this.labelGenerator = labelGenerator;
         DAGMulti multiNodes = function.data.bodiesMap.get(methodDescriptor);
         this.generateMultiStatements(multiNodes);
     }
 
     public MethodBodyGenerator(Function function, DAGNode statement) {
         this(function);
+        this.labelGenerator = new LabelGenerator();
+        this.generateStatement(statement);
+    }
+
+    public MethodBodyGenerator(Function function, DAGNode statement, LabelGenerator labelGenerator) {
+        this(function);
+        this.labelGenerator = labelGenerator;
         this.generateStatement(statement);
     }
 
@@ -74,6 +87,4 @@ public class MethodBodyGenerator {
             methodBody = methodBody.concat(statement.toString());
         return methodBody;
     }
-
-    
 }

@@ -6,7 +6,7 @@ class Dog {
 
   public static void main(String[] args) {
     int i;
-    i = 4;
+    ioPlus.printResult(i);
 
   }
   
