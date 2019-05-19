@@ -10,6 +10,7 @@ import compiler.dag.DAGLength;
 import compiler.dag.DAGMethodCall;
 import compiler.dag.DAGNewClass;
 import compiler.dag.DAGNewIntArray;
+import compiler.dag.DAGNot;
 import compiler.dag.DAGStaticCall;
 import compiler.dag.DAGVariable;
 
@@ -63,17 +64,21 @@ public class Expression extends BaseStatement {
         }
         else if(expression instanceof DAGNewClass)
         {
-            NewClass nclass = new NewClass(this.function, (DAGNewClass) expression);
-            expressionBody = expressionBody.concat(nclass.toString());
+            NewClass newClass = new NewClass(this.function, (DAGNewClass) expression);
+            expressionBody = expressionBody.concat(newClass.toString());
         }
         else if(expression instanceof DAGStaticCall)
         {
-            StaticCall scall = new StaticCall(this.function, (DAGStaticCall) expression);
-            expressionBody = expressionBody.concat(scall.toString());
+            StaticCall call = new StaticCall(this.function, (DAGStaticCall) expression);
+            expressionBody = expressionBody.concat(call.toString());
         }
-        else if(expression instanceof DAGExpression) {
+        else if(expression instanceof DAGLength) {
             ArrayLength arrayLength = new ArrayLength(this.function, (DAGLength)expression);
             expressionBody = expressionBody.concat(arrayLength.toString());
+        }
+        else if(expression instanceof DAGNot) {
+            Not not = new Not(this.function, (DAGNot)expression);
+            expressionBody = expressionBody.concat(not.toString());
         }
 
         // TODO: missing some instances of expression?

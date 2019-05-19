@@ -23,7 +23,6 @@ class Quicksort {
         int i;
         i = 0;
         while (i < L.length) {
-            io.println(L[i]);
             i = i + 1;
         }
 

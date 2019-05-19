@@ -7,12 +7,15 @@ class Dog {
   public static void main(String[] args) {
     int i;
     i = 4;
+
   }
   
   public int run(int a, int b) {
     int i;
     array = new int[11];
     i = 0;
+
+
     /*
     while(i < 10) {
       ioPlus.printResult(i);

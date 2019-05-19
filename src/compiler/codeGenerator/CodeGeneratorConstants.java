@@ -33,8 +33,8 @@ public final class CodeGeneratorConstants {
         binaryOperators.put("/", "\tidiv");
         binaryOperators.put("<", "\tdcmpg");
         binaryOperators.put("&&", "\tiand");
-        load.put("int", "\tiload ?");
-        load.put("boolean", "\tiload ?");
+        load.put("int", "\n\tiload ?");
+        load.put("boolean", "\n\tiload ?");
         returnTypes.put("int", "?\tireturn");
         returnTypes.put("boolean", "?\tireturn");
         returnTypes.put("int[]", "?\tareturn");
@@ -168,5 +168,5 @@ public final class CodeGeneratorConstants {
     /**
      * Main
      */
-    public static String MAIN = "\n.method public static main([Ljava/lang/String;)V\n?\n?\n?\n.end method";
+    public static String MAIN = "\n\n.method public static main([Ljava/lang/String;)V\n?\n?\n?\n.end method";
 }
