@@ -7,7 +7,7 @@ JJT := jjt
 COMPILER := compiler
 
 # Test file (in folder test_files)
-TEST_FILE := Dog.java	# Caution: files Life and MonteCarloPi don't work yet
+TEST_FILE := Quicksort.jmm	# Caution: files Life and MonteCarloPi don't work yet
 MYSTERIOUS := Mysterious.java
 DAG_TEST_FILE = DAGTorture.java
 

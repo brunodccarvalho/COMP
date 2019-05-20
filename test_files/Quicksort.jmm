@@ -7,15 +7,22 @@ class Quicksort {
         L = new int[10];
 
         i = 0;
+        ioPlus.printResult(11);
         while (i < L.length) {
             L[i] = L.length - i;
-
+            
+            ioPlus.printResult(i);
             i = i + 1;
         }
-
+        
+        ioPlus.printResult(22);
         q = new Quicksort();
+        
+        ioPlus.printResult(33);
 
         q.quicksort(L);
+        
+        ioPlus.printResult(44);
         q.printL(L);
     }
 
@@ -31,15 +38,16 @@ class Quicksort {
     }
 
     public boolean quicksort(int[] L) {
+        ioPlus.printResult(55);
         return this.quicksort(L, 0, L.length - 1);
     }
 
     public boolean quicksort(int[] L, int lo, int hi) {
         int p;
+        ioPlus.printResult(66);
 
         if (lo < hi) {
             p = this.partition(L, lo, hi);
-
             this.quicksort(L, lo, p - 1);
             this.quicksort(L, p + 1, hi);
         } else {}

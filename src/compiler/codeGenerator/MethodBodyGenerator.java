@@ -66,7 +66,7 @@ public class MethodBodyGenerator {
                 baseStatement = new Assignment(this.function, (DAGAssignment)statement);
         }
         else if(statement instanceof DAGExpression)
-            baseStatement = new Expression(this.function, (DAGExpression)statement);
+            baseStatement = new ExpressionStatement(this.function, (DAGExpression)statement);
         else if(statement instanceof DAGReturn)
             baseStatement = new MethodReturn(this.function, (DAGReturn)statement);
         else if(statement instanceof DAGIfElse)
