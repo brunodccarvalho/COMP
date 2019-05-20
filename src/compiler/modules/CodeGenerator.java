@@ -1,6 +1,7 @@
 package compiler.modules;
 
 import compiler.codeGenerator.ClassHeader;
+import compiler.codeGenerator.CodeGeneratorConstants;
 import compiler.codeGenerator.Constructors;
 import compiler.codeGenerator.FieldDefinitionsHeader;
 import compiler.codeGenerator.MethodGenerator;
@@ -24,6 +25,9 @@ public class CodeGenerator extends CompilationStatus {
         FieldDefinitionsHeader fieldDefinitions = new FieldDefinitionsHeader(data.jmmClass.getMembersList());
         Constructors constructors = new Constructors();
         MethodGenerator methods = new MethodGenerator(this.data);
-        this.writer.writeFile(classHeader.toString(), superHeader.toString(), fieldDefinitions.toString(), constructors.toString(), methods.toString());
+        if(data.jmmClass.hasMain())
+            this.writer.writeFile(classHeader.toString(), superHeader.toString(), fieldDefinitions.toString(), constructors.toString(), methods.toString());
+        else
+            this.writer.writeFile(classHeader.toString(), superHeader.toString(), fieldDefinitions.toString(), constructors.toString(), methods.toString(),CodeGeneratorConstants.DEFAULTMAIN);
     }
 }

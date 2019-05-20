@@ -169,4 +169,5 @@ public final class CodeGeneratorConstants {
      * Main
      */
     public static String MAIN = "\n\n.method public static main([Ljava/lang/String;)V\n?\n?\n?\n.end method";
+    public static String DEFAULTMAIN = "\n\n.method public static main([Ljava/lang/String;)V\n\t.limit stack 1\n\t.limit locals 1\n\treturn\n.end method";
 }
