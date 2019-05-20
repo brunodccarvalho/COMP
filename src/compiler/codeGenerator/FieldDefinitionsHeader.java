@@ -8,7 +8,7 @@ public class FieldDefinitionsHeader extends JVMInst {
      * 1. Field Name
      * 2. Field Type Descriptor
      */
-    public static String FIELDDEF = "\n.field protected ? ?";
+    public static String FIELDDEF = "\n.field protected '?' ?";
     private final MemberDescriptor[] memberDescriptors;
 
     public FieldDefinitionsHeader(MemberDescriptor[] memberDescriptors) {

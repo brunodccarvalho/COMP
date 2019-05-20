@@ -6,16 +6,17 @@ class Dog {
 
   public static void main(String[] args) {
     int i;
-    ioPlus.printResult(i);
-
+    Dog dog;
+    dog = new Dog();
+    dog.run(1,2);
   }
   
   public int run(int a, int b) {
     int i;
-    array = new int[11];
     i = 0;
-
-
+    numberKm = 22;
+    ioPlus.printResult(numberKm);
+    
     /*
     while(i < 10) {
       ioPlus.printResult(i);
