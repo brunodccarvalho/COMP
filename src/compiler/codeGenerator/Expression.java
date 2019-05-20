@@ -80,8 +80,6 @@ public class Expression extends BaseStatement {
             Not not = new Not(this.function, (DAGNot)expression);
             expressionBody = expressionBody.concat(not.toString());
         }
-
-        // TODO: missing some instances of expression?
         return expressionBody;
     }
 
