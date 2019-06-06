@@ -16,10 +16,12 @@ import jjt.jmm;
 public final class ClassCompiler extends CompilationStatus {
   private final File sourcefile;
   private final CompilationData data;
+  public static boolean optimizeR; 
 
-  public ClassCompiler(File sourcefile) {
+  public ClassCompiler(File sourcefile, boolean optimizeR) {
     this.sourcefile = sourcefile;
     this.data = new CompilationData(sourcefile);
+    ClassCompiler.optimizeR = optimizeR;
 
     try {
       DiagnosticsHandler.self = new DiagnosticsHandler(sourcefile);

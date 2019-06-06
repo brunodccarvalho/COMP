@@ -3,7 +3,9 @@ package compiler.codeGenerator;
 import java.util.Collection;
 import java.util.HashMap;
 
+import compiler.modules.ClassCompiler;
 import compiler.modules.CompilationData;
+import compiler.optimize.r.VariableManager;
 import compiler.symbols.JMMCallableDescriptor;
 import compiler.symbols.JMMFunction;
 import compiler.symbols.JMMMainDescriptor;
@@ -36,9 +38,16 @@ public abstract class Function extends JVMInst {
     }
 
     private void arrangeLocalsIndexes() {
-        Collection<LocalDescriptor> locals = this.data.localsMap.get(this.function).getVariables().values();
-        for(LocalDescriptor local: locals)
-            this.variablesIndexes.put(local, index++);
+        if(ClassCompiler.optimizeR) {
+            VariableManager variableManager = new VariableManager(this, this.function, this.index);
+            variableManager.assignMinVariable();
+            HashMap<VariableDescriptor, Integer> localsIndexes = variableManager.getLocalsIndexes();
+            this.variablesIndexes.putAll(localsIndexes);
+        } else {
+            Collection<LocalDescriptor> locals = this.data.localsMap.get(this.function).getVariables().values();
+            for(LocalDescriptor local: locals)
+                this.variablesIndexes.put(local, index++);
+        }
     }
 
     private void arrangeParamIndexes() {
@@ -46,5 +55,9 @@ public abstract class Function extends JVMInst {
         ParameterDescriptor[] params = ((JMMCallableDescriptor)this.function).getParameters();
         for(ParameterDescriptor param: params)
             this.variablesIndexes.put(param, index++);
+    }
+
+    public CompilationData getData() {
+        return this.data;
     }
 }

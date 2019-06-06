@@ -7,7 +7,7 @@ JJT := jjt
 COMPILER := compiler
 
 # Test file (in folder test_files)
-TEST_FILE := Quicksort.jmm	# Caution: files Life and MonteCarloPi don't work yet
+TEST_FILE := Dog.java	# Caution: files Life and MonteCarloPi don't work yet
 MYSTERIOUS := Mysterious.java
 DAG_TEST_FILE = DAGTorture.java
 
@@ -66,6 +66,10 @@ clean: mkdir
 test:
 	@clear
 	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(TEST_FILE) || true
+
+optimize-r:
+	@clear
+	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(TEST_FILE) 1 || true
 
 parser-test:
 	@clear

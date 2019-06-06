@@ -18,7 +18,14 @@ final class Compiler {
       return;
     }
 
-    String source = args[args.length - 1];
-    new ClassCompiler(new File(source)).compile();
+    boolean optimizeR = false;
+    String source = null;
+    if(args.length == 1)
+      source = args[0];
+    else if(args.length == 2) {
+      source = args[args.length - 2];
+      optimizeR = (Integer.valueOf(args[1]) == 1);
+    }
+    new ClassCompiler(new File(source), optimizeR).compile();
   }
 }
