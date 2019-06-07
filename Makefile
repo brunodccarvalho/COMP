@@ -7,12 +7,7 @@ JJT := jjt
 COMPILER := compiler
 
 # Test file (in folder test_files)
-TEST_FILE := Quicksort.jmm	# Caution: files Life and MonteCarloPi don't work yet
-MYSTERIOUS := Mysterious.java
-DAG_TEST_FILE = DAGTorture.java
-
-# Jasmin file (to see how javac writes bytecode).
-JASMIN_FILE := JavapExample.java
+TEST_FILE := Quicksort.jmm
 
 # Flags
 JJTREE_DEBUG :=
@@ -77,14 +72,6 @@ test:
 parser-test:
 	@clear
 	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) jjt.jmm test_files/$(TEST_FILE) || true
-
-mysterious:
-	@clear
-	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(MYSTERIOUS) || true
-
-dagtorture:
-	@clear
-	@java -Xdiag $(JAVA_DEBUG) $(JAVA_FLAGS) compiler.Compiler test_files/$(DAG_TEST_FILE) || true
 
 jasmin:
 	@javac $(JASMIN_FILE)

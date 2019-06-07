@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import compiler.exceptions.CompilationException;
-import compiler.modules.CodeGenerator;
 import jjt.ParseException;
 import jjt.SimpleNode;
 import jjt.jmm;
@@ -74,7 +73,7 @@ public final class ClassCompiler extends CompilationStatus {
    * * Compiler proper.
    */
   private void buildSymbolTables() {
-    new SymbolsTableBuilder(data).read(this).dump();
+    new SymbolsTableBuilder(data).read(this);//.dump();
   }
 
   /**
@@ -82,7 +81,7 @@ public final class ClassCompiler extends CompilationStatus {
    * * Compiler proper.
    */
   private void buildInternalRepresentations() {
-    new DAGBuilder(data).buildMethods(this).dump();
+    new DAGBuilder(data).buildMethods(this);//.dump();
   }
 
   /**
@@ -90,9 +89,7 @@ public final class ClassCompiler extends CompilationStatus {
    * * Assembler
    */
   public void generateCode() {
-    System.out.println(" ***** Code Generation");
-    CodeGenerator codeGenerator = new CodeGenerator(data);
-    codeGenerator.generateCode();
+    new CodeGenerator(data).generateCode();
   }
 
   /**

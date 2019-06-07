@@ -4,5 +4,5 @@ public final class Config {
     /**
      * Directory where the .j files are placed
      */
-    public static String classFilesPath = "./bin/codeGenerator/";
+    public static String classFilesPath = "./";
 }

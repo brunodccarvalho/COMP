@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import compiler.symbols.FunctionSignature;
-import compiler.symbols.TypeDescriptor;
 import compiler.symbols.JMMFunction;
+import compiler.symbols.TypeDescriptor;
 import jjt.SimpleNode;
 
 /**
@@ -21,7 +21,7 @@ public class DiagnosticsHandler {
   public static DiagnosticsHandler self;
 
   public static boolean SUPPRESS_WARNINGS = false;
-  public static boolean SUPPRESS_NOTES = false;
+  public static boolean SUPPRESS_NOTES = true;
   public static int PADDING = 7;
 
   public DiagnosticsHandler(File file) throws IOException {
@@ -162,12 +162,12 @@ public class DiagnosticsHandler {
   }
 
   private static void error(SimpleNode node, String message) {
-    print(node, message, "Error", ANSI_RED);
+    print(node, message, "error", ANSI_RED);
   }
 
   private static void warning(SimpleNode node, String message) {
     if (SUPPRESS_WARNINGS) return;
-    print(node, message, "Warning", ANSI_PURPLE);
+    print(node, message, "warning", ANSI_PURPLE);
   }
 
   private static void note(SimpleNode node, String message) {
