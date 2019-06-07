@@ -27,14 +27,21 @@ JAVAC_FLAGS := -cp bin -d bin -Werror -sourcepath src
 
 JAVA_DEBUG :=
 JAVA_FLAGS := -cp bin -ea
+JAR_FLAGS := cvfe
+ENTRY_POINT := compiler.Compiler
+OUTPUT_JAR := compiler.jar
 
 COMPILER_FILES := $(shell find src/${COMPILER} -name '*.java' -type f)
+CLASS_FILES := -C bin .
 
 .PHONY: all debug parser parser-debug load-java mkdir clean test run
 
 all: parser
 	@echo "Compiling src/compiler ..."
 	@javac $(JAVAC_FLAGS) $(COMPILER_FILES)
+
+jar: all
+	@jar $(JAR_FLAGS) $(OUTPUT_JAR) $(ENTRY_POINT) $(CLASS_FILES)
 
 debug: parser-debug
 	@echo "Compiling src/compiler ..."
@@ -61,7 +68,7 @@ mkdir:
 	@mkdir -p bin parser
 
 clean: mkdir
-	@rm -rf bin/* parser/* compiled jjt
+	@rm -rf bin/* parser/* compiled jjt compiler.jar
 
 test:
 	@clear
