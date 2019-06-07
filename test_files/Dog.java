@@ -2,25 +2,37 @@ class Dog {
   int availableFood;
   int hoursSleep;
   int numberKm;
-  int[] foodEaten;
+  int[] array;
 
   public static void main(String[] args) {
-    boolean full;
-    ioPlus.printResult(100*100);
-    full = false;
+    int i;
+    Dog dog;
+    dog = new Dog();
+    dog.run(1,2);
   }
-  /*public int run(int a,int b) {
-    boolean full;
-    int sleepEatFactor;
-    int x;
-    int y;
-    // foodEaten = new int[2];
-    // foodEaten[0] = -3;
+  
+  public int run(int a, int b) {
+    int i;
+    i = 0;
+    numberKm = 22;
+    ioPlus.printResult(numberKm);
     
-    while(1 < 2) {
-      x = x + 1;
+    /*
+    while(i < 10) {
+      ioPlus.printResult(i);
+      array[i] = i;
+      i = i + 1;
     }
-    
-    return numberKm;
-  }*/
+
+    i = 0;
+
+    while(i < array.length) {
+      ioPlus.printResult(array[i]);
+      i = i + 1;
+    }
+  
+    */
+    return i;
+  }
+  
 }

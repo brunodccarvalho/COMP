@@ -1,7 +1,6 @@
 package compiler.codeGenerator;
 
 import compiler.dag.DAGAssignment;
-import compiler.dag.DAGBracketAssignment;
 import compiler.dag.DAGExpression;
 import compiler.dag.DAGMember;
 import compiler.dag.DAGVariable;

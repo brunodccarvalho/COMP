@@ -14,6 +14,7 @@ public class Main extends Function {
 
     @Override
     public String toString() {
+
         String methodStack = subst(CodeGeneratorConstants.STACK, String.valueOf(localsSize));
         String methodLocals = subst(CodeGeneratorConstants.LOCALS, String.valueOf(localsSize));
         String mainBodyRegex = subst(CodeGeneratorConstants.MAIN, methodStack, methodLocals, methodBody.toString());

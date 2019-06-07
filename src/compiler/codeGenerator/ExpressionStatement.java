@@ -14,11 +14,11 @@ import compiler.dag.DAGNot;
 import compiler.dag.DAGStaticCall;
 import compiler.dag.DAGVariable;
 
-public class Expression extends BaseStatement {
+public class ExpressionStatement extends BaseStatement {
 
     private DAGExpression expression;
 
-    Expression(Function function, DAGExpression expression)
+    ExpressionStatement(Function function, DAGExpression expression)
     {
         super(function);
         this.function = function;
@@ -47,7 +47,7 @@ public class Expression extends BaseStatement {
             expressionBody = expressionBody.concat(integerLoadBody.toString());
         }
         else if(expression instanceof DAGMethodCall) {
-            MethodCall callBody = new MethodCall(this.function, (DAGMethodCall)expression);
+            MethodCallSpecial callBody = new MethodCallSpecial(this.function, (DAGMethodCall)expression);
             expressionBody = expressionBody.concat(callBody.toString());
         }
         else if(expression instanceof DAGBooleanConstant) {
@@ -80,6 +80,8 @@ public class Expression extends BaseStatement {
             Not not = new Not(this.function, (DAGNot)expression);
             expressionBody = expressionBody.concat(not.toString());
         }
+
+        // TODO: missing some instances of expression?
         return expressionBody;
     }
 

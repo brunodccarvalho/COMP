@@ -19,7 +19,7 @@ public class MethodStackLocals extends JVMInst {
 
     MethodStackLocals(Method belongs) {
         /**
-         * TODO Calcular o numero de local size
+         * TODO Determine stack and locals size
          * 
          * in belongs:
          * protected int numberLocals; 

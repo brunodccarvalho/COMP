@@ -31,12 +31,12 @@ public class IfElse extends Conditional {
         // Else body and label
         String elseLabel = this.labelGenerator.nextLabel();
         DAGNode elseNode = ((DAGIfElse)this.branch).getElseNode();
-        MethodBodyGenerator elseGenerator = new MethodBodyGenerator(this.function, elseNode);
+        MethodBodyGenerator elseGenerator = new MethodBodyGenerator(this.function, elseNode, this.labelGenerator);
 
         // If body and label
         String gotoLabel = this.labelGenerator.nextLabel();
         DAGNode thenNode = ((DAGIfElse)this.branch).getThenNode();
-        MethodBodyGenerator thenGenerator = new MethodBodyGenerator(this.function, thenNode);
+        MethodBodyGenerator thenGenerator = new MethodBodyGenerator(this.function, thenNode, this.labelGenerator);
 
         return JVMInst.subst(IFCOND, this.condBody, this.cond, elseLabel, thenGenerator.toString(), gotoLabel, elseLabel, elseGenerator.toString(), gotoLabel);
     }
