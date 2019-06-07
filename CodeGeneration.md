@@ -38,7 +38,7 @@
         ? istore                  Store result of lhs / rhs
 
     DAGBinaryOp> 5/6
-      Less:
+      Less:                 ISTO ESTÁ MAL, estou a dar fix
           $lhs...
           $rhs...
           if_icmpge   A
@@ -48,7 +48,7 @@
       B:? istore                  Store result of lhs < rhs
 
     DAGBinaryOp> 6/6
-      And:
+      And:                  ISTO ESTÁ MAL, estou a dar fix
           $lhs...
           ifeq        A
           $rhs...
@@ -64,7 +64,7 @@
         ? istore                  Store result of loadarray.length
 
     - DAGNot:
-          $loadboolean...
+          $loadboolean...         TALVEZ DÊ FIX DISTO, SE TIVER TEMPO
           ifne        A
           iconst_1
           goto        B
@@ -226,7 +226,7 @@
 
     DAGIfElse> 3/3
       DAGCondition is BinaryOperation And (&&):
-          $lhs...
+          $lhs...                     MAL FEITO, SEM SHORT CIRCUIT
           ifeq        A
           $rhs...
           ifeq        A
@@ -284,33 +284,33 @@
     + DAGBinaryOp 2/6 (Sub, -)
     + DAGBinaryOp 3/6 (Mul, *)
     + DAGBinaryOp 4/6 (Div, /)
-    - DAGBinaryOp 5/6 (Less, <)  completely different, involves jumps
-    - DAGBinaryOp 6/6 (And, &&)  completely different, involves jumps
-      DAGLength
-      DAGNot
-    - DAGBracket   should be iastore
-      DAGNewClass
-    ? DAGNewIntArray       jasmin uses 'newarray int' instead
+    + DAGBinaryOp 5/6 (Less, <)  completely different, involves jumps
+    + DAGBinaryOp 6/6 (And, &&)  completely different, involves jumps
+    + DAGLength
+    + DAGNot
+    + DAGBracket   should be iastore
+    + DAGNewClass
+    + DAGNewIntArray       jasmin uses 'newarray int' instead
     + DAGIntegerConstant
     + DAGBooleanConstant
       DAGCall 1/4 (Method Call -> void)         see code above
       DAGCall 2/4 (Static Call -> void)         see code above
       DAGCall 3/4 (Method Call -> not void)     see code above
       DAGCall 4/4 (Static Call -> not void)     see code above
-    ? DAGVariable 1/3 (Local and Parameter)
+    + DAGVariable 1/3 (Local and Parameter)
     ? DAGVariable 2/3 (this)
     ? DAGVariable 3/3 (Member)
-    ? DAGAssignment 1/2 (to Member)
+    ? DAGAssignment 1/2 (to Member) --> hacks : swap
     ? DAGAssignment 2/2 (to Local or Parameter)
     - DAGBracketAssignment               should be iastore
-      DAGVoidReturn
-      DAGReturnExpression 1/2 (primitives)
-      DAGReturnExpression 2/2 (references)
+    + DAGVoidReturn
+    + DAGReturnExpression 1/2 (primitives)
+    + DAGReturnExpression 2/2 (references)
     + DAGIfElse 1/3 (boolean)   correct, ifeq
-    - DAGIfElse 2/3 (Less, <)   if_icmpge
+    + DAGIfElse 2/3 (Less, <)   if_icmpge
     - DAGIfElse 3/3 (And, &&)   very different, needs short-circuiting
     + DAGWhile 1/3 (boolean)   correct, ifeq
-    - DAGWhile 2/3 (Less, <)   if_icmpge
+    + DAGWhile 2/3 (Less, <)   if_icmpge
     - DAGWhile 3/3 (And, &&)   very different, needs short-circuiting
     + DAGMulti
 

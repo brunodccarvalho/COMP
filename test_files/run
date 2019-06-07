@@ -1,0 +1,6 @@
+#!/bin/bash
+
+clear
+java -jar compiler.jar "$1.jmm"
+jasmin "$1.j"
+java -cp . "$1"

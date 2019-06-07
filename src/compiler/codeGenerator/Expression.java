@@ -1,6 +1,5 @@
 package compiler.codeGenerator;
 
-import compiler.dag.BinaryOperator;
 import compiler.dag.DAGBinaryOp;
 import compiler.dag.DAGBooleanConstant;
 import compiler.dag.DAGBracket;
@@ -30,13 +29,8 @@ public class Expression extends BaseStatement {
     {
         String expressionBody = new String();
         if(expression instanceof DAGBinaryOp) {
-            DAGExpression lhs = ((DAGBinaryOp)expression).getLhs();
-            DAGExpression rhs = ((DAGBinaryOp)expression).getRhs();
-            BinaryOperator operator = ((DAGBinaryOp)expression).getOperator();
-            Expression lhsBody = new Expression(this.function, lhs);
-            Expression rhsBody = new Expression(this.function, rhs);
-            Operator operatorBody = new Operator(operator);
-            expressionBody = expressionBody.concat(lhsBody.toString()).concat(rhsBody.toString()).concat(operatorBody.toString());
+            BinaryOperation operation = new BinaryOperation(this.function, (DAGBinaryOp) expression);
+            expressionBody = expressionBody.concat(operation.toString());
         }
         else if(expression instanceof DAGVariable) {
             Variable variable = new Variable(this.function, (DAGVariable)expression);
@@ -80,5 +74,13 @@ public class Expression extends BaseStatement {
         }
         return expressionBody;
     }
-
 }
+
+
+            /*DAGExpression lhs = ((DAGBinaryOp)expression).getLhs();
+            DAGExpression rhs = ((DAGBinaryOp)expression).getRhs();
+            BinaryOperator operator = ((DAGBinaryOp)expression).getOperator();
+            Expression lhsBody = new Expression(this.function, lhs);
+            Expression rhsBody = new Expression(this.function, rhs);
+            Operator operatorBody = new Operator(operator);
+            expressionBody = expressionBody.concat(lhsBody.toString()).concat(rhsBody.toString()).concat(operatorBody.toString());*/

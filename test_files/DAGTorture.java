@@ -16,6 +16,8 @@ class DAGTorture extends Torture {
 
   // a + b + c. CORRECT
   public int add(int a, int b, int c) {
+    boolean d;
+    d = a < b;
     return a + b + c;
   }
 

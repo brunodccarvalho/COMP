@@ -1,6 +1,7 @@
 package compiler.codeGenerator;
 
-import compiler.codeGenerator.utils.LabelGenerator;
+import java.util.ArrayList;
+
 import compiler.dag.DAGAssignment;
 import compiler.dag.DAGBracketAssignment;
 import compiler.dag.DAGExpression;
@@ -10,44 +11,26 @@ import compiler.dag.DAGNode;
 import compiler.dag.DAGReturn;
 import compiler.dag.DAGWhile;
 import compiler.symbols.JMMFunction;
-import java.util.ArrayList;
 
 public class MethodBodyGenerator {
 
     private Function function;
-    private LabelGenerator labelGenerator;
     private ArrayList<BaseStatement> statements;
 
     private MethodBodyGenerator(Function function) {
         this.function = function;
         this.statements = new ArrayList<BaseStatement>();
-    } 
-    
+    }
+
     public MethodBodyGenerator(Function function, JMMFunction methodDescriptor)
     {
         this(function);
-        this.labelGenerator = new LabelGenerator();
-        DAGMulti multiNodes = function.data.bodiesMap.get(methodDescriptor);
-        this.generateMultiStatements(multiNodes);
-    }
-
-    public MethodBodyGenerator(Function function, JMMFunction methodDescriptor, LabelGenerator labelGenerator)
-    {
-        this(function);
-        this.labelGenerator = labelGenerator;
         DAGMulti multiNodes = function.data.bodiesMap.get(methodDescriptor);
         this.generateMultiStatements(multiNodes);
     }
 
     public MethodBodyGenerator(Function function, DAGNode statement) {
         this(function);
-        this.labelGenerator = new LabelGenerator();
-        this.generateStatement(statement);
-    }
-
-    public MethodBodyGenerator(Function function, DAGNode statement, LabelGenerator labelGenerator) {
-        this(function);
-        this.labelGenerator = labelGenerator;
         this.generateStatement(statement);
     }
 
@@ -70,9 +53,9 @@ public class MethodBodyGenerator {
         else if(statement instanceof DAGReturn)
             baseStatement = new MethodReturn(this.function, (DAGReturn)statement);
         else if(statement instanceof DAGIfElse)
-            baseStatement = new IfElse(this.function, (DAGIfElse)statement, this.labelGenerator);
+            baseStatement = new IfElse(this.function, (DAGIfElse)statement);
         else if(statement instanceof DAGWhile)
-            baseStatement = new While(this.function, (DAGWhile)statement, this.labelGenerator);
+            baseStatement = new While(this.function, (DAGWhile)statement);
         else if(statement instanceof DAGMulti)
             this.generateMultiStatements((DAGMulti)statement);
         if(baseStatement != null)

@@ -1,6 +1,5 @@
 package compiler.codeGenerator;
 
-import compiler.codeGenerator.utils.LabelGenerator;
 import compiler.dag.BinaryOperator;
 import compiler.dag.DAGBinaryOp;
 import compiler.dag.DAGBranch;
@@ -14,12 +13,10 @@ public abstract class Conditional extends BaseStatement {
     protected DAGBranch branch;
     protected String cond;  // either IFEQ or IFGE
     protected String condBody;
-    protected LabelGenerator labelGenerator;
 
-    public Conditional(Function function, DAGBranch branch, LabelGenerator labelGenerator, String cond) {
+    public Conditional(Function function, DAGBranch branch, String cond) {
         super(function);
         this.branch = branch;
-        this.labelGenerator = labelGenerator;
         this.cond = cond;
     }
 
