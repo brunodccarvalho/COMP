@@ -37,6 +37,14 @@ public class DiagnosticsHandler {
     }
   }
 
+  public static void invalidClassname(SimpleNode node, String name) {
+    error(node, "Invalid class name " + name);
+  }
+
+  public static void invalidSuperClassname(SimpleNode node, String name) {
+    error(node, "Invalid super class name " + name);
+  }
+
   // Any expression node
   public static void typeMismatch(SimpleNode node, TypeDescriptor expectedType,
                                   TypeDescriptor foundType) {

@@ -71,7 +71,16 @@ public abstract class TypeDescriptor extends Descriptor {
    *     consideration in the future.
    */
   public static boolean typematch(TypeDescriptor type1, TypeDescriptor type2) {
-    return type1 == null || type2 == null || type1 == type2;
+    return type1 == null || type2 == null || type1 == type2 || convertible(type1, type2);
+  }
+
+  private static boolean convertible(TypeDescriptor lower, TypeDescriptor higher) {
+    // we ask if higher is super class of lower, basically.
+    if (!lower.isClass() || !higher.isClass()) return lower == higher;
+
+    ClassDescriptor lowerClass = (ClassDescriptor) lower;
+    ClassDescriptor higherClass = (ClassDescriptor) higher;
+    return lowerClass.extendsClass(higherClass);
   }
 
   /**

@@ -42,8 +42,8 @@ public class DAGAssignment extends DAGNode {
    * @return the type of the assignment, which is the type of the assigned to variable.
    */
   public TypeDescriptor getType() {
-    assert typematch(assignVariable.getType(), assignedExpression.getType());
-    return assignVariable.getType();
+    assert typematch(assignedExpression.getType(), assignVariable.getType());
+    return assignedExpression.getType();
   }
 
   /* (non-Javadoc)

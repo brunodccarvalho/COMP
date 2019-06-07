@@ -9,14 +9,10 @@ public class SuperHeader extends JVMInst {
      */
     public static String SUPERNAME = ".super ?";
     public static String DEFAULTSUPER = "java/lang/Object";
-    private String superName;
+    private final String superName;
 
     public SuperHeader (String superName) {
-        this.superName = superName;
-        if(this.superName==null)
-        {
-            this.superName=SuperHeader.DEFAULTSUPER;
-        }
+        this.superName = superName == null ? SuperHeader.DEFAULTSUPER : superName;
     }
 
     @Override

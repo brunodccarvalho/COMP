@@ -16,6 +16,10 @@ public abstract class ClassDescriptor extends TypeDescriptor implements Resolver
     super(name);
   }
 
+  public abstract ClassDescriptor getSuper();
+
+  public abstract boolean extendsClass(ClassDescriptor otherClass);
+
   /**
    * @return This class's name.
    */

@@ -1,7 +1,5 @@
 package compiler.symbols;
 
-import compiler.symbols.FunctionSignature;
-
 /**
  * The descriptor for a generic Java class, whose contents are unknown.
  */
@@ -14,6 +12,17 @@ public class UnknownClassDescriptor extends ClassDescriptor {
    */
   public UnknownClassDescriptor(String name) {
     super(name);
+  }
+
+  @Override
+  public ClassDescriptor getSuper() {
+    return null;
+  }
+
+  @Override
+  public boolean extendsClass(ClassDescriptor otherClass) {
+    assert otherClass != null;
+    return false;
   }
 
   @Override

@@ -3,6 +3,7 @@ package compiler.dag;
 import static compiler.symbols.PrimitiveDescriptor.booleanDescriptor;
 import static compiler.symbols.PrimitiveDescriptor.intArrayDescriptor;
 import static compiler.symbols.PrimitiveDescriptor.intDescriptor;
+import static compiler.symbols.TypeDescriptor.typematch;
 import static compiler.symbols.TypeDescriptor.voidDescriptor;
 import static jjt.jmmTreeConstants.JJTAND;
 import static jjt.jmmTreeConstants.JJTARGUMENTLIST;
@@ -596,21 +597,24 @@ public class ExpressionFactory extends BaseDAGFactory {
    * @param type       The type the node should have.
    * @param node       The SimpleNode used to construct the expression, for diagnostics.
    */
-  private void assertType(DAGExpression expression, TypeDescriptor type, SimpleNode node) {
+  private void assertType(DAGExpression expression, TypeDescriptor expectedType, SimpleNode node) {
     assert expression != null && node != null;
-    if (type == null) return;
+    if (expectedType == null) return;
 
     if (expression instanceof DAGCall) {
       DAGCall call = (DAGCall) expression;
 
       if (call.isNotDeduced()) {
-        deduceUnknownCallType(call, type, node);
+        deduceUnknownCallType(call, expectedType, node);
         return;
       }
     }
 
-    if (expression.getType() != null && expression.getType() != type) {
-      DiagnosticsHandler.typeMismatch(node, type, expression.getType());
+    if (expression.getType() != null && !typematch(expression.getType(), expectedType)) {
+      System.out.println(expression.getType().toString());
+      System.out.println(expectedType);
+      System.out.println(((ClassDescriptor)expression.getType()).getSuper());
+      DiagnosticsHandler.typeMismatch(node, expectedType, expression.getType());
       update(Codes.MAJOR_ERRORS);
     }
 

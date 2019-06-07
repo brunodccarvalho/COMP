@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import compiler.symbols.FunctionSignature;
-
 /**
  * Represents a class being parsed by this compiler: it must obey the rules of
  * JMM and be parseable by our compiler, which means:
@@ -49,6 +47,18 @@ public class JMMClassDescriptor extends ClassDescriptor {
     this.superClass = superClass;
     this.members = new HashMap<>();
     this.methods = new HashMap<>();
+  }
+
+  @Override
+  public ClassDescriptor getSuper() {
+    return superClass;
+  }
+
+  @Override
+  public boolean extendsClass(ClassDescriptor otherClass) {
+    assert otherClass != null;
+    return this == otherClass || superClass == otherClass ||
+      (superClass != null && superClass.extendsClass(otherClass));
   }
 
   /**
@@ -159,47 +169,50 @@ public class JMMClassDescriptor extends ClassDescriptor {
 
   @Override
   public boolean hasMethod(String name) {
-    return methods.containsKey(name);
+    boolean superHas = superClass != null && superClass.hasMethod(name);
+    return methods.containsKey(name) || superHas;
   }
 
   @Override
   public boolean hasMethod(String name, FunctionSignature signature) {
+    boolean superHas = superClass != null && superClass.hasMethod(name, signature);
     HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
     if (map == null) return false;
     if (signature.isComplete())
-      return map.containsKey(signature);
+      return map.containsKey(signature) || superHas;
     else
       for (FunctionSignature candidate : map.keySet())
         if (FunctionSignature.matches(candidate, signature)) return true;
-    return false;
+    return superHas;
   }
 
   @Override
   public boolean hasReturning(String name, FunctionSignature signature, TypeDescriptor returnType) {
+    boolean superHas = superClass != null && superClass.hasReturning(name, signature, returnType);
     HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
-    if (map == null) return false;
+    if (map == null) return superHas;
     if (signature.isComplete())
       return map.containsKey(signature);
     else
       for (JMMMethodDescriptor candidate : map.values())
         if (candidate.returning(signature, returnType)) return true;
-    return false;
+    return superHas;
   }
 
   @Override
   public boolean hasStaticMethod(String name) {
-    return false;
+    return superClass != null && superClass.hasStaticMethod(name);
   }
 
   @Override
   public boolean hasStaticMethod(String name, FunctionSignature signature) {
-    return false;
+    return superClass != null && superClass.hasStaticMethod(name, signature);
   }
 
   @Override
   public boolean hasStaticReturning(String name, FunctionSignature signature,
                                     TypeDescriptor returnType) {
-    return false;
+    return superClass != null && superClass.hasStaticReturning(name, signature, returnType);
   }
 
   @Override
@@ -223,8 +236,10 @@ public class JMMClassDescriptor extends ClassDescriptor {
 
   @Override
   public Deduction deduce(String name, FunctionSignature signature) {
+    Deduction superDeduction = superClass == null ? new Deduction(null, false, false)
+      : superClass.deduce(name, signature);
     HashMap<FunctionSignature, JMMMethodDescriptor> map = methods.get(name);
-    if (map == null || map.isEmpty()) return new Deduction(null, false, false);
+    if (map == null || map.isEmpty()) return superDeduction;
 
     ArrayList<JMMMethodDescriptor> list = new ArrayList<>();
 
@@ -236,7 +251,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
     }
 
     if (list.isEmpty())
-      return new Deduction(null, false, false);
+      return superDeduction;
     else if (list.size() == 1)
       return new Deduction(list.get(0), true, false);
     else
@@ -244,7 +259,7 @@ public class JMMClassDescriptor extends ClassDescriptor {
   }
 
   @Override
-  public Deduction deduceStatic(String name, FunctionSignature multi) {
-    return new Deduction(null, false, false);
+  public Deduction deduceStatic(String name, FunctionSignature signature) {
+    return superClass == null ? new Deduction(null, false, false) : superClass.deduceStatic(name, signature);
   }
 }

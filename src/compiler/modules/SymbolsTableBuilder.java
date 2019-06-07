@@ -1,9 +1,35 @@
 package compiler.modules;
 
-import static jjt.jmmTreeConstants.*;
+import static jjt.jmmTreeConstants.JJTCLASSBODY;
+import static jjt.jmmTreeConstants.JJTCLASSHEADER;
+import static jjt.jmmTreeConstants.JJTCLASSMETHODDECLARATIONS;
+import static jjt.jmmTreeConstants.JJTCLASSTYPE;
+import static jjt.jmmTreeConstants.JJTCLASSVARDECLARATION;
+import static jjt.jmmTreeConstants.JJTCLASSVARDECLARATIONS;
+import static jjt.jmmTreeConstants.JJTEXTENDS;
+import static jjt.jmmTreeConstants.JJTIDENTIFIER;
+import static jjt.jmmTreeConstants.JJTMAINDECLARATION;
+import static jjt.jmmTreeConstants.JJTMAINPARAMETERLIST;
+import static jjt.jmmTreeConstants.JJTMETHODBODY;
+import static jjt.jmmTreeConstants.JJTMETHODDECLARATION;
+import static jjt.jmmTreeConstants.JJTMETHODNAME;
+import static jjt.jmmTreeConstants.JJTPARAMETER;
+import static jjt.jmmTreeConstants.JJTPARAMETERLIST;
+import static jjt.jmmTreeConstants.JJTRETURNSTATEMENT;
+import static jjt.jmmTreeConstants.JJTVARIABLEDECLARATION;
 
 import compiler.exceptions.CompilationException;
-import compiler.symbols.*;
+import compiler.symbols.FunctionLocals;
+import compiler.symbols.FunctionSignature;
+import compiler.symbols.JMMCallableDescriptor;
+import compiler.symbols.JMMClassDescriptor;
+import compiler.symbols.JMMFunction;
+import compiler.symbols.JMMMainDescriptor;
+import compiler.symbols.JMMMethodDescriptor;
+import compiler.symbols.LocalDescriptor;
+import compiler.symbols.MemberDescriptor;
+import compiler.symbols.TypeDescriptor;
+import compiler.symbols.UnknownClassDescriptor;
 import jjt.SimpleNode;
 
 /**
@@ -28,49 +54,63 @@ public class SymbolsTableBuilder extends CompilationStatus {
   }
 
   private void readClassHeader() {
-    SimpleNode classHeader = data.classNode.jjtGetChild(0);
-    assert classHeader.is(JJTCLASSHEADER);
+    SimpleNode classHeaderNode = data.classNode.jjtGetChild(0);
+    assert classHeaderNode.is(JJTCLASSHEADER);
 
-    SimpleNode classType = classHeader.jjtGetChild(0);
-    assert classType.is(JJTCLASSTYPE);
+    SimpleNode classTypeNode = classHeaderNode.jjtGetChild(0);
+    assert classTypeNode.is(JJTCLASSTYPE);
 
-    String className = classType.jjtGetVal();
+    String className = classTypeNode.jjtGetVal();
 
     if (TypeDescriptor.exists(className)) {
-      System.err.println("Invalid class name " + className);
+      DiagnosticsHandler.invalidClassname(classTypeNode, className);
       throw new CompilationException("Invalid class name " + className);
     }
 
     // TODO: Extends clause...
-    if (classHeader.jjtGetNumChildren() == 1) {
+    if (classHeaderNode.jjtGetNumChildren() == 1) {
       data.jmmClass = new JMMClassDescriptor(className);
     } else {
-      data.jmmClass = new JMMClassDescriptor(className);
+      SimpleNode extendsNode = classHeaderNode.jjtGetChild(1);
+      assert extendsNode.is(JJTEXTENDS);
+
+      SimpleNode superNode = extendsNode.jjtGetChild(0);
+      assert superNode.is(JJTCLASSTYPE);
+
+      String superName = superNode.jjtGetVal();
+
+      if (TypeDescriptor.exists(superName)) {
+        DiagnosticsHandler.invalidSuperClassname(superNode, superName);
+        throw new CompilationException("Invalid class name " + superName);
+      }
+
+      UnknownClassDescriptor superClass = new UnknownClassDescriptor(superName);
+      data.jmmClass = new JMMClassDescriptor(className, superClass);
     }
   }
 
   private void readClassMemberVariables() {
-    SimpleNode classBody = data.classNode.jjtGetChild(1);
-    assert classBody.is(JJTCLASSBODY);
+    SimpleNode classBodyNode = data.classNode.jjtGetChild(1);
+    assert classBodyNode.is(JJTCLASSBODY);
 
-    SimpleNode classVarDeclarations = classBody.jjtGetChild(0);
-    assert classVarDeclarations.is(JJTCLASSVARDECLARATIONS);
+    SimpleNode classVarDeclarationsNode = classBodyNode.jjtGetChild(0);
+    assert classVarDeclarationsNode.is(JJTCLASSVARDECLARATIONS);
 
-    for (int i = 0; i < classVarDeclarations.jjtGetNumChildren(); ++i) {
-      SimpleNode varDeclaration = classVarDeclarations.jjtGetChild(i);
+    for (int i = 0; i < classVarDeclarationsNode.jjtGetNumChildren(); ++i) {
+      SimpleNode varDeclaration = classVarDeclarationsNode.jjtGetChild(i);
       readOneClassMemberVariable(varDeclaration);
     }
   }
 
   private void readClassMethodDeclarations() {
-    SimpleNode classBody = data.classNode.jjtGetChild(1);
-    assert classBody.is(JJTCLASSBODY);
+    SimpleNode classBodyNode = data.classNode.jjtGetChild(1);
+    assert classBodyNode.is(JJTCLASSBODY);
 
-    SimpleNode classMethodDeclarations = classBody.jjtGetChild(1);
-    assert classMethodDeclarations.is(JJTCLASSMETHODDECLARATIONS);
+    SimpleNode classMethodDeclarationsNode = classBodyNode.jjtGetChild(1);
+    assert classMethodDeclarationsNode.is(JJTCLASSMETHODDECLARATIONS);
 
-    for (int i = 0; i < classMethodDeclarations.jjtGetNumChildren(); ++i) {
-      SimpleNode functionNode = classMethodDeclarations.jjtGetChild(i);
+    for (int i = 0; i < classMethodDeclarationsNode.jjtGetNumChildren(); ++i) {
+      SimpleNode functionNode = classMethodDeclarationsNode.jjtGetChild(i);
       assert functionNode.is(JJTMETHODDECLARATION) || functionNode.is(JJTMAINDECLARATION);
 
       if (functionNode.is(JJTMETHODDECLARATION)) {

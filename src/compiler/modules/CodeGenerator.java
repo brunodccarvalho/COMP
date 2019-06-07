@@ -23,7 +23,7 @@ public class CodeGenerator extends CompilationStatus {
         ClassHeader classHeader = new ClassHeader(data.jmmClass.getClassName());
         SuperHeader superHeader = new SuperHeader(data.jmmClass.getSuperClassName());
         FieldDefinitionsHeader fieldDefinitions = new FieldDefinitionsHeader(data.jmmClass.getMembersList());
-        Constructors constructors = new Constructors();
+        Constructors constructors = new Constructors(data.jmmClass.getSuper());
         MethodGenerator methods = new MethodGenerator(this.data);
         if(data.jmmClass.hasMain())
             this.writer.writeFile(classHeader.toString(), superHeader.toString(), fieldDefinitions.toString(), constructors.toString(), methods.toString());
