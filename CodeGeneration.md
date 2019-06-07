@@ -127,6 +127,7 @@
           ...
           invokevirtual <method descriptor>
         ? [ia]store               Store result of method call
+          [pop]                   se for um statement
 
     DAGCall> 4/4
       DAGStaticCall --> non void:
@@ -135,6 +136,7 @@
           ...
           invokestatic <method descriptor>
         ? [ia]store               Store result of static call
+          [pop]                   se for um statement
 
     ***** DAGVariable (reads)
 
