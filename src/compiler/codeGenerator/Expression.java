@@ -62,13 +62,11 @@ public class Expression extends BaseStatement {
             NewIntArray newObject = new NewIntArray(this.function, (DAGNewIntArray)expression);
             expressionBody = expressionBody.concat(newObject.toString());
         }
-        else if(expression instanceof DAGNewClass)
-        {
+        else if(expression instanceof DAGNewClass) {
             NewClass newClass = new NewClass(this.function, (DAGNewClass) expression);
             expressionBody = expressionBody.concat(newClass.toString());
         }
-        else if(expression instanceof DAGStaticCall)
-        {
+        else if(expression instanceof DAGStaticCall) {
             StaticCall call = new StaticCall(this.function, (DAGStaticCall) expression);
             expressionBody = expressionBody.concat(call.toString());
         }

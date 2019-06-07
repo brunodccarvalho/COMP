@@ -16,14 +16,12 @@ public class NewClass extends MethodBodyContent {
     {
         super(function);
         this.className = variable.getClassDescriptor();
-
     }
-
 
     @Override
     public String toString()
     {
         return subst(NewClass.NEWCLASS, this.className.toString(), this.className.toString());
     }
-    
+
 }

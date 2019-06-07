@@ -58,12 +58,12 @@
       A:  iconst_0
       B:? istore                  Store result of lhs && rhs
 
-    DAGLength:
+    * DAGLength:
           $loadarray...
           arraylength
         ? istore                  Store result of loadarray.length
 
-    DAGNot:
+    - DAGNot:
           $loadboolean...
           ifne        A
           iconst_1
@@ -71,19 +71,19 @@
       A:  iconst_0
       B:? istore                  Store result of !loadboolean
 
-    DAGBracket:
+    * DAGBracket:
           $loadarray...
           $loadindex...
           iaload
         ? istore                  Store result of loadarray[loadindex]
 
-    DAGNewClass:
+    * DAGNewClass:
           new <class>
           dup                     # don't dup if top-level expression
           invokespecial <init>:()V
         ? astore                  Store result of new Class()
 
-    DAGNewIntArray:
+    * DAGNewIntArray:
           $loadcount...
           newarray int
         ? astore                  Store result of new int[loadcount]
