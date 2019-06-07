@@ -38,6 +38,9 @@ all: parser
 jar: all
 	@jar $(JAR_FLAGS) $(OUTPUT_JAR) $(ENTRY_POINT) $(CLASS_FILES)
 
+testjar: jar
+	@mv compiler.jar test_files/compiler.jar
+
 debug: parser-debug
 	@echo "Compiling src/compiler ..."
 	@javac $(JAVAC_FLAGS) $(JAVAC_DEBUG) $(COMPILER_FILES)

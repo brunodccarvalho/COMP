@@ -23,7 +23,7 @@ public class Not extends MethodBodyContent {
 
     @Override
     public String toString() {
-        String exprStr = expression.toString();
+        String exprStr = new Expression(this.function, expression).toString();
         String A = LabelGenerator.nextLabel();
         String B = LabelGenerator.nextLabel();
         return subst(NOT, exprStr, A, B, A, B);

@@ -81,7 +81,7 @@ public final class ClassCompiler extends CompilationStatus {
    * * Compiler proper.
    */
   private void buildInternalRepresentations() {
-    new DAGBuilder(data).buildMethods(this).dump();
+    new DAGBuilder(data).buildMethods(this);//.dump();
   }
 
   /**

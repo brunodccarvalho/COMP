@@ -63,7 +63,7 @@ public class BinaryOperation extends MethodBodyContent {
         String lhsStr = new Expression(this.function, lhs).toString();
         String rhsStr = new Expression(this.function, rhs).toString();
 
-        switch (op) {
+        switch(op){
             case SUM:
                 return subst(SUM, lhsStr, rhsStr);
             case SUB:
