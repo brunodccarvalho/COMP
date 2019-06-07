@@ -38,7 +38,7 @@
         ? istore                  Store result of lhs / rhs
 
     DAGBinaryOp> 5/6
-      Less:
+      Less:                 ISTO ESTÁ MAL, estou a dar fix
           $lhs...
           $rhs...
           if_icmpge   A
@@ -48,7 +48,7 @@
       B:? istore                  Store result of lhs < rhs
 
     DAGBinaryOp> 6/6
-      And:
+      And:                  ISTO ESTÁ MAL, estou a dar fix
           $lhs...
           ifeq        A
           $rhs...
@@ -64,7 +64,7 @@
         ? istore                  Store result of loadarray.length
 
     - DAGNot:
-          $loadboolean...
+          $loadboolean...         TALVEZ DÊ FIX DISTO, SE TIVER TEMPO
           ifne        A
           iconst_1
           goto        B
@@ -226,7 +226,7 @@
 
     DAGIfElse> 3/3
       DAGCondition is BinaryOperation And (&&):
-          $lhs...
+          $lhs...                     MAL FEITO, SEM SHORT CIRCUIT
           ifeq        A
           $rhs...
           ifeq        A
@@ -284,8 +284,8 @@
     + DAGBinaryOp 2/6 (Sub, -)
     + DAGBinaryOp 3/6 (Mul, *)
     + DAGBinaryOp 4/6 (Div, /)
-    - DAGBinaryOp 5/6 (Less, <)  completely different, involves jumps
-    - DAGBinaryOp 6/6 (And, &&)  completely different, involves jumps
+    + DAGBinaryOp 5/6 (Less, <)  completely different, involves jumps
+    + DAGBinaryOp 6/6 (And, &&)  completely different, involves jumps
       DAGLength
       DAGNot
     - DAGBracket   should be iastore

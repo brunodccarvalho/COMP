@@ -17,15 +17,15 @@ public class While extends Conditional {
      */
     private static String WHILE = "\n?:?\n? ??\n\tgoto ?\n?:\n";
 
-    public While(Function function, DAGWhile branch, LabelGenerator labelGenerator) {
-        super(function, branch, labelGenerator, IFEQ);
+    public While(Function function, DAGWhile branch) {
+        super(function, branch, IFEQ);
     }
 
     @Override
     public String toString() {
 
         // Condition
-        String conditionLabel = this.labelGenerator.nextLabel();
+        String conditionLabel = LabelGenerator.nextLabel();
         super.generateCondition();
 
         // While body
@@ -33,8 +33,8 @@ public class While extends Conditional {
         MethodBodyGenerator whileBody = new MethodBodyGenerator(function, dagWhile);
 
         // After while loop
-        String continueLabel = this.labelGenerator.nextLabel();
-        
+        String continueLabel = LabelGenerator.nextLabel();
+
         return JVMInst.subst(WHILE, conditionLabel, this.condBody, this.cond, continueLabel, whileBody.toString(), conditionLabel, continueLabel);
     }
 }

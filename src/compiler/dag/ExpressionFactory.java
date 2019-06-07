@@ -1,15 +1,45 @@
 package compiler.dag;
 
-import static jjt.jmmTreeConstants.*;
-import static compiler.symbols.PrimitiveDescriptor.*;
+import static compiler.symbols.PrimitiveDescriptor.booleanDescriptor;
+import static compiler.symbols.PrimitiveDescriptor.intArrayDescriptor;
+import static compiler.symbols.PrimitiveDescriptor.intDescriptor;
+import static compiler.symbols.TypeDescriptor.voidDescriptor;
+import static jjt.jmmTreeConstants.JJTAND;
+import static jjt.jmmTreeConstants.JJTARGUMENTLIST;
+import static jjt.jmmTreeConstants.JJTBRACKET;
+import static jjt.jmmTreeConstants.JJTCALL;
+import static jjt.jmmTreeConstants.JJTCLASSTYPE;
+import static jjt.jmmTreeConstants.JJTDIV;
+import static jjt.jmmTreeConstants.JJTFALSE;
+import static jjt.jmmTreeConstants.JJTIDENTIFIER;
+import static jjt.jmmTreeConstants.JJTINTEGER;
+import static jjt.jmmTreeConstants.JJTLENGTH;
+import static jjt.jmmTreeConstants.JJTLT;
+import static jjt.jmmTreeConstants.JJTMETHODNAME;
+import static jjt.jmmTreeConstants.JJTMUL;
+import static jjt.jmmTreeConstants.JJTNEWCLASS;
+import static jjt.jmmTreeConstants.JJTNEWINTARRAY;
+import static jjt.jmmTreeConstants.JJTNOT;
+import static jjt.jmmTreeConstants.JJTSUB;
+import static jjt.jmmTreeConstants.JJTSUM;
+import static jjt.jmmTreeConstants.JJTTHIS;
+import static jjt.jmmTreeConstants.JJTTRUE;
 
-import compiler.symbols.FunctionSignature;
-import compiler.symbols.ResolverClass.Deduction;
 import compiler.exceptions.InternalCompilerError;
 import compiler.modules.CompilationStatus;
 import compiler.modules.DiagnosticsHandler;
-import compiler.symbols.*;
-
+import compiler.symbols.CallableDescriptor;
+import compiler.symbols.ClassDescriptor;
+import compiler.symbols.FunctionLocals;
+import compiler.symbols.FunctionSignature;
+import compiler.symbols.JavaCallableDescriptor;
+import compiler.symbols.LocalDescriptor;
+import compiler.symbols.MemberDescriptor;
+import compiler.symbols.ParameterDescriptor;
+import compiler.symbols.ResolverClass.Deduction;
+import compiler.symbols.ThisDescriptor;
+import compiler.symbols.TypeDescriptor;
+import compiler.symbols.VariableDescriptor;
 import jjt.SimpleNode;
 
 /**
@@ -524,7 +554,7 @@ public class ExpressionFactory extends BaseDAGFactory {
    *
    * Since we cannot deduce the types of b2 and b4, we must disambiguate this call by looking at
    * the return type of method2(,,,), or at least the context where it is used. If the overload is
-   * deduced, the types of b2 and b4 are as well. We implemented this (return type overload
+   * deduced, the types of b2 and b4 are known as well. We implemented this (return type overload
    * resolution), but the code got very complicated for a rather pointless (and actually dangerous)
    * feature, and made unknown-type propagation very difficult during semantic analysis (in this
    * class), so we removed the code. If the above case occurs, a gentle error is shown asking the
