@@ -1,19 +1,11 @@
-# Compiler of the Java-- language to Java Bytecodes [Group 62]
+# COMP
 
-### Project Evaluation
+Project partners:
+* [Sofia Martins](https://github.com/SofiaCardosoMartins)
+* [João Carlos Maduro](https://github.com/Raidenkyu)
+* [João Augusto Lima](https://github.com/tripor)
 
-All the grades listed below are provided on a scale of 1 to 20.
-
-|      | Name           | Number    | Self Assessment | Grade 1            | Grade 2            | Grade 3            | Grade 4            | Contribution (%) |
-| ---- | -------------- | --------- | --------------- | ------------------ | ------------------ | ------------------ | ------------------ | ---------------- |
-| 1    | Bruno Carvalho | 201606517 | 18              | :heavy_minus_sign: | 18                 | 18                 | 18                 | 25               |
-| 2    | João Lima      | 201605314 | 18              | 18                 | :heavy_minus_sign: | 18                 | 18                 | 25               |
-| 3    | João Maduro    | 201605219 | 18              | 18                 | 18                 | :heavy_minus_sign: | 18                 | 25               |
-| 4    | Sofia Martins  | 201606033 | 18              | 18                 | 18                 | 18                 | :heavy_minus_sign: | 25               |
-
-Given the features added to the compiler (which are detailed in the following sections), the group believes that a fair global grade would be __18__ out of 20.
-
-
+## Compiler of Java-- to JVM [Group 62]
 
 ## 1. Summary
 
@@ -24,8 +16,6 @@ The intention of this assignment was to develop a compiler, named _jmm_, which i
 - Generation of a DAG (_Directed Acyclic Graph_)
 - Generation of java _bytecodes_ 
 
-
-
 ## 2. Execute
 
 The execute the compiler, use the following commands:
@@ -33,8 +23,6 @@ The execute the compiler, use the following commands:
 ```console
 java –jar jmm.jar [-r=<num>] [-o] <input_file.jmm>
 ```
-
-
 
 ## 3. Dealing with Syntactic Errors
 
@@ -59,18 +47,12 @@ The compiler implements the following semantic rules:
 - Check if a variable is not defined more than one time.
 
 - Assumes the return value of a function it doesn't know to the variable it is beeing assigned or assumes it is void if not being assigned to anything
-
-  
-
+ 
 ## 5. Intermediate Representations (IRs)
 
 The intermediate representation is being delivered by both the Syntax Tree (_Abstract Syntax Tree_) and the DAG (_Directed Acyclic Graph_). This representation is made after both the lexical and syntax are complete. Also, the IR help us structure the Java-- code in something more simpler and manageable. It will also help us in the optimizations of the code generation part of the project.
 
-
-
 ## 6. Code Generation
-
-
 
 The code generation is performed using as an input a DAG (_Directed Acyclic Graph_), which is generated from the AST (_Abstract Syntax Tree_).  Then, the DAG is transversed starting from its root. Each DAG node is then matched with a JVM instruction. This instructions are already defined by the compiler, but are incomplete, having _?_ operators to mark a value that is expected by that same instruction. Each of the values are then provided in order, so that they can replace the _?_ operators, and the instructions outputted to the _class_ file.
 
@@ -91,7 +73,6 @@ The group was able to achieve the expected compiler in this project:
 12. Proceeded with the optimizations related to the code generation, related to the register allocation (“-r” option) and the optimizations related to the “-o” option.
 
 This were the suggested stages for the compiler and they were all applied in this project.
-
 
 ## 8. Task Distribution
 
